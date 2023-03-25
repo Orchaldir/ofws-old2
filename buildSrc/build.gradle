@@ -5,17 +5,24 @@
 plugins {
     // Support convention plugins written in Groovy. Convention plugins are build scripts in 'src/main' that automatically become available as plugins in the main build.
     id 'groovy-gradle-plugin'
+    id "jacoco"
+    id("org.sonarqube") version "4.0.0.2929"
 }
 
 repositories {
     // Use the plugin portal to apply community plugins in convention plugins.
     gradlePluginPortal()
+    mavenCentral()
 }
 
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.10'
+    //implementation('org.sonarqube.gradle:gradle-sonarqube-plugin:3.3.0')
+    //implementation('org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3')
+    implementation("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:4.0.0.2929")
 }
 
 tasks.named('wrapper') {
     gradleVersion = "8.0.2"
 }
+
