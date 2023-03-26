@@ -111,22 +111,23 @@ class ComponentMapTest {
 
         @Test
         fun `Update and remove some components`() {
-            testCopy(mapOf(ID0 to D, ID1 to B, ID3 to E), mapOf(ID0 to D, ID3 to E), setOf(ID2))
+            val copy = storage.updateAndRemove( mapOf(ID0 to D, ID3 to E), setOf(ID2))
+
+            assertEquals(ComponentMap(TYPE, mapOf(ID0 to D, ID1 to B, ID3 to E)), copy)
         }
 
         @Test
         fun `Only update some components`() {
-            testCopy(
-                mapOf(ID0 to E, ID1 to B, ID2 to C, ID3 to D),
-                mapOf(ID0 to E, ID3 to D),
-                emptySet()
-            )
+            val copy = storage.updateAndRemove(mapOf(ID0 to E, ID3 to D))
+
+            assertEquals(ComponentMap(TYPE, mapOf(ID0 to E, ID1 to B, ID2 to C, ID3 to D)), copy)
         }
 
-        private fun testCopy(result: Map<Entity, String>, updated: Map<Entity, String>, removed: Set<Entity>) {
-            val copy = storage.updateAndRemove(updated, removed)
+        @Test
+        fun `Only remove some components`() {
+            val copy = storage.updateAndRemove(removed = setOf(ID0))
 
-            assertEquals(ComponentMap(TYPE, result), copy)
+            assertEquals(ComponentMap(TYPE, mapOf(ID1 to B, ID2 to C)), copy)
         }
 
     }

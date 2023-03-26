@@ -1,4 +1,4 @@
 package ofws.ecs
 
 @JvmInline
-value class Entity(val id: Int)
+value class Entity(private val id: Int)
