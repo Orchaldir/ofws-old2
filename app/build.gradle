@@ -1,0 +1,11 @@
+plugins {
+    id 'ofws.kotlin-application-conventions'
+}
+
+dependencies {
+    implementation project(':ofws-core')
+}
+
+application {
+    mainClass = 'ofws.app.AppKt'
+}

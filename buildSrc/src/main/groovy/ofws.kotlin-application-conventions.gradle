@@ -1,0 +1,5 @@
+plugins {
+    id 'ofws.kotlin-common-conventions'
+    id 'application'
+}
+

@@ -1,0 +1,21 @@
+plugins {
+    id 'groovy-gradle-plugin'
+    id 'jacoco'
+    id 'org.sonarqube' version "4.0.0.2929"
+}
+
+repositories {
+    // Use the plugin portal to apply community plugins in convention plugins.
+    gradlePluginPortal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.10'
+    implementation 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:4.0.0.2929'
+}
+
+tasks.wrapper {
+    gradleVersion = "8.0.2"
+}
+
