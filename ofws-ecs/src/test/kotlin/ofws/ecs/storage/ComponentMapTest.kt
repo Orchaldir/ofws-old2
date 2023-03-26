@@ -1,15 +1,17 @@
 package ofws.ecs.storage
 
+import ofws.ecs.Entity
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 private const val TYPE = "Type"
 
-private const val ID0 = 0
-private const val ID1 = 9
-private const val ID2 = 42
-private const val ID3 = 99
+private val ID0 = Entity(0)
+private val ID1 = Entity(9)
+private val ID2 = Entity(42)
+private val ID3 = Entity(99)
+private val NO_ID = Entity(1)
 
 private const val A = "A"
 private const val B = "B"
@@ -17,9 +19,8 @@ private const val C = "C"
 private const val D = "D"
 private const val E = "E"
 
-private const val NO_ID = 1
 
-private val components: Map<Int, String> = mapOf(ID0 to A, ID1 to B, ID2 to C)
+private val components: Map<Entity, String> = mapOf(ID0 to A, ID1 to B, ID2 to C)
 private val storage = ComponentMap(TYPE, components)
 
 class ComponentMapTest {
@@ -85,12 +86,12 @@ class ComponentMapTest {
 
         @Test
         fun `Test list of known entities`() {
-            assertEquals(listOf(A, C), storage.getList(ID0, ID2))
+            assertEquals(listOf(A, C), storage.getList(listOf( ID0, ID2)))
         }
 
         @Test
         fun `Test list with unknown entity`() {
-            assertThrows(NoSuchElementException::class.java) { storage.getList(NO_ID) }
+            assertThrows(NoSuchElementException::class.java) { storage.getList(listOf(NO_ID)) }
         }
 
     }
@@ -122,7 +123,7 @@ class ComponentMapTest {
             )
         }
 
-        private fun testCopy(result: Map<Int, String>, updated: Map<Int, String>, removed: Set<Int>) {
+        private fun testCopy(result: Map<Entity, String>, updated: Map<Entity, String>, removed: Set<Entity>) {
             val copy = storage.updateAndRemove(updated, removed)
 
             assertEquals(ComponentMap(TYPE, result), copy)
