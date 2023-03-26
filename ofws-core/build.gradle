@@ -7,6 +7,7 @@ plugins {
 }
 
 dependencies {
+    api project(':ofws-ecs')
     api project(':ofws-redux')
 }
 
