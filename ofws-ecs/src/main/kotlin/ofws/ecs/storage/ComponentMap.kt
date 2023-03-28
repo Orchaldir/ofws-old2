@@ -4,7 +4,7 @@ import ofws.ecs.Entity
 
 data class ComponentMap<T>(
     private val type: String,
-    val componentMap: Map<Entity, T>
+    private val componentMap: Map<Entity, T> = mapOf(),
 ) : ComponentStorage<T> {
 
     override fun getType() = type
