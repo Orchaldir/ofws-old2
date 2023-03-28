@@ -75,7 +75,6 @@ class EcsStateTest {
         @Test
         fun `Copy with new data`() {
             val state = EcsState()
-
             val copy0 = state.copy(updatedData = listOf(42, "Test"))
 
             assertNull(state.getData<Int>())
@@ -83,15 +82,19 @@ class EcsStateTest {
 
             assertEquals(42, copy0.getData())
             assertEquals("Test", copy0.getData<String>())
+        }
 
-            val copy1 = copy0.copy(updatedData = listOf(true))
+        @Test
+        fun `Copy with overwriting existing data`() {
+            val state = EcsState()
+            val copy0 = state.copy(updatedData = listOf(42, "Test"))
+            val copy1 = copy0.copy(updatedData = listOf(99))
 
             assertNull(copy0.getData<Boolean>())
             assertEquals(42, copy0.getData())
             assertEquals("Test", copy0.getData<String>())
 
-            assertEquals(true, copy1.getData<Boolean>())
-            assertEquals(42, copy1.getData())
+            assertEquals(99, copy1.getData())
             assertEquals("Test", copy1.getData<String>())
         }
 
