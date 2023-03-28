@@ -39,8 +39,7 @@ class EcsStateTest {
 
         @Test
         fun `Get existing data`() {
-            assertEquals(42, state.getData())
-            assertEquals("Test", state.getData<String>())
+            assertData(state, 42, "Test")
         }
 
         @Test
@@ -63,13 +62,8 @@ class EcsStateTest {
 
             val copy = state.copy(updatedStorage = listOf(newIntStorage, boolStorage))
 
-            assertNull(state.getStorage<Boolean>())
-            assertEquals(intStorage, state.getStorage<Int>())
-            assertEquals(stringStorage, state.getStorage<String>())
-
-            assertEquals(boolStorage, copy.getStorage<Boolean>())
-            assertEquals(newIntStorage, copy.getStorage<Int>())
-            assertEquals(stringStorage, copy.getStorage<String>())
+            assertStorage(state, null, newIntStorage, stringStorage)
+            assertStorage(copy, boolStorage, newIntStorage, stringStorage)
         }
 
         @Test
@@ -77,11 +71,8 @@ class EcsStateTest {
             val state = EcsState()
             val copy0 = state.copy(updatedData = listOf(42, "Test"))
 
-            assertNull(state.getData<Int>())
-            assertNull(state.getData<String>())
-
-            assertEquals(42, copy0.getData())
-            assertEquals("Test", copy0.getData<String>())
+            assertData(state, null, null)
+            assertData(copy0, 42, "Test")
         }
 
         @Test
@@ -90,13 +81,25 @@ class EcsStateTest {
             val copy0 = state.copy(updatedData = listOf(42, "Test"))
             val copy1 = copy0.copy(updatedData = listOf(99))
 
-            assertNull(copy0.getData<Boolean>())
-            assertEquals(42, copy0.getData())
-            assertEquals("Test", copy0.getData<String>())
-
-            assertEquals(99, copy1.getData())
-            assertEquals("Test", copy1.getData<String>())
+            assertData(copy0, 42, "Test")
+            assertData(copy1, 99, "Test")
         }
 
+    }
+
+    private fun assertData(state: EcsState, intData: Int?, stringData: String?) {
+        assertEquals(intData, state.getData())
+        assertEquals(stringData, state.getData<String>())
+    }
+
+    private fun assertStorage(
+        state: EcsState,
+        boolStorage: ComponentMap<Boolean>?,
+        intStorage: ComponentMap<Int>?,
+        stringStorage: ComponentMap<String>?,
+    ) {
+        assertEquals(boolStorage, state.getStorage<Boolean>())
+        assertEquals(intStorage, state.getStorage<Int>())
+        assertEquals(stringStorage, state.getStorage<String>())
     }
 }
