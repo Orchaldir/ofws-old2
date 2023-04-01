@@ -86,7 +86,7 @@ class ComponentMapTest {
 
         @Test
         fun `Test list of known entities`() {
-            assertEquals(listOf(A, C), storage.getList(listOf( ID0, ID2)))
+            assertEquals(listOf(A, C), storage.getList(listOf(ID0, ID2)))
         }
 
         @Test
@@ -111,7 +111,7 @@ class ComponentMapTest {
 
         @Test
         fun `Update and remove some components`() {
-            val copy = storage.updateAndRemove( mapOf(ID0 to D, ID3 to E), setOf(ID2))
+            val copy = storage.updateAndRemove(mapOf(ID0 to D, ID3 to E), setOf(ID2))
 
             assertEquals(ComponentMap(TYPE, mapOf(ID0 to D, ID1 to B, ID3 to E)), copy)
         }
