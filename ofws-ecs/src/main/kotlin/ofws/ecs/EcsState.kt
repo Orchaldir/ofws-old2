@@ -4,7 +4,7 @@ import ofws.ecs.storage.ComponentStorage
 import kotlin.reflect.KClass
 
 class EcsState(
-    private val entities: Set<Int> = emptySet(),
+    private val entities: Set<Entity> = emptySet(),
     private val storageMap: Map<String, ComponentStorage<*>> = emptyMap(),
     private val dataMap: Map<String, Any> = emptyMap()
 ) {
@@ -47,5 +47,15 @@ class EcsState(
 
         return EcsState(entities, newStorageMap, newDataMap)
     }
+
+    fun <A, B> query2(classA: KClass<*>, classB: KClass<*>): Query2<A, B> {
+        val storageA: ComponentStorage<A> = getStorage(classA) ?: throw NoSuchElementException()
+        val storageB: ComponentStorage<B> = getStorage(classB) ?: throw NoSuchElementException()
+        val sharedEntities: Set<Entity> = entities.intersect(storageA.getIds()).intersect(storageB.getIds())
+
+        return Query2(sharedEntities.toMutableList(), storageA, storageB)
+    }
+
+    inline fun <reified A : Any, reified B : Any> query2(): Query2<A, B> = query2(A::class, B::class)
 
 }
