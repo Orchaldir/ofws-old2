@@ -1,6 +1,7 @@
 package ofws.ecs
 
 import ofws.ecs.storage.ComponentMap
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Nested
@@ -29,6 +30,24 @@ class EcsStateTest {
         @Test
         fun `Get non-existing storage`() {
             assertNull(state.getStorage<Boolean>())
+        }
+
+    }
+
+    @Nested
+    inner class GetStorageOrThrow {
+
+        private val state = EcsState(storageMap = mapOf(intType to intStorage, stringType to stringStorage))
+
+        @Test
+        fun `Get existing storage`() {
+            assertEquals(intStorage, state.getStorageOrThrow<Int>())
+            assertEquals(stringStorage, state.getStorageOrThrow<String>())
+        }
+
+        @Test
+        fun `Get non-existing storage`() {
+            Assertions.assertThrows(NoSuchElementException::class.java) { state.getStorageOrThrow<Boolean>() }
         }
 
     }

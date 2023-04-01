@@ -19,6 +19,12 @@ class EcsState(
 
     inline fun <reified T : Any> getStorage(): ComponentStorage<T>? = getStorage(T::class)
 
+    fun <T> getStorageOrThrow(kClass: KClass<*>): ComponentStorage<T> {
+        return getStorage(kClass) ?: throw NoSuchElementException("No storage for type ${getType(kClass)}!")
+    }
+
+    inline fun <reified T : Any> getStorageOrThrow(): ComponentStorage<T> = getStorageOrThrow(T::class)
+
     fun <T> getData(kClass: KClass<*>): T? {
         val type = getType(kClass)
         val data = dataMap[type]
@@ -49,8 +55,8 @@ class EcsState(
     }
 
     fun <A, B> query2(classA: KClass<*>, classB: KClass<*>): Query2<A, B> {
-        val storageA: ComponentStorage<A> = getStorage(classA) ?: throw NoSuchElementException()
-        val storageB: ComponentStorage<B> = getStorage(classB) ?: throw NoSuchElementException()
+        val storageA: ComponentStorage<A> = getStorageOrThrow(classA)
+        val storageB: ComponentStorage<B> = getStorageOrThrow(classB)
         val sharedEntities: Set<Entity> = entities.intersect(storageA.getIds()).intersect(storageB.getIds())
 
         return Query2(sharedEntities.toMutableList(), storageA, storageB)
