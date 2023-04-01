@@ -1,8 +1,7 @@
 package ofws.ecs
 
 import ofws.ecs.storage.ComponentMap
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class QueryTest {
@@ -24,6 +23,8 @@ class QueryTest {
 
         assertTrue(query.hasNext())
         assertEquals(QueryEntry2(e3, "3", "Three"), query.next())
+
+        assertFalse(query.hasNext())
     }
 
 }
