@@ -13,8 +13,8 @@ class Query2<A, B>(
 
     override fun next(): QueryEntry2<A, B> {
         val entity = Entity(entities.removeFirst())
-        val a: A = storageA[entity] ?: throw NoSuchElementException()
-        val b: B = storageB[entity] ?: throw NoSuchElementException()
+        val a: A = storageA.getOrThrow(entity)
+        val b: B = storageB.getOrThrow(entity)
         return QueryEntry2(entity, a, b)
     }
 }
