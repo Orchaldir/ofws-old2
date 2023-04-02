@@ -1,4 +1,4 @@
-package ofws.app
+package ofws.app.demo
 
 fun main() {
     println("Hello World!")
