@@ -3,7 +3,7 @@ package ofws.ecs
 import ofws.ecs.storage.ComponentStorage
 import kotlin.reflect.KClass
 
-class EcsState(
+data class EcsState(
     private val entities: Set<Entity> = emptySet(),
     private val storageMap: Map<String, ComponentStorage<*>> = emptyMap(),
     private val dataMap: Map<String, Any> = emptyMap()
@@ -48,7 +48,7 @@ class EcsState(
         val newDataMap = if (updatedData.isEmpty()) {
             dataMap
         } else {
-            dataMap + updatedData.map { getType(it::class) to it }.toMap()
+            dataMap + updatedData.associateBy { getType(it::class) }
         }
 
         return EcsState(entities, newStorageMap, newDataMap)
