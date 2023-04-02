@@ -8,4 +8,4 @@
  */
 
 rootProject.name = 'ofws'
-include('app', 'ofws-redux', 'ofws-core')
+include('ofws-ecs', 'ofws-redux', 'ofws-core', 'app')
