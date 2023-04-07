@@ -85,14 +85,14 @@ abstract class TileApplication(
     }
 
     open fun onKeyReleased(keyCode: KeyCode) {
-        // Should be overwritten by  subclasses if needed
+        // Should be overwritten by subclasses if needed
     }
 
     open fun onTileClicked(x: Int, y: Int, button: MouseButton) {
-        // Should be overwritten by  subclasses if needed
+        // Should be overwritten by subclasses if needed
     }
 
     open fun onMouseMoved(x: Int, y: Int) {
-        // Should be overwritten by  subclasses if needed
+        // Should be overwritten by subclasses if needed
     }
 }
