@@ -12,7 +12,4 @@ data class Size(
         requireGreater(y, 0, "y")
     }
 
-    val cells: Int
-        get() = x * y
-
 }
