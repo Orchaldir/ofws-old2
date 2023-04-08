@@ -66,7 +66,7 @@ class TileRendererTest {
         }
 
         @Test
-        fun `Render full tile with size`() {
+        fun `Render full tile`() {
             tileRenderer.renderFullTile(Color.RED, 5, 6, 3)
 
             verify(90, 120)
@@ -84,14 +84,28 @@ class TileRendererTest {
     inner class RenderUnicodeTile {
 
         @Test
-        fun `Render unicode tile with default size`() {
+        fun `Render character with default size`() {
+            tileRenderer.renderUnicodeTile('@', Color.GREEN, 2, 3)
+
+            verify('@', 40, 175, 340)
+        }
+
+        @Test
+        fun `Render character`() {
+            tileRenderer.renderUnicodeTile('?', Color.GREEN, 2, 3, 4)
+
+            verify('?', 160, 220, 400)
+        }
+
+        @Test
+        fun `Render code point with default size`() {
             tileRenderer.renderUnicodeTile('@'.code, Color.GREEN, 2, 3)
 
             verify('@', 40, 175, 340)
         }
 
         @Test
-        fun `Render unicode tile with size`() {
+        fun `Render code point`() {
             tileRenderer.renderUnicodeTile('?'.code, Color.GREEN, 2, 3, 4)
 
             verify('?', 160, 220, 400)
@@ -117,10 +131,22 @@ class TileRendererTest {
         }
 
         @Test
-        fun `Render unicode tile with size`() {
+        fun `Render text`() {
             tileRenderer.renderText("Test", Color.BLUE, 0, 1, 2)
 
             verify(80, 130, 190, 250, 310, 280)
+        }
+
+        @Test
+        fun `Render emoji`() {
+            tileRenderer.renderText("🌳🚀", Color.RED, 0, 0)
+
+            verifySequence {
+                renderer.setColor(Color.RED)
+                renderer.setFont(40)
+                renderer.renderUnicode(127795, 115, 220)
+                renderer.renderUnicode(128640, 145, 220)
+            }
         }
 
         private fun verify(fontSize: Int, x0: Int, x1: Int, x2: Int, x3: Int, y: Int) {

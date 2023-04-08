@@ -36,6 +36,14 @@ class TileRenderer(
     }
 
     fun renderUnicodeTile(
+        character: Char,
+        color: Color,
+        x: Int,
+        y: Int,
+        size: Int = 1
+    ) = renderUnicodeTile(character.code, color, x, y, size)
+
+    fun renderUnicodeTile(
         codePoint: Int,
         color: Color,
         x: Int,
