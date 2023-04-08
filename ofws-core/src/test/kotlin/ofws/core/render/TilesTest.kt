@@ -20,6 +20,13 @@ class TilesTest {
         }
 
         @Test
+        fun `An empty tile renders nothing with default size`() {
+            renderTile(renderer, EmptyTile, 1, 2)
+
+            verify { renderer wasNot Called }
+        }
+
+        @Test
         fun `A full tile renders a full tile`() {
             renderTile(renderer, FullTile(Color.WHITE), 10, 20, 30)
 
@@ -29,11 +36,29 @@ class TilesTest {
         }
 
         @Test
+        fun `A full tile renders a full tile with default size`() {
+            renderTile(renderer, FullTile(Color.WHITE), 10, 20)
+
+            verify {
+                renderer.renderFullTile(Color.WHITE, 10, 20, 1)
+            }
+        }
+
+        @Test
         fun `A unicode tile renders a unicode character`() {
             renderTile(renderer, UnicodeTile("T", Color.GREEN), 5, 6, 7)
 
             verify {
                 renderer.renderUnicodeTile("T", Color.GREEN, 5, 6, 7)
+            }
+        }
+
+        @Test
+        fun `A unicode tile renders a unicode  with default size`() {
+            renderTile(renderer, UnicodeTile("T", Color.GREEN), 5, 6)
+
+            verify {
+                renderer.renderUnicodeTile("T", Color.GREEN, 5, 6, 1)
             }
         }
     }
