@@ -37,10 +37,10 @@ class TilesTest {
 
         @Test
         fun `A full tile renders a full tile with default size`() {
-            renderTile(renderer, FullTile(Color.WHITE), 10, 20)
+            renderTile(renderer, FullTile(Color.BLUE), 10, 20)
 
             verify {
-                renderer.renderFullTile(Color.WHITE, 10, 20, 1)
+                renderer.renderFullTile(Color.BLUE, 10, 20, 1)
             }
         }
 
@@ -55,10 +55,10 @@ class TilesTest {
 
         @Test
         fun `A unicode tile renders a unicode  with default size`() {
-            renderTile(renderer, UnicodeTile("T", Color.GREEN), 5, 6)
+            renderTile(renderer, UnicodeTile("@", Color.RED), 3, 2)
 
             verify {
-                renderer.renderUnicodeTile("T", Color.GREEN, 5, 6, 1)
+                renderer.renderUnicodeTile("@", Color.RED, 3, 2, 1)
             }
         }
     }
