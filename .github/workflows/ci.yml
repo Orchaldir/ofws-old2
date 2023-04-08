@@ -28,7 +28,7 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys:  ${{ runner.os }}-gradle
+          restore-keys: ${{ runner.os }}-gradle
 
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
