@@ -2,6 +2,7 @@ package ofws.core.render
 
 import io.mockk.mockk
 import io.mockk.verifySequence
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
@@ -9,6 +10,50 @@ class TileRendererTest {
 
     val renderer = mockk<Renderer>(relaxed = true)
     val tileRenderer = TileRenderer(renderer, 100, 200, 30, 40)
+
+    @Nested
+    inner class GetTileX {
+
+        @Test
+        fun `Get tile x from pixel x`() {
+            testGetX(0, 100)
+            testGetX(1, 130)
+            testGetX(2, 160)
+        }
+
+        @Test
+        fun `The first tile below startPixelX is -1`() {
+            assertEquals(-1, tileRenderer.getX(99))
+        }
+
+        private fun testGetX(tile: Int, startPixelX: Int) {
+            for (x: Int in startPixelX until startPixelX + 30) {
+                assertEquals(tile, tileRenderer.getX(x))
+            }
+        }
+    }
+
+    @Nested
+    inner class GetTileY {
+
+        @Test
+        fun `Get tile y from pixel y`() {
+            testGetY(0, 200)
+            testGetY(1, 240)
+            testGetY(2, 280)
+        }
+
+        @Test
+        fun `The first tile below startPixelY is -1`() {
+            assertEquals(-1, tileRenderer.getY(199))
+        }
+
+        private fun testGetY(tile: Int, startPixelY: Int) {
+            for (x: Int in startPixelY until startPixelY + 40) {
+                assertEquals(tile, tileRenderer.getY(x))
+            }
+        }
+    }
 
     @Nested
     inner class RenderFullTile {

@@ -74,9 +74,9 @@ class TileRenderer(
         }
     }
 
-    fun getX(pixelX: Int) = (pixelX - startPixelX) / tileWidth
+    fun getX(pixelX: Int) = (pixelX - startPixelX) / tileWidth + if (pixelX < startPixelX) -1 else 0
 
-    fun getY(pixelY: Int) = (pixelY - startPixelY) / tileHeight
+    fun getY(pixelY: Int) = (pixelY - startPixelY) / tileHeight + if (pixelY < startPixelY) -1 else 0
 
     private fun getStartPixelX(x: Int) = startPixelX + x * tileWidth
 
