@@ -17,19 +17,20 @@ class TileRendererTest {
         fun `Render full tile with default size`() {
             tileRenderer.renderFullTile(Color.RED, 5, 6)
 
-            verifySequence {
-                renderer.setColor(Color.RED)
-                renderer.renderRectangle(250, 440, 30, 40)
-            }
+            verify(30, 40)
         }
 
         @Test
         fun `Render full tile with size`() {
             tileRenderer.renderFullTile(Color.RED, 5, 6, 3)
 
+            verify(90, 120)
+        }
+
+        private fun verify(width: Int, height: Int) {
             verifySequence {
                 renderer.setColor(Color.RED)
-                renderer.renderRectangle(250, 440, 90, 120)
+                renderer.renderRectangle(250, 440, width, height)
             }
         }
     }
@@ -41,21 +42,21 @@ class TileRendererTest {
         fun `Render unicode tile with default size`() {
             tileRenderer.renderUnicodeTile("@", Color.GREEN, 2, 3)
 
-            verifySequence {
-                renderer.setColor(Color.GREEN)
-                renderer.setFont(40)
-                renderer.renderUnicode("@",  175, 340)
-            }
+            verify("@", 40, 175, 340)
         }
 
         @Test
         fun `Render unicode tile with size`() {
             tileRenderer.renderUnicodeTile("?", Color.GREEN, 2, 3, 4)
 
+            verify("?", 160, 220, 400)
+        }
+
+        private fun verify(unicode: String, fontSize: Int, x: Int, y: Int) {
             verifySequence {
                 renderer.setColor(Color.GREEN)
-                renderer.setFont(160)
-                renderer.renderUnicode("?",  220, 400)
+                renderer.setFont(fontSize)
+                renderer.renderUnicode(unicode, x, y)
             }
         }
     }
@@ -67,27 +68,24 @@ class TileRendererTest {
         fun `Render text with default size`() {
             tileRenderer.renderText("Test", Color.BLUE, 0, 1)
 
-            verifySequence {
-                renderer.setColor(Color.BLUE)
-                renderer.setFont(40)
-                renderer.renderUnicode("T",  115, 260)
-                renderer.renderUnicode("e",  145, 260)
-                renderer.renderUnicode("s",  175, 260)
-                renderer.renderUnicode("t",  205, 260)
-            }
+            verify(40, 115, 145, 175, 205, 260)
         }
 
         @Test
         fun `Render unicode tile with size`() {
             tileRenderer.renderText("Test", Color.BLUE, 0, 1, 2)
 
+            verify(80, 130, 190, 250, 310, 280)
+        }
+
+        private fun verify(fontSize: Int, x0: Int, x1: Int, x2: Int, x3: Int, y: Int) {
             verifySequence {
                 renderer.setColor(Color.BLUE)
-                renderer.setFont(80)
-                renderer.renderUnicode("T",  130, 280)
-                renderer.renderUnicode("e",  190, 280)
-                renderer.renderUnicode("s",  250, 280)
-                renderer.renderUnicode("t",  310, 280)
+                renderer.setFont(fontSize)
+                renderer.renderUnicode("T", x0, y)
+                renderer.renderUnicode("e", x1, y)
+                renderer.renderUnicode("s", x2, y)
+                renderer.renderUnicode("t", x3, y)
             }
         }
     }
