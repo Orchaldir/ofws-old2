@@ -61,19 +61,6 @@ class TileRenderer(
         renderer.renderRectangle(getStartPixelX(x), getStartPixelY(y), tileWidth * size, tileHeight * size)
     }
 
-    fun renderTile(
-        tile: Tile,
-        x: Int,
-        y: Int,
-        size: Int = 1
-    ) {
-        when (tile) {
-            is FullTile -> renderFullTile(tile.color, x, y, size)
-            is UnicodeTile -> renderUnicodeTile(tile.symbol, tile.color, x, y, size)
-            is EmptyTile -> return
-        }
-    }
-
     fun getX(pixelX: Int) = (pixelX - startPixelX) / tileWidth + if (pixelX < startPixelX) -1 else 0
 
     fun getY(pixelY: Int) = (pixelY - startPixelY) / tileHeight + if (pixelY < startPixelY) -1 else 0
