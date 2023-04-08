@@ -25,7 +25,7 @@ class RenderingDemo : TileApplication(50, 20, 22, 32) {
         with(tileRenderer) {
             renderFullTile(Color.GREEN, 5, 10)
             renderFullTile(Color.BLUE, 6, 10)
-            renderUnicodeTile('@', Color.RED, 5, 11, 2)
+            renderUnicodeTile('@', Color.RED, 5, 11, 4)
             renderText("This is a test.", Color.WHITE, 0, 0, 1)
         }
     }

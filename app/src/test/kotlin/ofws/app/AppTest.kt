@@ -1,4 +1,3 @@
-package ofws.app;
+package ofws.app
 
-public class AppTest {
-}
+class AppTest
