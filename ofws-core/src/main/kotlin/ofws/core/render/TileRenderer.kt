@@ -28,9 +28,7 @@ class TileRenderer(
             var centerX = getCenterPixelX(x, size)
             val centerY = getCenterPixelY(y, size)
 
-            val splitByCodePoint = splitByCodePoint(text)
-
-            for (character in splitByCodePoint) {
+            for (character in text.codePoints()) {
                 renderUnicode(character, centerX, centerY)
                 centerX += tileWidth * size
             }
@@ -38,7 +36,7 @@ class TileRenderer(
     }
 
     fun renderUnicodeTile(
-        text: String,
+        codePoint: Int,
         color: Color,
         x: Int,
         y: Int,
@@ -47,7 +45,7 @@ class TileRenderer(
         with(renderer) {
             setColor(color)
             setFont(size * tileHeight)
-            renderUnicode(text, getCenterPixelX(x, size), getCenterPixelY(y, size))
+            renderUnicode(codePoint, getCenterPixelX(x, size), getCenterPixelY(y, size))
         }
     }
 
@@ -73,10 +71,4 @@ class TileRenderer(
 
     private fun getCenterPixelY(y: Int, size: Int) = getStartPixelY(y) + size * tileHeight / 2
 
-    private fun splitByCodePoint(str: String): Array<String> {
-        val codePoints = str.codePoints().toArray()
-        return Array(codePoints.size) { index ->
-            String(codePoints, index, 1)
-        }
-    }
 }

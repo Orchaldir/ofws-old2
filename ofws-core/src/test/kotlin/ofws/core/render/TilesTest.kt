@@ -46,19 +46,19 @@ class TilesTest {
 
         @Test
         fun `A unicode tile renders a unicode character`() {
-            renderTile(renderer, UnicodeTile("T", Color.GREEN), 5, 6, 7)
+            renderTile(renderer, UnicodeTile('T'.code, Color.GREEN), 5, 6, 7)
 
             verify {
-                renderer.renderUnicodeTile("T", Color.GREEN, 5, 6, 7)
+                renderer.renderUnicodeTile('T'.code, Color.GREEN, 5, 6, 7)
             }
         }
 
         @Test
         fun `A unicode tile renders a unicode  with default size`() {
-            renderTile(renderer, UnicodeTile("@", Color.RED), 3, 2)
+            renderTile(renderer, UnicodeTile('@'.code, Color.RED), 3, 2)
 
             verify {
-                renderer.renderUnicodeTile("@", Color.RED, 3, 2, 1)
+                renderer.renderUnicodeTile('@'.code, Color.RED, 3, 2, 1)
             }
         }
     }

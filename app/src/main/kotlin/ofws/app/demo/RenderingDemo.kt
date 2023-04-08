@@ -16,8 +16,8 @@ class RenderingDemo : TileApplication(50, 20, 22, 32) {
         with(renderer) {
             setColor(Color.RED)
             setFont(32)
-            renderUnicode("@", 100, 100)
-            renderUnicode("🌳", 200, 200)
+            renderUnicode('@'.code, 100, 100)
+            renderUnicode("🌳".codePointAt(0), 200, 200)
             setColor(Color.BLUE)
             renderRectangle(400, 300, 100, 200)
         }
@@ -25,7 +25,7 @@ class RenderingDemo : TileApplication(50, 20, 22, 32) {
         with(tileRenderer) {
             renderFullTile(Color.GREEN, 5, 10)
             renderFullTile(Color.BLUE, 6, 10)
-            renderUnicodeTile("@", Color.RED, 5, 11, 2)
+            renderUnicodeTile('@'.code, Color.RED, 5, 11, 2)
             renderText("This is a test.", Color.WHITE, 0, 0, 1)
         }
     }
