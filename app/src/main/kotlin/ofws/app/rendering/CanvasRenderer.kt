@@ -20,11 +20,11 @@ class CanvasRenderer(
         graphicsContext.clearRect(0.0, 0.0, canvas.width, canvas.height)
     }
 
-    override fun renderUnicode(text: String, centerX: Int, centerY: Int) =
-        graphicsContext.fillText(text, centerX.toDouble(), centerY.toDouble())
-
     override fun renderRectangle(x: Int, y: Int, width: Int, height: Int) =
         graphicsContext.fillRect(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble())
+
+    override fun renderUnicode(text: String, centerX: Int, centerY: Int) =
+        graphicsContext.fillText(text, centerX.toDouble(), centerY.toDouble())
 
     override fun setColor(color: Color) {
         graphicsContext.fill =

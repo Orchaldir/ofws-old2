@@ -4,13 +4,13 @@ import ofws.core.requireGreater
 
 class TileRenderer(
     private val renderer: Renderer,
-    pixelX: Int,
-    pixelY: Int,
+    startPixelX: Int,
+    startPixelY: Int,
     tileWidth: Int,
     tileHeight: Int
 ) {
-    private val startPixelX = requireGreater(pixelX, -1, "pixelX")
-    private val startPixelY = requireGreater(pixelY, -1, "pixelY")
+    private val startPixelX = requireGreater(startPixelX, -1, "pixelX")
+    private val startPixelY = requireGreater(startPixelY, -1, "pixelY")
     private val tileWidth = requireGreater(tileWidth, 0, "tileWidth")
     private val tileHeight = requireGreater(tileHeight, 0, "tileHeight")
 
