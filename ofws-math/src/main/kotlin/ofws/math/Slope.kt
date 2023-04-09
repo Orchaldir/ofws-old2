@@ -14,8 +14,7 @@ data class Slope(val x: Int, val y: Int) {
     /**
      * Returns the lowest y-coordinate above the [Slope] at the x-coordinate [localX].
      */
-    fun calculateBottomX(localX: Int) = if (y == 0) 0 else
-        ((localX * 2 - 1) * y + x) / (x * 2)
+    fun calculateBottomX(localX: Int) = ((localX * 2 - 1) * y + x) / (x * 2)
 
 }
 
