@@ -6,13 +6,12 @@ package ofws.math
 data class Slope(val x: Int, val y: Int) {
 
     /**
-     * Returns the highest y-coordinate below the [Slope] at the x-coordinate [localX].
+     * Returns the y of tile with the highest y-coordinate that has at least 1 corner below the [Slope] and the x-coordinate [localX].
      */
-    fun calculateTopX(localX: Int) = if (x == 1) localX else
-        ((localX * 2 + 1) * y + x - 1) / (x * 2)
+    fun calculateTopX(localX: Int) = ((localX * 2 + 1) * y + x - 1) / (x * 2)
 
     /**
-     * Returns the lowest y-coordinate above the [Slope] at the x-coordinate [localX].
+     * Returns the y of tile with the lowest y-coordinate that has at least 1 corner above the [Slope] and the x-coordinate [localX].
      */
     fun calculateBottomX(localX: Int) = ((localX * 2 - 1) * y + x) / (x * 2)
 
