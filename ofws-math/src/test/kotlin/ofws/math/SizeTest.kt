@@ -3,6 +3,9 @@ package ofws.math
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 
 class SizeTest {
 
@@ -33,7 +36,7 @@ class SizeTest {
     @Nested
     inner class GetPositionIfInside {
         @Test
-        fun `Convert x & y inside the size to a position`() {
+        fun `Return a position, if inside`() {
             testGetPosition(0, 0, 0)
             testGetPosition(1, 1, 0)
             testGetPosition(2, 0, 1)
@@ -42,45 +45,36 @@ class SizeTest {
             testGetPosition(5, 1, 2)
         }
 
-        @Test
-        fun `Convert x & y outside the size to null`() {
-            testNull(-1, 0)
-            testNull(0, -1)
-            testNull(-1, -1)
-            testNull(2, 2)
-            testNull(1, 3)
-            testNull(2, 3)
+        @ParameterizedTest(name = "x={0} y={1}")
+        @MethodSource("ofws.math.SizeTest#outside")
+        fun `Return null if outside`(x: Int, y: Int) {
+            assertNull(size.getPositionIfInside(x, y))
         }
 
         private fun testGetPosition(index: Int, x: Int, y: Int) {
             assertEquals(Position(index), size.getPositionIfInside(x, y))
         }
-
-        private fun testNull(x: Int, y: Int) {
-            assertNull(size.getPositionIfInside(x, y))
-        }
     }
 
     @Nested
     inner class IsInside {
-        @Test
-        fun `Tiles inside`() {
-            testGetPosition(0, 0)
-            testGetPosition(1, 0)
-            testGetPosition(0, 1)
-            testGetPosition(1, 1)
-            testGetPosition(0, 2)
-            testGetPosition(1, 2)
+
+        @ParameterizedTest(name = "x={0} y={1}")
+        @MethodSource("ofws.math.SizeTest#inside")
+        fun `Test x & y with inside`(x: Int, y: Int) {
+            assertTrue(size.isInside(x, y))
         }
 
-        @Test
-        fun `Tiles outside`() {
-            testNull(-1, 0)
-            testNull(0, -1)
-            testNull(-1, -1)
-            testNull(2, 2)
-            testNull(1, 3)
-            testNull(2, 3)
+        @ParameterizedTest(name = "x={0} y={1}")
+        @MethodSource("ofws.math.SizeTest#inside")
+        fun `Test position with inside`(x: Int, y: Int) {
+            assertTrue(size.isInside(size.getPosition(x, y)))
+        }
+
+        @ParameterizedTest(name = "x={0} y={1}")
+        @MethodSource("ofws.math.SizeTest#outside")
+        fun `Tiles outside`(x: Int, y: Int) {
+            assertFalse(size.isInside(x, y))
         }
 
         @Test
@@ -103,15 +97,27 @@ class SizeTest {
             assertFalse(size.isInsideForY(3))
             assertFalse(size.isInsideForY(4))
         }
+    }
 
-        private fun testGetPosition(x: Int, y: Int) {
-            assertTrue(size.isInside(x, y))
-            assertTrue(size.isInsideForX(x))
-            assertTrue(size.isInsideForY(y))
-        }
+    companion object {
+        @JvmStatic
+        fun inside() = listOf(
+            Arguments.of(0, 0),
+            Arguments.of(1, 0),
+            Arguments.of(0, 1),
+            Arguments.of(1, 1),
+            Arguments.of(0, 2),
+            Arguments.of(1, 2),
+        )
 
-        private fun testNull(x: Int, y: Int) {
-            assertFalse(size.isInside(x, y))
-        }
+        @JvmStatic
+        fun outside() = listOf(
+            Arguments.of(-1, 0),
+            Arguments.of(0, -1),
+            Arguments.of(-1, -1),
+            Arguments.of(2, 2),
+            Arguments.of(1, 3),
+            Arguments.of(2, 3),
+        )
     }
 }
