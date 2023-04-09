@@ -14,6 +14,7 @@ import ofws.app.rendering.CanvasRenderer
 import ofws.core.render.Renderer
 import ofws.core.render.TileRenderer
 import ofws.core.requireGreater
+import ofws.math.Size
 
 abstract class TileApplication(
     sizeX: Int,
