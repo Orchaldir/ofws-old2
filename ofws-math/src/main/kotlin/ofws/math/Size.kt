@@ -4,10 +4,19 @@ package ofws.math
  * A Size defines a 2d rectangle starting at the origin.
  */
 data class Size(
+    /**
+     * The Size along the x-axis. Also known as width.
+     */
     val x: Int,
+    /**
+     * The Size along the y-axis. Also known as height.
+     */
     val y: Int
 ) {
 
+    /**
+     * The number of tiles inside the rectangle defined by the [Size].
+     */
     val tiles: Int
         get() = x * y
 
