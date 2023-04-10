@@ -58,33 +58,32 @@ class ShadowCasting : FovAlgorithm {
 
                 logger.info("  x=$localX y=$localY isBlocking=$isBlocking previous=$status")
 
-                if (isBlocking) {
-                    if (status == Status.CLEAR) {
-                        // create a slope above the current blocker
-                        val newBottom = createSlopeThroughTopLeft(localX, localY)
+                if (isBlocking && status == Status.CLEAR) {
+                    // create a slope above the current blocker
+                    val newBottom = createSlopeThroughTopLeft(localX, localY)
 
-                        if (localY == bottomY) {
-                            bottom = newBottom
-                            break
-                        } else processOctant(
-                            config, visibleCells, octant,
-                            localX + 1,
-                            top,
-                            newBottom
-                        )
-                    }
-                    status = Status.BLOCKING
-                } else {
-                    if (status == Status.BLOCKING) {
-                        // create a slope below the previous blocker
-                        top = createSlopeThroughTopRight(localX, localY)
-                    }
-
-                    status = Status.CLEAR
+                    if (localY == bottomY) {
+                        bottom = newBottom
+                        break
+                    } else processOctant(
+                        config, visibleCells, octant,
+                        localX + 1,
+                        top,
+                        newBottom
+                    )
+                } else if (status == Status.BLOCKING) {
+                    // create a slope below the previous blocker
+                    top = createSlopeThroughTopRight(localX, localY)
                 }
+
+                status = updateStatus(isBlocking)
             }
 
-            if (status != Status.CLEAR) break
+            if (status != Status.CLEAR) {
+                break
+            }
         }
     }
+
+    private fun updateStatus(isBlocking: Boolean) = if (isBlocking) Status.BLOCKING else Status.CLEAR
 }
