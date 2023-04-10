@@ -9,6 +9,8 @@ import ofws.app.TileApplication
 import ofws.core.game.map.Terrain
 import ofws.core.render.Color
 import ofws.math.Position
+import ofws.math.fov.FovConfig
+import ofws.math.fov.ShadowCasting
 import ofws.math.map.TileMapBuilder
 import kotlin.random.Random
 import kotlin.system.exitProcess
@@ -25,6 +27,9 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
     }
 
     private var position = Position(990)
+    private val fovAlgorithm = ShadowCasting()
+    private var visibleTiles = setOf<Position>()
+    private val knownTiles = mutableSetOf<Position>()
 
     override fun start(primaryStage: Stage) {
         init(primaryStage, "FieldOfView Demo")
@@ -34,6 +39,11 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
     private fun update() {
         logger.info("update()")
 
+        val config = FovConfig(map.size, position, 10, ::isBlocking)
+
+        visibleTiles = fovAlgorithm.calculateVisibleCells(config)
+        knownTiles.addAll(visibleTiles)
+
         render()
     }
 
@@ -42,12 +52,11 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
 
         renderer.clear()
 
+        visibleTiles.forEach { renderNode(it, Color.GREEN) }
         renderNode(position, Color.BLUE)
 
-        for (y in 0 until map.size.y) {
-            for (x in 0 until map.size.x) {
-                renderTile(x, y)
-            }
+        for (tile in knownTiles) {
+            renderTile(tile)
         }
 
         logger.info("render(): finished")
@@ -57,15 +66,14 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
         tileRenderer.renderFullTile(color, size.getX(position), size.getY(position))
     }
 
-    private fun renderTile(x: Int, y: Int) {
-        val position = map.size.getPosition(x, y)
+    private fun renderTile(position: Position) {
         val symbol = if (map.terrainList[position.index] == Terrain.FLOOR) {
             '.'
         } else {
             '#'
         }
 
-        tileRenderer.renderUnicodeTile(symbol, Color.WHITE, x, y)
+        tileRenderer.renderUnicodeTile(symbol, Color.WHITE, map.size.getX(position), map.size.getY(position))
     }
 
     override fun onKeyReleased(keyCode: KeyCode) {
@@ -79,7 +87,17 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
 
     override fun onTileClicked(x: Int, y: Int, button: MouseButton) {
         logger.info("onTileClicked(): x=$x y=$y button=$button")
+
+        val newPosition = map.size.getPosition(x, y)
+
+        if (isBlocking(newPosition)) {
+            position = newPosition
+            update()
+        }
     }
+
+    private fun isBlocking(position: Position) =
+        map.terrainList[position.index] == Terrain.WALL
 }
 
 fun main() {
