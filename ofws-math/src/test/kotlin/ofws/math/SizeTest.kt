@@ -40,6 +40,18 @@ class SizeTest {
         }
     }
 
+    @ParameterizedTest(name = "index={0} x={1} y={2}")
+    @MethodSource("ofws.math.SizeTest#inside")
+    fun `Get x from position`(index: Int, x: Int, y: Int) {
+        assertEquals(x, size.getX(Position((index))))
+    }
+
+    @ParameterizedTest(name = "index={0} x={1} y={2}")
+    @MethodSource("ofws.math.SizeTest#inside")
+    fun `Get y from position`(index: Int, x: Int, y: Int) {
+        assertEquals(y, size.getY(Position((index))))
+    }
+
     @Nested
     inner class IsInside {
 

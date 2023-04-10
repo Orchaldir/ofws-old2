@@ -1,7 +1,7 @@
 package ofws.math.map
 
 import ofws.math.Size
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class TileMapTest {
@@ -24,7 +24,7 @@ class TileMapTest {
         )
 
 
-        assertEquals(builder,map.builder())
+        assertEquals(builder, map.builder())
     }
 
 }

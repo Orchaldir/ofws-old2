@@ -35,6 +35,10 @@ data class Size(
         null
     }
 
+    fun getX(position: Position) = position.index % x
+
+    fun getY(position: Position) = position.index / x
+
     fun isInside(position: Position) = position.index in 0 until tiles
 
     fun isInside(x: Int, y: Int) = isInsideForX(x) && isInsideForY(y)
