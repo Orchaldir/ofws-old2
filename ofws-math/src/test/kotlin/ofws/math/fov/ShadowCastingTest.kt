@@ -48,6 +48,53 @@ class ShadowCastingTest {
         assertRectangle(visible, map, 1, 5, 1, 5)
     }
 
+    @Test
+    fun `A single wall next to the watcher`() {
+        val map = TileMapBuilder(10, 10, false)
+            .addBorder(true)
+            .setTile(5, 4, true)
+            .build()
+        val config = createConfig(map, 4, 4, 10)
+
+        val visible = algo.calculateVisibleCells(config)
+
+        // 1.column
+        notVisible(visible, map, 6, 3)
+        notVisible(visible, map, 6, 4)
+        notVisible(visible, map, 6, 5)
+
+        // 2.column
+        notVisible(visible, map, 7, 2)
+        notVisible(visible, map, 7, 3)
+        notVisible(visible, map, 7, 4)
+        notVisible(visible, map, 7, 5)
+        notVisible(visible, map, 7, 6)
+
+        // 3.column
+        notVisible(visible, map, 8, 1)
+        notVisible(visible, map, 8, 2)
+        notVisible(visible, map, 8, 3)
+        notVisible(visible, map, 8, 4)
+        notVisible(visible, map, 8, 5)
+        notVisible(visible, map, 8, 6)
+        notVisible(visible, map, 8, 7)
+
+        // 4.column
+        notVisible(visible, map, 9, 0)
+        notVisible(visible, map, 9, 1)
+        notVisible(visible, map, 9, 2)
+        notVisible(visible, map, 9, 3)
+        notVisible(visible, map, 9, 4)
+        notVisible(visible, map, 9, 5)
+        notVisible(visible, map, 9, 6)
+        notVisible(visible, map, 9, 7)
+        notVisible(visible, map, 9, 8)
+    }
+
+    private fun notVisible(visible: Set<Position>, map: TileMap<Boolean>, x: Int, y: Int) {
+        assertFalse(visible.contains(map.size.getPosition(x, y)))
+    }
+
     private fun assertRectangle(visible: Set<Position>, map: TileMap<Boolean>, x0: Int, x1: Int, y0: Int, y1: Int) {
         for (x in x0..x1) {
             for (y in y0..y1) {
