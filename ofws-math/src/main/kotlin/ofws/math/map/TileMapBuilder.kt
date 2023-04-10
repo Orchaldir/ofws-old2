@@ -4,7 +4,7 @@ import ofws.math.Position
 import ofws.math.Size
 
 
-class TileMapBuilder<T>(
+data class TileMapBuilder<T>(
     val size: Size,
     private val tiles: MutableList<T>,
 ) {
@@ -35,14 +35,6 @@ class TileMapBuilder<T>(
         }
 
         return this
-    }
-
-    fun getTiles() = tiles
-
-    fun getTile(x: Int, y: Int) = getTile(size.getPosition(x, y))
-
-    fun getTile(position: Position): T {
-        return tiles[position.index]
     }
 
     fun setTile(x: Int, y: Int, tile: T) = setTile(size.getPosition(x, y), tile)
