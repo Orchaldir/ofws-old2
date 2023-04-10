@@ -44,11 +44,28 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
 
         renderNode(position, Color.BLUE)
 
+        for (y in 0 until map.size.y) {
+            for (x in 0 until map.size.x) {
+                renderTile(x, y)
+            }
+        }
+
         logger.info("render(): finished")
     }
 
     private fun renderNode(position: Position, color: Color) {
         tileRenderer.renderFullTile(color, size.getX(position), size.getY(position))
+    }
+
+    private fun renderTile(x: Int, y: Int) {
+        val position = map.size.getPosition(x, y)
+        val symbol = if (map.terrainList[position.index] == Terrain.FLOOR) {
+            '.'
+        } else {
+            '#'
+        }
+
+        tileRenderer.renderUnicodeTile(symbol, Color.WHITE, x, y)
     }
 
     override fun onKeyReleased(keyCode: KeyCode) {
