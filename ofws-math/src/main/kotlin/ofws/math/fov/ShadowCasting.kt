@@ -40,7 +40,7 @@ class ShadowCasting : FovAlgorithm {
         var bottom = parentBottom
         logger.info("$octant startX=$startX top=$top bottom=$bottom")
 
-        for (localX in startX until config.range) {
+        for (localX in startX .. config.range) {
             val topY = top.calculateTopX(localX)
             val bottomY = bottom.calculateBottomX(localX)
 
