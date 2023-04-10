@@ -57,8 +57,14 @@ class SizeTest {
 
         @ParameterizedTest(name = "x={0} y={1}")
         @MethodSource("ofws.math.SizeTest#outside")
-        fun `Tiles outside`(x: Int, y: Int) {
+        fun `Test x & y with outside`(x: Int, y: Int) {
             assertFalse(size.isInside(x, y))
+        }
+
+        @ParameterizedTest(name = "x={0} y={1}")
+        @MethodSource("ofws.math.SizeTest#outside")
+        fun `Test position with outside`(x: Int, y: Int) {
+            assertFalse(size.isInside(size.getPosition(x, y)))
         }
 
         @Test
