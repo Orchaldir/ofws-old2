@@ -90,7 +90,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
 
         val newPosition = map.size.getPosition(x, y)
 
-        if (isBlocking(newPosition)) {
+        if (!isBlocking(newPosition)) {
             position = newPosition
             update()
         }
