@@ -1,56 +1,54 @@
 package ofws.math.map
 
+import ofws.math.Position
 import ofws.math.Size
 
 
 class TileMapBuilder<T>(
     val size: Size,
-    private val terrainList: MutableList<T>,
+    private val tiles: MutableList<T>,
 ) {
     constructor(size: Size, tile: T) :
             this(size, MutableList(size.tiles) { tile })
 
-    constructor(x: Int, y: Int, terrain: T) :
-            this(Size(x, y), terrain)
+    constructor(x: Int, y: Int, tile: T) :
+            this(Size(x, y), tile)
 
-    fun build() = TileMap(size, terrainList)
+    fun build() = TileMap(size, tiles)
 
-    // terrain
+    // tile
 
-    fun addBorder(terrain: T) = addRectangle(0, 0, size.x, size.y, terrain)
+    fun addBorder(tile: T) = addRectangle(0, 0, size.x, size.y, tile)
 
-    fun addRectangle(startX: Int, startY: Int, sizeX: Int, sizeY: Int, terrain: T): TileMapBuilder<T> {
+    fun addRectangle(startX: Int, startY: Int, sizeX: Int, sizeY: Int, tile: T): TileMapBuilder<T> {
         val endX = startX + sizeX
         val endY = startY + sizeY
 
         for (x in startX until endX) {
-            terrainList[size.getPosition(x, startY).index] = terrain
-            terrainList[size.getPosition(x, endY - 1).index] = terrain
+            setTile(x, startY, tile)
+            setTile(x, endY - 1, tile)
         }
 
         for (y in startY until endY) {
-            terrainList[size.getPosition(startX, y).index] = terrain
-            terrainList[size.getPosition(endX - 1, y).index] = terrain
+            setTile(startX, y, tile)
+            setTile(endX - 1, y, tile)
         }
 
         return this
     }
 
-    fun getTerrainList() = terrainList
+    fun getTiles() = tiles
 
-    fun getTerrain(x: Int, y: Int) = terrainList[size.getPosition(x, y).index]
+    fun getTile(x: Int, y: Int) = getTile(size.getPosition(x, y))
 
-    fun getTerrain(index: Int): T {
-        return terrainList[index]
+    fun getTile(position: Position): T {
+        return tiles[position.index]
     }
 
-    fun setTerrain(x: Int, y: Int, terrain: T): TileMapBuilder<T> {
-        terrainList[size.getPosition(x, y).index] = terrain
-        return this
-    }
+    fun setTile(x: Int, y: Int, tile: T) = setTile(size.getPosition(x, y), tile)
 
-    fun setTerrain(index: Int, terrain: T): TileMapBuilder<T> {
-        terrainList[index] = terrain
+    fun setTile(position: Position, tile: T): TileMapBuilder<T> {
+        tiles[position.index] = tile
         return this
     }
 }
