@@ -1,13 +1,16 @@
 package ofws.math.map
 
+import ofws.math.Position
 import ofws.math.Size
 
 
 data class TileMap<T>(
     val size: Size,
-    val terrainList: List<T>,
+    val tiles: List<T>,
 ) {
 
-    fun builder() = TileMapBuilder(size, terrainList.toMutableList())
+    fun getTile(position: Position) = tiles[position.index]
+
+    fun builder() = TileMapBuilder(size, tiles.toMutableList())
 
 }

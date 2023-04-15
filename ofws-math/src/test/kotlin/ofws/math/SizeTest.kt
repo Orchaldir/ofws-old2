@@ -30,7 +30,7 @@ class SizeTest {
         @ParameterizedTest(name = "index={0} x={1} y={2}")
         @MethodSource("ofws.math.SizeTest#inside")
         fun `Return a position, if inside`(index: Int, x: Int, y: Int) {
-            assertEquals(Position(index), size.getPositionIfInside(x, y))
+            assertEquals(Position(index), size.getPositionIfInside(x, y)!!)
         }
 
         @ParameterizedTest(name = "x={0} y={1}")
@@ -43,13 +43,13 @@ class SizeTest {
     @ParameterizedTest(name = "index={0} x={1} y={2}")
     @MethodSource("ofws.math.SizeTest#inside")
     fun `Get x from position`(index: Int, x: Int, y: Int) {
-        assertEquals(x, size.getX(Position((index))))
+        assertEquals(x, size.getX(Position(index)))
     }
 
     @ParameterizedTest(name = "index={0} x={1} y={2}")
     @MethodSource("ofws.math.SizeTest#inside")
     fun `Get y from position`(index: Int, x: Int, y: Int) {
-        assertEquals(y, size.getY(Position((index))))
+        assertEquals(y, size.getY(Position(index)))
     }
 
     @Nested

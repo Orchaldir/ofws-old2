@@ -26,7 +26,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
         build()
     }
 
-    private var position = Position(990)
+    private var position = size.getPosition(30, 22)
     private val fovAlgorithm = ShadowCasting()
     private var visibleTiles = setOf<Position>()
     private val knownTiles = mutableSetOf<Position>()
@@ -67,7 +67,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
     }
 
     private fun renderTile(position: Position) {
-        val symbol = if (map.terrainList[position.index] == Terrain.FLOOR) {
+        val symbol = if (map.getTile(position) == Terrain.FLOOR) {
             '.'
         } else {
             '#'
@@ -97,7 +97,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
     }
 
     private fun isBlocking(position: Position) =
-        map.terrainList[position.index] == Terrain.WALL
+        map.getTile(position) == Terrain.WALL
 }
 
 fun main() {

@@ -104,7 +104,7 @@ class ShadowCastingTest {
         }
     }
 
-    private fun createConfig(x: Int, i: Int, range: Int) =
-        FovConfig(map.size, map.size.getPosition(x, i), range) { p -> map.terrainList[p.index] }
+    private fun createConfig(x: Int, y: Int, range: Int) =
+        FovConfig(map.size, map.size.getPosition(x, y), range) { p -> map.getTile(p) }
 
 }
