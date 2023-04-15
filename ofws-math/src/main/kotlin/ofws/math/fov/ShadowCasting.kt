@@ -54,7 +54,7 @@ class ShadowCasting : FovAlgorithm {
             for (localY in topY downTo bottomY) {
                 val (x, y) = octant.getGlobal(originX, originY, localX, localY)
 
-                val index = config.mapSize.getIndex(x, y)
+                val index = config.mapSize.getIndexIfInside(x, y) ?: break
                 visibleCells.add(index)
 
                 val isBlocking = config.isBlocking(index)

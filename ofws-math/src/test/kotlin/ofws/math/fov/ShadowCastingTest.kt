@@ -19,7 +19,6 @@ class ShadowCastingTest {
         val visible = algo.calculateVisibleCells(config)
 
         assertEquals(9, visible.size)
-
         assertRectangle(visible, 2, 4, 2, 4)
     }
 
@@ -31,7 +30,6 @@ class ShadowCastingTest {
         val visible = algo.calculateVisibleCells(config)
 
         assertEquals(25, visible.size)
-
         assertRectangle(visible, 2, 6, 2, 6)
     }
 
@@ -45,7 +43,6 @@ class ShadowCastingTest {
         val visible = algo.calculateVisibleCells(config)
 
         assertEquals(25, visible.size)
-
         assertRectangle(visible, 1, 5, 1, 5)
     }
 
@@ -90,6 +87,18 @@ class ShadowCastingTest {
         notVisible(visible, 9, 6)
         notVisible(visible, 9, 7)
         notVisible(visible, 9, 8)
+    }
+
+    @Test
+    fun `A map without border doesn't crash`() {
+        map = TileMapBuilder(3, 3, false)
+            .build()
+        val config = createConfig(1, 1, 10)
+
+        val visible = algo.calculateVisibleCells(config)
+
+        assertEquals(9, visible.size)
+        assertRectangle(visible, 0, 0, 2, 2)
     }
 
     private fun notVisible(visible: Set<TileIndex>, x: Int, y: Int) {
