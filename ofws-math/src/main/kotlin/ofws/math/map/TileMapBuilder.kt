@@ -1,6 +1,5 @@
 package ofws.math.map
 
-import ofws.math.Position
 import ofws.math.Size
 
 
@@ -37,10 +36,10 @@ data class TileMapBuilder<T>(
         return this
     }
 
-    fun setTile(x: Int, y: Int, tile: T) = setTile(size.getPosition(x, y), tile)
+    fun setTile(x: Int, y: Int, tile: T) = setTile(size.getIndex(x, y), tile)
 
-    fun setTile(position: Position, tile: T): TileMapBuilder<T> {
-        tiles[position.index] = tile
+    fun setTile(index: Index, tile: T): TileMapBuilder<T> {
+        tiles[index.index] = tile
         return this
     }
 }

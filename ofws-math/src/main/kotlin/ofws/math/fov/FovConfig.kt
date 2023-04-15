@@ -1,11 +1,11 @@
 package ofws.math.fov
 
-import ofws.math.Position
 import ofws.math.Size
+import ofws.math.map.Index
 
 data class FovConfig(
     val mapSize: Size,
-    val position: Position,
+    val index: Index,
     val range: Int,
-    val isBlocking: (position: Position) -> Boolean
+    val isBlocking: (index: Index) -> Boolean
 )

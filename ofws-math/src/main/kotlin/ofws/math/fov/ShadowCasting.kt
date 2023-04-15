@@ -1,7 +1,11 @@
 package ofws.math.fov
 
 import mu.KotlinLogging
-import ofws.math.*
+import ofws.math.Octant
+import ofws.math.Slope
+import ofws.math.createSlopeThroughTopLeft
+import ofws.math.createSlopeThroughTopRight
+import ofws.math.map.Index
 
 private val logger = KotlinLogging.logger {}
 
@@ -13,8 +17,8 @@ class ShadowCasting : FovAlgorithm {
         CLEAR;
     }
 
-    override fun calculateVisibleCells(config: FovConfig): Set<Position> {
-        val visibleCells = mutableSetOf(config.position)
+    override fun calculateVisibleCells(config: FovConfig): Set<Index> {
+        val visibleCells = mutableSetOf(config.index)
 
         val top = Slope(1, 1)
         val bottom = Slope(1, 0)
@@ -28,13 +32,13 @@ class ShadowCasting : FovAlgorithm {
 
     private fun processOctant(
         config: FovConfig,
-        visibleCells: MutableSet<Position>,
+        visibleCells: MutableSet<Index>,
         octant: Octant,
         startX: Int,
         parentTop: Slope,
         parentBottom: Slope
     ) {
-        val (originX, originY) = config.mapSize.getPoint(config.position)
+        val (originX, originY) = config.mapSize.getPoint(config.index)
         var top = parentTop
         var bottom = parentBottom
         logger.info("$octant startX=$startX top=$top bottom=$bottom")
@@ -50,7 +54,7 @@ class ShadowCasting : FovAlgorithm {
             for (localY in topY downTo bottomY) {
                 val (x, y) = octant.getGlobal(originX, originY, localX, localY)
 
-                val index = config.mapSize.getPosition(x, y)
+                val index = config.mapSize.getIndex(x, y)
                 visibleCells.add(index)
 
                 val isBlocking = config.isBlocking(index)

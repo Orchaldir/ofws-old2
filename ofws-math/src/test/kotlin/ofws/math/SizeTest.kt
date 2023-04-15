@@ -1,5 +1,6 @@
 package ofws.math
 
+import ofws.math.map.Index
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -17,45 +18,45 @@ class SizeTest {
     }
 
     @Nested
-    inner class GetPosition {
+    inner class GetIndex {
         @ParameterizedTest(name = "index={0} x={1} y={2}")
         @MethodSource("ofws.math.SizeTest#inside")
-        fun `Convert x & y inside the size to a position`(index: Int, x: Int, y: Int) {
-            assertEquals(Position(index), size.getPosition(x, y))
+        fun `Convert x & y inside the size to a index`(index: Int, x: Int, y: Int) {
+            assertEquals(Index(index), size.getIndex(x, y))
         }
     }
 
     @Nested
-    inner class GetPositionIfInside {
+    inner class GetIndexIfInside {
         @ParameterizedTest(name = "index={0} x={1} y={2}")
         @MethodSource("ofws.math.SizeTest#inside")
-        fun `Return a position, if inside`(index: Int, x: Int, y: Int) {
-            assertEquals(Position(index), size.getPositionIfInside(x, y)!!)
+        fun `Return a index, if inside`(index: Int, x: Int, y: Int) {
+            assertEquals(Index(index), size.getIndexIfInside(x, y)!!)
         }
 
         @ParameterizedTest(name = "x={0} y={1}")
         @MethodSource("ofws.math.SizeTest#outside")
         fun `Return null if outside`(x: Int, y: Int) {
-            assertNull(size.getPositionIfInside(x, y))
+            assertNull(size.getIndexIfInside(x, y))
         }
     }
 
     @ParameterizedTest(name = "index={0} x={1} y={2}")
     @MethodSource("ofws.math.SizeTest#inside")
-    fun `Get point from position`(index: Int, x: Int, y: Int) {
-        assertEquals(Pair(x, y), size.getPoint(Position(index)))
+    fun `Get a point from index`(index: Int, x: Int, y: Int) {
+        assertEquals(Pair(x, y), size.getPoint(Index(index)))
     }
 
     @ParameterizedTest(name = "index={0} x={1} y={2}")
     @MethodSource("ofws.math.SizeTest#inside")
-    fun `Get x from position`(index: Int, x: Int, y: Int) {
-        assertEquals(x, size.getX(Position(index)))
+    fun `Get x from index`(index: Int, x: Int, y: Int) {
+        assertEquals(x, size.getX(Index(index)))
     }
 
     @ParameterizedTest(name = "index={0} x={1} y={2}")
     @MethodSource("ofws.math.SizeTest#inside")
-    fun `Get y from position`(index: Int, x: Int, y: Int) {
-        assertEquals(y, size.getY(Position(index)))
+    fun `Get y from index`(index: Int, x: Int, y: Int) {
+        assertEquals(y, size.getY(Index(index)))
     }
 
     @Nested
@@ -69,8 +70,8 @@ class SizeTest {
 
         @ParameterizedTest(name = "index={0} x={1} y={2}")
         @MethodSource("ofws.math.SizeTest#inside")
-        fun `Test position with inside`(index: Int, x: Int, y: Int) {
-            assertTrue(size.isInside(size.getPosition(x, y)))
+        fun `Test index with inside`(index: Int, x: Int, y: Int) {
+            assertTrue(size.isInside(size.getIndex(x, y)))
         }
 
         @ParameterizedTest(name = "x={0} y={1}")
@@ -81,8 +82,8 @@ class SizeTest {
 
         @ParameterizedTest(name = "x={0} y={1}")
         @MethodSource("ofws.math.SizeTest#outside")
-        fun `Test position with outside`(x: Int, y: Int) {
-            assertFalse(size.isInside(size.getPosition(x, y)))
+        fun `Test index with outside`(x: Int, y: Int) {
+            assertFalse(size.isInside(size.getIndex(x, y)))
         }
 
         @Test

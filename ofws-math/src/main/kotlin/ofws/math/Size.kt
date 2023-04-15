@@ -1,5 +1,7 @@
 package ofws.math
 
+import ofws.math.map.Index
+
 /**
  * A Size defines a 2d rectangle starting at the origin.
  */
@@ -21,27 +23,27 @@ data class Size(
         get() = x * y
 
     /**
-     * Returns the [Position] of [x] & [y], but the calculation is only valid inside the defined rectangle.
-     * Use the slower [getPositionIfInside] otherwise.
+     * Returns the [Index] of [x] & [y], but the calculation is only valid inside the defined rectangle.
+     * Use the slower [getIndexIfInside] otherwise.
      */
-    fun getPosition(x: Int, y: Int) = Position(y * this.x + x)
+    fun getIndex(x: Int, y: Int) = Index(y * this.x + x)
 
     /**
-     * Returns the [Position] of [x] & [y] if inside the defined rectangle or null.
+     * Returns the [Index] of [x] & [y] if inside the defined rectangle or null.
      */
-    fun getPositionIfInside(x: Int, y: Int) = if (isInside(x, y)) {
-        getPosition(x, y)
+    fun getIndexIfInside(x: Int, y: Int) = if (isInside(x, y)) {
+        getIndex(x, y)
     } else {
         null
     }
 
-    fun getPoint(position: Position) = Pair(getX(position), getY(position))
+    fun getPoint(index: Index) = Pair(getX(index), getY(index))
 
-    fun getX(position: Position) = position.index % x
+    fun getX(index: Index) = index.index % x
 
-    fun getY(position: Position) = position.index / x
+    fun getY(index: Index) = index.index / x
 
-    fun isInside(position: Position) = position.index in 0 until tiles
+    fun isInside(index: Index) = index.index in 0 until tiles
 
     fun isInside(x: Int, y: Int) = isInsideForX(x) && isInsideForY(y)
 
