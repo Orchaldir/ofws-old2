@@ -13,7 +13,7 @@ import javafx.stage.Stage
 import ofws.app.rendering.CanvasRenderer
 import ofws.core.render.Renderer
 import ofws.core.render.TileRenderer
-import ofws.core.requireGreater
+import ofws.math.Size
 
 abstract class TileApplication(
     sizeX: Int,
@@ -21,12 +21,8 @@ abstract class TileApplication(
     tileWidth: Int,
     tileHeight: Int
 ) : Application() {
-    val size = Size(
-        requireGreater(sizeX, 0, "sizeX"),
-        requireGreater(sizeY, 0, "sizeY")
-    )
-    private val tileWidth = requireGreater(tileWidth, 0, "tileWidth")
-    private val tileHeight = requireGreater(tileHeight, 0, "tileHeight")
+    val size = Size(sizeX, sizeY)
+    private val tileSize = Size(tileWidth, tileHeight)
     private var canvasRenderer: CanvasRenderer? = null
     val renderer: Renderer
         get() = canvasRenderer as Renderer
@@ -40,8 +36,8 @@ abstract class TileApplication(
         windowTitle: String
     ): Scene {
 
-        val canvasWidth = size.x * tileWidth.toDouble()
-        val canvasHeight = size.y * tileHeight.toDouble()
+        val canvasWidth = size.x * tileSize.x.toDouble()
+        val canvasHeight = size.y * tileSize.y.toDouble()
 
         val root = Group()
         val canvas = Canvas(canvasWidth, canvasHeight)
@@ -56,7 +52,7 @@ abstract class TileApplication(
         }
 
         canvasRenderer = CanvasRenderer(canvas.graphicsContext2D)
-        tileRenderer = TileRenderer(renderer, 0, 0, tileWidth, tileHeight)
+        tileRenderer = TileRenderer(renderer, 0, 0, tileSize)
 
         windowScene.onKeyReleased = EventHandler { event: KeyEvent ->
             onKeyReleased(event.code)
