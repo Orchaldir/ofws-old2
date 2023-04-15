@@ -22,10 +22,7 @@ abstract class TileApplication(
     tileWidth: Int,
     tileHeight: Int
 ) : Application() {
-    val size = Size(
-        requireGreater(sizeX, 0, "sizeX"),
-        requireGreater(sizeY, 0, "sizeY")
-    )
+    val size = Size(sizeX, sizeY)
     private val tileWidth = requireGreater(tileWidth, 0, "tileWidth")
     private val tileHeight = requireGreater(tileHeight, 0, "tileHeight")
     private var canvasRenderer: CanvasRenderer? = null

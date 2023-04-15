@@ -1,6 +1,7 @@
 package ofws.core.render
 
 import ofws.core.requireGreater
+import ofws.math.Size
 
 class TileRenderer(
     private val renderer: Renderer,
@@ -11,8 +12,7 @@ class TileRenderer(
 ) {
     private val startPixelX = requireGreater(startPixelX, -1, "pixelX")
     private val startPixelY = requireGreater(startPixelY, -1, "pixelY")
-    private val tileWidth = requireGreater(tileWidth, 0, "tileWidth")
-    private val tileHeight = requireGreater(tileHeight, 0, "tileHeight")
+    private val tileSize = Size(tileWidth, tileHeight)
 
     fun renderText(
         text: String,
@@ -21,16 +21,18 @@ class TileRenderer(
         y: Int,
         size: Int = 1
     ) {
+        val sizeInPixel = size * tileSize.y
+
         with(renderer) {
             setColor(color)
-            setFont(size * tileHeight)
+            setFont(sizeInPixel)
 
             var centerX = getCenterPixelX(x, size)
             val centerY = getCenterPixelY(y, size)
 
             for (character in text.codePoints()) {
                 renderUnicode(character, centerX, centerY)
-                centerX += tileWidth * size
+                centerX += sizeInPixel
             }
         }
     }
@@ -52,7 +54,7 @@ class TileRenderer(
     ) {
         with(renderer) {
             setColor(color)
-            setFont(size * tileHeight)
+            setFont(size * tileSize.y)
             renderUnicode(codePoint, getCenterPixelX(x, size), getCenterPixelY(y, size))
         }
     }
@@ -64,19 +66,19 @@ class TileRenderer(
         size: Int = 1
     ) {
         renderer.setColor(color)
-        renderer.renderRectangle(getStartPixelX(x), getStartPixelY(y), tileWidth * size, tileHeight * size)
+        renderer.renderRectangle(getStartPixelX(x), getStartPixelY(y), tileSize.x * size, tileSize.y * size)
     }
 
-    fun getX(pixelX: Int) = (pixelX - startPixelX) / tileWidth + if (pixelX < startPixelX) -1 else 0
+    fun getX(pixelX: Int) = (pixelX - startPixelX) / tileSize.x + if (pixelX < startPixelX) -1 else 0
 
-    fun getY(pixelY: Int) = (pixelY - startPixelY) / tileHeight + if (pixelY < startPixelY) -1 else 0
+    fun getY(pixelY: Int) = (pixelY - startPixelY) / tileSize.y + if (pixelY < startPixelY) -1 else 0
 
-    private fun getStartPixelX(x: Int) = startPixelX + x * tileWidth
+    private fun getStartPixelX(x: Int) = startPixelX + x * tileSize.x
 
-    private fun getStartPixelY(y: Int) = startPixelY + y * tileHeight
+    private fun getStartPixelY(y: Int) = startPixelY + y * tileSize.y
 
-    private fun getCenterPixelX(x: Int, size: Int) = getStartPixelX(x) + size * tileWidth / 2
+    private fun getCenterPixelX(x: Int, size: Int) = getStartPixelX(x) + size * tileSize.x / 2
 
-    private fun getCenterPixelY(y: Int, size: Int) = getStartPixelY(y) + size * tileHeight / 2
+    private fun getCenterPixelY(y: Int, size: Int) = getStartPixelY(y) + size * tileSize.y / 2
 
 }

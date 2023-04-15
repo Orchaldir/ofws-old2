@@ -12,6 +12,24 @@ class SizeTest {
 
     private val size = Size(2, 3)
 
+    @Nested
+    inner class Constructor {
+
+        @Test
+        fun `X must be at least 1`() {
+            for (x in 0 downTo -10) {
+                assertThrows(IllegalArgumentException::class.java) { Size(x, 10) }
+            }
+        }
+
+        @Test
+        fun `Y must be at least 1`() {
+            for (y in 0 downTo -10) {
+                assertThrows(IllegalArgumentException::class.java) { Size(20, y) }
+            }
+        }
+    }
+
     @Test
     fun `Test the number of tiles inside the area`() {
         assertEquals(6, size.tiles)

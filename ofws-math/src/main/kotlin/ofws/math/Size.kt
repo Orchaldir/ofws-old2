@@ -16,6 +16,11 @@ data class Size(
     val y: Int
 ) {
 
+    init {
+        requireGreater(x, 1, "x")
+        requireGreater(x, 1, "y")
+    }
+
     /**
      * The number of tiles inside the rectangle defined by the [Size].
      */
