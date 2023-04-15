@@ -35,6 +35,8 @@ data class Size(
         null
     }
 
+    fun getPoint(position: Position) = Pair(getX(position), getY(position))
+
     fun getX(position: Position) = position.index % x
 
     fun getY(position: Position) = position.index / x

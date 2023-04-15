@@ -34,8 +34,7 @@ class ShadowCasting : FovAlgorithm {
         parentTop: Slope,
         parentBottom: Slope
     ) {
-        val originX = config.mapSize.getX(config.position)
-        val originY = config.mapSize.getY(config.position)
+        val (originX, originY) = config.mapSize.getPoint(config.position)
         var top = parentTop
         var bottom = parentBottom
         logger.info("$octant startX=$startX top=$top bottom=$bottom")

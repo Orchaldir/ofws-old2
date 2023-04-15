@@ -42,6 +42,12 @@ class SizeTest {
 
     @ParameterizedTest(name = "index={0} x={1} y={2}")
     @MethodSource("ofws.math.SizeTest#inside")
+    fun `Get point from position`(index: Int, x: Int, y: Int) {
+        assertEquals(Pair(x, y), size.getPoint(Position(index)))
+    }
+
+    @ParameterizedTest(name = "index={0} x={1} y={2}")
+    @MethodSource("ofws.math.SizeTest#inside")
     fun `Get x from position`(index: Int, x: Int, y: Int) {
         assertEquals(x, size.getX(Position(index)))
     }
