@@ -10,7 +10,7 @@ import ofws.core.game.map.Terrain
 import ofws.core.render.Color
 import ofws.math.fov.FovConfig
 import ofws.math.fov.ShadowCasting
-import ofws.math.map.Index
+import ofws.math.map.TileIndex
 import ofws.math.map.TileMapBuilder
 import kotlin.random.Random
 import kotlin.system.exitProcess
@@ -22,14 +22,14 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
     private val map = with(TileMapBuilder(size, Terrain.FLOOR)) {
         addBorder(Terrain.WALL)
         val rng = Random
-        repeat(500) { setTile(Index(rng.nextInt(size.tiles)), Terrain.WALL) }
+        repeat(500) { setTile(TileIndex(rng.nextInt(size.tiles)), Terrain.WALL) }
         build()
     }
 
     private var fovIndex = size.getIndex(30, 22)
     private val fovAlgorithm = ShadowCasting()
-    private var visibleTiles = setOf<Index>()
-    private val knownTiles = mutableSetOf<Index>()
+    private var visibleTiles = setOf<TileIndex>()
+    private val knownTiles = mutableSetOf<TileIndex>()
 
     override fun start(primaryStage: Stage) {
         init(primaryStage, "FieldOfView Demo")
@@ -62,11 +62,11 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
         logger.info("render(): finished")
     }
 
-    private fun renderNode(index: Index, color: Color) {
+    private fun renderNode(index: TileIndex, color: Color) {
         tileRenderer.renderFullTile(color, size.getX(index), size.getY(index))
     }
 
-    private fun renderTile(index: Index) {
+    private fun renderTile(index: TileIndex) {
         val symbol = if (map.getTile(index) == Terrain.FLOOR) {
             '.'
         } else {
@@ -96,7 +96,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
         }
     }
 
-    private fun isBlocking(index: Index) =
+    private fun isBlocking(index: TileIndex) =
         map.getTile(index) == Terrain.WALL
 }
 

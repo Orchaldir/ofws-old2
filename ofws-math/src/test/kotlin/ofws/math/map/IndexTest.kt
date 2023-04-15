@@ -7,7 +7,7 @@ class IndexTest {
 
     @Test
     fun `test index of index`() {
-        assertEquals(6, Index(6).index)
+        assertEquals(6, TileIndex(6).index)
     }
 
 }

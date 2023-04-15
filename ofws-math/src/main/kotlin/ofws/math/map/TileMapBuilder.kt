@@ -38,7 +38,7 @@ data class TileMapBuilder<T>(
 
     fun setTile(x: Int, y: Int, tile: T) = setTile(size.getIndex(x, y), tile)
 
-    fun setTile(index: Index, tile: T): TileMapBuilder<T> {
+    fun setTile(index: TileIndex, tile: T): TileMapBuilder<T> {
         tiles[index.index] = tile
         return this
     }

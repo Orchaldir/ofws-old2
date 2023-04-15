@@ -5,7 +5,7 @@ import ofws.math.Octant
 import ofws.math.Slope
 import ofws.math.createSlopeThroughTopLeft
 import ofws.math.createSlopeThroughTopRight
-import ofws.math.map.Index
+import ofws.math.map.TileIndex
 
 private val logger = KotlinLogging.logger {}
 
@@ -17,7 +17,7 @@ class ShadowCasting : FovAlgorithm {
         CLEAR;
     }
 
-    override fun calculateVisibleCells(config: FovConfig): Set<Index> {
+    override fun calculateVisibleCells(config: FovConfig): Set<TileIndex> {
         val visibleCells = mutableSetOf(config.index)
 
         val top = Slope(1, 1)
@@ -32,7 +32,7 @@ class ShadowCasting : FovAlgorithm {
 
     private fun processOctant(
         config: FovConfig,
-        visibleCells: MutableSet<Index>,
+        visibleCells: MutableSet<TileIndex>,
         octant: Octant,
         startX: Int,
         parentTop: Slope,

@@ -10,7 +10,7 @@ data class TileMap<T>(
     val tiles: List<T>,
 ) {
 
-    fun getTile(index: Index) = tiles[index.index]
+    fun getTile(index: TileIndex) = tiles[index.index]
 
     fun builder() = TileMapBuilder(size, tiles.toMutableList())
 

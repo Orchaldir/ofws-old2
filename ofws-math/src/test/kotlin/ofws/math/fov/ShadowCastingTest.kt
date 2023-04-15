@@ -1,6 +1,6 @@
 package ofws.math.fov
 
-import ofws.math.map.Index
+import ofws.math.map.TileIndex
 import ofws.math.map.TileMap
 import ofws.math.map.TileMapBuilder
 import org.junit.jupiter.api.Assertions.*
@@ -92,11 +92,11 @@ class ShadowCastingTest {
         notVisible(visible, 9, 8)
     }
 
-    private fun notVisible(visible: Set<Index>, x: Int, y: Int) {
+    private fun notVisible(visible: Set<TileIndex>, x: Int, y: Int) {
         assertFalse(visible.contains(map.size.getIndex(x, y)))
     }
 
-    private fun assertRectangle(visible: Set<Index>, x0: Int, x1: Int, y0: Int, y1: Int) {
+    private fun assertRectangle(visible: Set<TileIndex>, x0: Int, x1: Int, y0: Int, y1: Int) {
         for (x in x0..x1) {
             for (y in y0..y1) {
                 assertTrue(visible.contains(map.size.getIndex(x, y)))
