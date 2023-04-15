@@ -18,7 +18,7 @@ data class Size(
 
     init {
         requireGreater(x, 1, "x")
-        requireGreater(x, 1, "y")
+        requireGreater(y, 1, "y")
     }
 
     /**

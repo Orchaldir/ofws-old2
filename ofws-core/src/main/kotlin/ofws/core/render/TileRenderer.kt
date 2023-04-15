@@ -1,18 +1,19 @@
 package ofws.core.render
 
-import ofws.core.requireGreater
 import ofws.math.Size
+import ofws.math.requireGreater
 
 class TileRenderer(
     private val renderer: Renderer,
-    startPixelX: Int,
-    startPixelY: Int,
-    tileWidth: Int,
-    tileHeight: Int
+    private val startPixelX: Int,
+    private val startPixelY: Int,
+    private val tileSize: Size,
 ) {
-    private val startPixelX = requireGreater(startPixelX, -1, "pixelX")
-    private val startPixelY = requireGreater(startPixelY, -1, "pixelY")
-    private val tileSize = Size(tileWidth, tileHeight)
+
+    init {
+        requireGreater(startPixelX, 0, "startPixelX")
+        requireGreater(startPixelY, 0, "startPixelY")
+    }
 
     fun renderText(
         text: String,
@@ -21,18 +22,16 @@ class TileRenderer(
         y: Int,
         size: Int = 1
     ) {
-        val sizeInPixel = size * tileSize.y
-
         with(renderer) {
             setColor(color)
-            setFont(sizeInPixel)
+            setFont(size * tileSize.y)
 
             var centerX = getCenterPixelX(x, size)
             val centerY = getCenterPixelY(y, size)
 
             for (character in text.codePoints()) {
                 renderUnicode(character, centerX, centerY)
-                centerX += sizeInPixel
+                centerX += size * tileSize.x
             }
         }
     }
