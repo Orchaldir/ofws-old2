@@ -8,6 +8,7 @@ import mu.KotlinLogging
 import ofws.app.TileApplication
 import ofws.core.game.map.Terrain
 import ofws.core.render.Color
+import ofws.math.Range
 import ofws.math.fov.FovConfig
 import ofws.math.fov.ShadowCasting
 import ofws.math.map.TileIndex
@@ -39,7 +40,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
     private fun update() {
         logger.info("update()")
 
-        val config = FovConfig(map.size, fovIndex, 10, ::isBlocking)
+        val config = FovConfig(map.size, fovIndex, Range(max = 10), ::isBlocking)
 
         visibleTiles = fovAlgorithm.calculateVisibleCells(config)
         knownTiles.addAll(visibleTiles)

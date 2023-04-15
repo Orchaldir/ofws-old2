@@ -24,7 +24,7 @@ class ShadowCasting : FovAlgorithm {
         val bottom = Slope(1, 0)
 
         Octant.values().forEach {
-            processOctant(config, visibleCells, it, 1, top, bottom)
+            processOctant(config, visibleCells, it, config.range.min, top, bottom)
         }
 
         return visibleCells
@@ -43,7 +43,7 @@ class ShadowCasting : FovAlgorithm {
         var bottom = parentBottom
         logger.info("$octant startX=$startX top=$top bottom=$bottom")
 
-        for (localX in startX..config.range) {
+        for (localX in startX..config.range.max) {
             val topY = top.calculateTopX(localX)
             val bottomY = bottom.calculateBottomX(localX)
 

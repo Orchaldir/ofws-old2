@@ -1,5 +1,6 @@
 package ofws.math.fov
 
+import ofws.math.Range
 import ofws.math.map.TileIndex
 import ofws.math.map.TileMap
 import ofws.math.map.TileMapBuilder
@@ -114,6 +115,6 @@ class ShadowCastingTest {
     }
 
     private fun createConfig(x: Int, y: Int, range: Int) =
-        FovConfig(map.size, map.size.getIndex(x, y), range) { p -> map.getTile(p) }
+        FovConfig(map.size, map.size.getIndex(x, y), Range(max = range)) { p -> map.getTile(p) }
 
 }
