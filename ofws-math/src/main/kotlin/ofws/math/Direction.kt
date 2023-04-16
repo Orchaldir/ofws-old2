@@ -8,3 +8,5 @@ enum class Direction(val x: Int, val y: Int) {
 
     fun isMatch(x: Int, y: Int) = x == this.x && y == this.y
 }
+
+fun getDirection(x: Int, y: Int) = Direction.values().firstOrNull { d -> d.isMatch(x, y) }
