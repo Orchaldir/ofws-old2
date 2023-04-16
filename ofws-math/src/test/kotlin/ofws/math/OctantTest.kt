@@ -45,7 +45,7 @@ class OctantTest {
         }
 
         @Test
-        fun `Test NORTH West`() {
+        fun `Test North West`() {
             test(NORTH_WEST, 9, 22)
         }
 
