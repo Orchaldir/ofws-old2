@@ -42,6 +42,25 @@ data class Size(
         null
     }
 
+    /**
+     * Returns a list of [TileIndex] that are inside the map and the desired rectangle.
+     */
+    fun getIndices(index: TileIndex, size: Int): List<TileIndex> {
+        if (!isInside(index, size)) return emptyList()
+
+        val indices = mutableListOf<TileIndex>()
+
+        for (dy in 0 until size) {
+            var currentIndex = index.index + dy * x
+
+            for (dx in 0 until size) {
+                indices.add(TileIndex(currentIndex++))
+            }
+        }
+
+        return indices
+    }
+
     fun getPoint(index: TileIndex) = Pair(getX(index), getY(index))
 
     fun getX(index: TileIndex) = index.index % x
@@ -49,6 +68,14 @@ data class Size(
     fun getY(index: TileIndex) = index.index / x
 
     fun isInside(index: TileIndex) = index.index in 0 until tiles
+
+    fun isInside(index: TileIndex, size: Int): Boolean {
+        val (startX, startY) = getPoint(index)
+        val endX = startX + size - 1
+        val endY = startY + size - 1
+
+        return isInside(startX, startY) && isInside(endX, endY)
+    }
 
     fun isInside(x: Int, y: Int) = isInsideForX(x) && isInsideForY(y)
 

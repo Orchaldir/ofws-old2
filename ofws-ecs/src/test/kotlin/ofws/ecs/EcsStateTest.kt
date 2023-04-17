@@ -1,9 +1,7 @@
 package ofws.ecs
 
 import ofws.ecs.storage.ComponentMap
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
@@ -47,7 +45,7 @@ class EcsStateTest {
 
         @Test
         fun `Get non-existing storage`() {
-            Assertions.assertThrows(NoSuchElementException::class.java) { state.getStorageOrThrow<Boolean>() }
+            assertThrows(NoSuchElementException::class.java) { state.getStorageOrThrow<Boolean>() }
         }
 
     }

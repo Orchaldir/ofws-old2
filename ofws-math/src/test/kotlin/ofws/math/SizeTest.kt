@@ -59,6 +59,32 @@ class SizeTest {
         }
     }
 
+    @Nested
+    inner class GetIndices {
+
+        private val size = Size(3, 4)
+
+        @Test
+        fun `Get indices with size 2`() {
+            test(0, 2, listOf(0, 1, 3, 4))
+            test(4, 2, listOf(4, 5, 7, 8))
+        }
+
+        @Test
+        fun `Get indices with start outside`() {
+            test(-1, 3, listOf())
+        }
+
+        @Test
+        fun `Get indices with end outside`() {
+            test(1, 3, listOf())
+        }
+
+        private fun test(index: Int, size: Int, result: List<Int>) {
+            assertEquals(result.map { TileIndex(it) }, this.size.getIndices(TileIndex(index), size))
+        }
+    }
+
     @ParameterizedTest(name = "index={0} x={1} y={2}")
     @MethodSource("ofws.math.SizeTest#inside")
     fun `Get a point from index`(index: Int, x: Int, y: Int) {
@@ -123,6 +149,28 @@ class SizeTest {
             assertTrue(size.isInsideForY(2))
             assertFalse(size.isInsideForY(3))
             assertFalse(size.isInsideForY(4))
+        }
+    }
+
+    @Nested
+    inner class IsRectangleInside {
+
+        private val size = Size(3, 4)
+
+        @Test
+        fun `Area is inside`() {
+            test(0, true)
+            test(4, true)
+        }
+
+        @Test
+        fun `Index is outside`() {
+            test(-1, false)
+            test(12, false)
+        }
+
+        private fun test(index: Int, result: Boolean) {
+            assertEquals(result, size.isInside(TileIndex(index), 2))
         }
     }
 
