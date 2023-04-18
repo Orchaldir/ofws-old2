@@ -1,17 +1,17 @@
 package ofws.math.map
 
-import ofws.math.Size
+import ofws.math.Size2d
 
 
 data class TileMapBuilder<T>(
-    val size: Size,
+    val size: Size2d,
     private val tiles: MutableList<T>,
 ) {
-    constructor(size: Size, tile: T) :
+    constructor(size: Size2d, tile: T) :
             this(size, MutableList(size.tiles) { tile })
 
     constructor(x: Int, y: Int, tile: T) :
-            this(Size(x, y), tile)
+            this(Size2d(x, y), tile)
 
     fun build() = TileMap(size, tiles)
 

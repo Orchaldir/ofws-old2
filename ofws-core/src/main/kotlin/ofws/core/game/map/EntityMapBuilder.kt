@@ -1,11 +1,11 @@
 package ofws.core.game.map
 
 import ofws.ecs.Entity
-import ofws.math.Size
+import ofws.math.Size2d
 import ofws.math.map.TileIndex
 
 data class EntityMapBuilder(
-    private val size: Size,
+    private val size: Size2d,
     private val entities: MutableMap<TileIndex, Entity> = mutableMapOf(),
 ) {
 

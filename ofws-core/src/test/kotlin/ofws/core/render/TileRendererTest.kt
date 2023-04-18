@@ -2,7 +2,7 @@ package ofws.core.render
 
 import io.mockk.mockk
 import io.mockk.verifySequence
-import ofws.math.Size
+import ofws.math.Size2d
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 class TileRendererTest {
 
     val renderer = mockk<Renderer>(relaxed = true)
-    val tileRenderer = TileRenderer(renderer, 100, 200, Size(30, 40))
+    val tileRenderer = TileRenderer(renderer, 100, 200, Size2d(30, 40))
 
     @Nested
     inner class GetTileX {

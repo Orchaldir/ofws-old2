@@ -1,13 +1,13 @@
 package ofws.core.render
 
-import ofws.math.Size
+import ofws.math.Size2d
 import ofws.math.requireGreater
 
 class TileRenderer(
     private val renderer: Renderer,
     private val startPixelX: Int,
     private val startPixelY: Int,
-    private val tileSize: Size,
+    private val tileSize: Size2d,
 ) {
 
     init {

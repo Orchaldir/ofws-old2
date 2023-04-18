@@ -13,7 +13,7 @@ import javafx.stage.Stage
 import ofws.app.rendering.CanvasRenderer
 import ofws.core.render.Renderer
 import ofws.core.render.TileRenderer
-import ofws.math.Size
+import ofws.math.Size2d
 
 abstract class TileApplication(
     sizeX: Int,
@@ -21,8 +21,8 @@ abstract class TileApplication(
     tileWidth: Int,
     tileHeight: Int
 ) : Application() {
-    val size = Size(sizeX, sizeY)
-    private val tileSize = Size(tileWidth, tileHeight)
+    val size = Size2d(sizeX, sizeY)
+    private val tileSize = Size2d(tileWidth, tileHeight)
     private var canvasRenderer: CanvasRenderer? = null
     val renderer: Renderer
         get() = canvasRenderer as Renderer

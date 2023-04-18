@@ -8,9 +8,9 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 
-class SizeTest {
+class Size2dTest {
 
-    private val size = Size(2, 3)
+    private val size = Size2d(2, 3)
 
     @Nested
     inner class Constructor {
@@ -18,14 +18,14 @@ class SizeTest {
         @Test
         fun `X must be at least 1`() {
             for (x in 0 downTo -10) {
-                assertThrows(IllegalArgumentException::class.java) { Size(x, 10) }
+                assertThrows(IllegalArgumentException::class.java) { Size2d(x, 10) }
             }
         }
 
         @Test
         fun `Y must be at least 1`() {
             for (y in 0 downTo -10) {
-                assertThrows(IllegalArgumentException::class.java) { Size(20, y) }
+                assertThrows(IllegalArgumentException::class.java) { Size2d(20, y) }
             }
         }
     }
@@ -38,7 +38,7 @@ class SizeTest {
     @Nested
     inner class GetIndex {
         @ParameterizedTest(name = "index={0} x={1} y={2}")
-        @MethodSource("ofws.math.SizeTest#inside")
+        @MethodSource("ofws.math.Size2dTest#inside")
         fun `Convert x & y inside the size to a index`(index: Int, x: Int, y: Int) {
             assertEquals(TileIndex(index), size.getIndex(x, y))
         }
@@ -47,13 +47,13 @@ class SizeTest {
     @Nested
     inner class GetIndexIfInside {
         @ParameterizedTest(name = "index={0} x={1} y={2}")
-        @MethodSource("ofws.math.SizeTest#inside")
+        @MethodSource("ofws.math.Size2dTest#inside")
         fun `Return a index, if inside`(index: Int, x: Int, y: Int) {
             assertEquals(TileIndex(index), size.getIndexIfInside(x, y)!!)
         }
 
         @ParameterizedTest(name = "x={0} y={1}")
-        @MethodSource("ofws.math.SizeTest#outside")
+        @MethodSource("ofws.math.Size2dTest#outside")
         fun `Return null if outside`(x: Int, y: Int) {
             assertNull(size.getIndexIfInside(x, y))
         }
@@ -62,7 +62,7 @@ class SizeTest {
     @Nested
     inner class GetIndices {
 
-        private val size = Size(3, 4)
+        private val size = Size2d(3, 4)
 
         @Test
         fun `Get indices with size 2`() {
@@ -86,19 +86,19 @@ class SizeTest {
     }
 
     @ParameterizedTest(name = "index={0} x={1} y={2}")
-    @MethodSource("ofws.math.SizeTest#inside")
+    @MethodSource("ofws.math.Size2dTest#inside")
     fun `Get a point from index`(index: Int, x: Int, y: Int) {
         assertEquals(Pair(x, y), size.getPoint(TileIndex(index)))
     }
 
     @ParameterizedTest(name = "index={0} x={1} y={2}")
-    @MethodSource("ofws.math.SizeTest#inside")
+    @MethodSource("ofws.math.Size2dTest#inside")
     fun `Get x from index`(index: Int, x: Int, y: Int) {
         assertEquals(x, size.getX(TileIndex(index)))
     }
 
     @ParameterizedTest(name = "index={0} x={1} y={2}")
-    @MethodSource("ofws.math.SizeTest#inside")
+    @MethodSource("ofws.math.Size2dTest#inside")
     fun `Get y from index`(index: Int, x: Int, y: Int) {
         assertEquals(y, size.getY(TileIndex(index)))
     }
@@ -107,25 +107,25 @@ class SizeTest {
     inner class IsInside {
 
         @ParameterizedTest(name = "index={0} x={1} y={2}")
-        @MethodSource("ofws.math.SizeTest#inside")
+        @MethodSource("ofws.math.Size2dTest#inside")
         fun `Test x & y with inside`(index: Int, x: Int, y: Int) {
             assertTrue(size.isInside(x, y))
         }
 
         @ParameterizedTest(name = "index={0} x={1} y={2}")
-        @MethodSource("ofws.math.SizeTest#inside")
+        @MethodSource("ofws.math.Size2dTest#inside")
         fun `Test index with inside`(index: Int, x: Int, y: Int) {
             assertTrue(size.isInside(size.getIndex(x, y)))
         }
 
         @ParameterizedTest(name = "x={0} y={1}")
-        @MethodSource("ofws.math.SizeTest#outside")
+        @MethodSource("ofws.math.Size2dTest#outside")
         fun `Test x & y with outside`(x: Int, y: Int) {
             assertFalse(size.isInside(x, y))
         }
 
         @ParameterizedTest(name = "x={0} y={1}")
-        @MethodSource("ofws.math.SizeTest#outside")
+        @MethodSource("ofws.math.Size2dTest#outside")
         fun `Test index with outside`(x: Int, y: Int) {
             assertFalse(size.isInside(size.getIndex(x, y)))
         }
@@ -155,7 +155,7 @@ class SizeTest {
     @Nested
     inner class IsRectangleInside {
 
-        private val size = Size(3, 4)
+        private val size = Size2d(3, 4)
 
         @Test
         fun `Area is inside`() {

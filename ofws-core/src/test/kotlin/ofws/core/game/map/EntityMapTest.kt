@@ -1,9 +1,10 @@
 package ofws.core.game.map
 
 import ofws.ecs.Entity
-import ofws.math.Size
+import ofws.math.Size2d
 import ofws.math.map.TileIndex
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
@@ -12,7 +13,7 @@ class EntityMapTest {
     @Nested
     inner class GetEntity {
 
-        private val map = EntityMapBuilder(Size(2, 1))
+        private val map = EntityMapBuilder(Size2d(2, 1))
             .setEntity(TileIndex(1), Entity(42))
             .build()
 
@@ -38,5 +39,5 @@ class EntityMapTest {
             assertEquals(Entity(42), map.getEntity(TileIndex(1))!!)
         }
     }
-    
+
 }

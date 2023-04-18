@@ -5,7 +5,7 @@ import ofws.math.map.TileIndex
 /**
  * A Size defines a 2d rectangle starting at the origin.
  */
-data class Size(
+data class Size2d(
     /**
      * The Size along the x-axis. Also known as width.
      */
@@ -22,7 +22,7 @@ data class Size(
     }
 
     /**
-     * The number of tiles inside the rectangle defined by the [Size].
+     * The number of tiles inside the rectangle defined by the [Size2d].
      */
     val tiles: Int
         get() = x * y
