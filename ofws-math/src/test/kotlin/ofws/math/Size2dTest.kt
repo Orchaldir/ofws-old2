@@ -81,7 +81,7 @@ class Size2dTest {
         }
 
         private fun test(index: Int, size: Int, result: List<Int>) {
-            assertEquals(result.map { TileIndex(it) }, this.size.getIndices(TileIndex(index), size))
+            assertEquals(result.map { TileIndex(it) }, this.size.getIndices(TileIndex(index), Size1d(size)))
         }
     }
 
@@ -155,7 +155,8 @@ class Size2dTest {
     @Nested
     inner class IsRectangleInside {
 
-        private val size = Size2d(3, 4)
+        private val size2d = Size2d(3, 4)
+        private val size1d = Size1d(2)
 
         @Test
         fun `Area is inside`() {
@@ -170,7 +171,7 @@ class Size2dTest {
         }
 
         private fun test(index: Int, result: Boolean) {
-            assertEquals(result, size.isInside(TileIndex(index), 2))
+            assertEquals(result, size2d.isInside(TileIndex(index), size1d))
         }
     }
 

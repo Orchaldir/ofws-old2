@@ -3,15 +3,15 @@ package ofws.math
 import ofws.math.map.TileIndex
 
 /**
- * A Size defines a 2d rectangle starting at the origin.
+ * A [Size2d] defines a 2d rectangle starting at the origin.
  */
 data class Size2d(
     /**
-     * The Size along the x-axis. Also known as width.
+     * The size along the x-axis. Also known as width. Must be greater than 0.
      */
     val x: Int,
     /**
-     * The Size along the y-axis. Also known as height.
+     * The size along the y-axis. Also known as height. Must be greater than 0.
      */
     val y: Int
 ) {
@@ -45,15 +45,15 @@ data class Size2d(
     /**
      * Returns a list of [TileIndex] that are inside the map and the desired rectangle.
      */
-    fun getIndices(index: TileIndex, size: Int): List<TileIndex> {
+    fun getIndices(index: TileIndex, size: Size1d): List<TileIndex> {
         if (!isInside(index, size)) return emptyList()
 
         val indices = mutableListOf<TileIndex>()
 
-        for (dy in 0 until size) {
+        for (dy in 0 until size.size) {
             var currentIndex = index.index + dy * x
 
-            for (dx in 0 until size) {
+            for (dx in 0 until size.size) {
                 indices.add(TileIndex(currentIndex++))
             }
         }
@@ -69,10 +69,10 @@ data class Size2d(
 
     fun isInside(index: TileIndex) = index.index in 0 until tiles
 
-    fun isInside(index: TileIndex, size: Int): Boolean {
+    fun isInside(index: TileIndex, size: Size1d): Boolean {
         val (startX, startY) = getPoint(index)
-        val endX = startX + size - 1
-        val endY = startY + size - 1
+        val endX = startX + size.size - 1
+        val endY = startY + size.size - 1
 
         return isInside(startX, startY) && isInside(endX, endY)
     }

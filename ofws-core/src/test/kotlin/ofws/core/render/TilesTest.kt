@@ -3,6 +3,9 @@ package ofws.core.render
 import io.mockk.Called
 import io.mockk.mockk
 import io.mockk.verify
+import ofws.math.Size1d
+import ofws.math.Size1d.Companion.ONE
+import ofws.math.Size1d.Companion.THREE
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
@@ -14,7 +17,7 @@ class TilesTest {
 
         @Test
         fun `An empty tile renders nothing`() {
-            renderTile(renderer, EmptyTile, 1, 2, 3)
+            renderTile(renderer, EmptyTile, 1, 2, THREE)
 
             verify { renderer wasNot Called }
         }
@@ -28,10 +31,11 @@ class TilesTest {
 
         @Test
         fun `A full tile renders a full tile`() {
-            renderTile(renderer, FullTile(Color.WHITE), 10, 20, 30)
+            val size = Size1d(30)
+            renderTile(renderer, FullTile(Color.WHITE), 10, 20, size)
 
             verify {
-                renderer.renderFullTile(Color.WHITE, 10, 20, 30)
+                renderer.renderFullTile(Color.WHITE, 10, 20, size)
             }
         }
 
@@ -40,16 +44,17 @@ class TilesTest {
             renderTile(renderer, FullTile(Color.BLUE), 10, 20)
 
             verify {
-                renderer.renderFullTile(Color.BLUE, 10, 20, 1)
+                renderer.renderFullTile(Color.BLUE, 10, 20, ONE)
             }
         }
 
         @Test
         fun `A unicode tile renders a unicode character`() {
-            renderTile(renderer, UnicodeTile('T'.code, Color.GREEN), 5, 6, 7)
+            val size = Size1d(7)
+            renderTile(renderer, UnicodeTile('T'.code, Color.GREEN), 5, 6, size)
 
             verify {
-                renderer.renderUnicodeTile('T'.code, Color.GREEN, 5, 6, 7)
+                renderer.renderUnicodeTile('T'.code, Color.GREEN, 5, 6, size)
             }
         }
 
@@ -58,7 +63,7 @@ class TilesTest {
             renderTile(renderer, UnicodeTile('@'.code, Color.RED), 3, 2)
 
             verify {
-                renderer.renderUnicodeTile('@'.code, Color.RED, 3, 2, 1)
+                renderer.renderUnicodeTile('@'.code, Color.RED, 3, 2, ONE)
             }
         }
     }

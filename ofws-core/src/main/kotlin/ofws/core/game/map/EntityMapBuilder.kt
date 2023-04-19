@@ -1,6 +1,7 @@
 package ofws.core.game.map
 
 import ofws.ecs.Entity
+import ofws.math.Size1d
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
 
@@ -21,7 +22,7 @@ data class EntityMapBuilder(
         return this
     }
 
-    fun setEntity(index: TileIndex, entity: Entity, size: Int): EntityMapBuilder {
+    fun setEntity(index: TileIndex, entity: Entity, size: Size1d): EntityMapBuilder {
         val indices = this.size.getIndices(index, size)
 
         if (indices.isEmpty()) {

@@ -2,6 +2,9 @@ package ofws.core.render
 
 import io.mockk.mockk
 import io.mockk.verifySequence
+import ofws.math.Size1d.Companion.FOUR
+import ofws.math.Size1d.Companion.THREE
+import ofws.math.Size1d.Companion.TWO
 import ofws.math.Size2d
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
@@ -68,7 +71,7 @@ class TileRendererTest {
 
         @Test
         fun `Render full tile`() {
-            tileRenderer.renderFullTile(Color.RED, 5, 6, 3)
+            tileRenderer.renderFullTile(Color.RED, 5, 6, THREE)
 
             verify(90, 120)
         }
@@ -93,7 +96,7 @@ class TileRendererTest {
 
         @Test
         fun `Render character`() {
-            tileRenderer.renderUnicodeTile('?', Color.GREEN, 2, 3, 4)
+            tileRenderer.renderUnicodeTile('?', Color.GREEN, 2, 3, FOUR)
 
             verify('?', 160, 220, 400)
         }
@@ -107,7 +110,7 @@ class TileRendererTest {
 
         @Test
         fun `Render code point`() {
-            tileRenderer.renderUnicodeTile('?'.code, Color.GREEN, 2, 3, 4)
+            tileRenderer.renderUnicodeTile('?'.code, Color.GREEN, 2, 3, FOUR)
 
             verify('?', 160, 220, 400)
         }
@@ -133,7 +136,7 @@ class TileRendererTest {
 
         @Test
         fun `Render text`() {
-            tileRenderer.renderText("Test", Color.BLUE, 0, 1, 2)
+            tileRenderer.renderText("Test", Color.BLUE, 0, 1, TWO)
 
             verify(80, 130, 190, 250, 310, 280)
         }

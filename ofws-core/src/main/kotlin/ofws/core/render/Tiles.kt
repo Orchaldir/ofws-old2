@@ -1,5 +1,8 @@
 package ofws.core.render
 
+import ofws.math.Size1d
+import ofws.math.Size1d.Companion.ONE
+
 sealed class Tile
 object EmptyTile : Tile()
 data class FullTile(val color: Color) : Tile()
@@ -12,7 +15,7 @@ fun renderTile(
     tile: Tile,
     x: Int,
     y: Int,
-    size: Int = 1
+    size: Size1d = ONE
 ) {
     when (tile) {
         is FullTile -> renderer.renderFullTile(tile.color, x, y, size)
