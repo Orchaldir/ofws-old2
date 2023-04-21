@@ -1,10 +1,12 @@
 package ofws.math
 
 import ofws.math.map.TileIndex
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.of
+import org.junit.jupiter.params.provider.MethodSource
 
 class RectangleTest {
 
@@ -13,56 +15,16 @@ class RectangleTest {
     @Nested
     inner class ConvertToInside {
 
-        @Test
-        fun `Tiles outside return null`() {
-            assertNull(rectangle.convertToInside(0, 0))
-            assertNull(rectangle.convertToInside(1, 0))
-            assertNull(rectangle.convertToInside(2, 0))
-            assertNull(rectangle.convertToInside(3, 0))
-            assertNull(rectangle.convertToInside(4, 0))
-
-            assertNull(rectangle.convertToInside(0, 1))
-            assertNull(rectangle.convertToInside(1, 1))
-            assertNull(rectangle.convertToInside(2, 1))
-            assertNull(rectangle.convertToInside(3, 1))
-            assertNull(rectangle.convertToInside(4, 1))
-
-            assertNull(rectangle.convertToInside(0, 2))
-            assertNull(rectangle.convertToInside(4, 2))
-
-            assertNull(rectangle.convertToInside(0, 3))
-            assertNull(rectangle.convertToInside(4, 3))
-
-            assertNull(rectangle.convertToInside(0, 4))
-            assertNull(rectangle.convertToInside(4, 4))
-
-            assertNull(rectangle.convertToInside(0, 5))
-            assertNull(rectangle.convertToInside(4, 5))
-
-            assertNull(rectangle.convertToInside(0, 6))
-            assertNull(rectangle.convertToInside(1, 6))
-            assertNull(rectangle.convertToInside(2, 6))
-            assertNull(rectangle.convertToInside(3, 6))
-            assertNull(rectangle.convertToInside(4, 6))
+        @ParameterizedTest(name = "x={0} y={1}")
+        @MethodSource("ofws.math.RectangleTest#outside")
+        fun `Tiles outside return null`(x: Int, y: Int) {
+            assertNull(rectangle.convertToInside(x, y))
         }
 
-        @Test
-        fun `Tiles inside return an index`() {
-            test(1, 2, 0)
-            test(2, 2, 1)
-            test(3, 2, 2)
-
-            test(1, 3, 3)
-            test(2, 3, 4)
-            test(3, 3, 5)
-
-            test(1, 4, 6)
-            test(2, 4, 7)
-            test(3, 4, 8)
-
-            test(1, 5, 9)
-            test(2, 5, 10)
-            test(3, 5, 11)
+        @ParameterizedTest(name = "x={0} y={1}")
+        @MethodSource("ofws.math.RectangleTest#inside")
+        fun `Tiles inside return an index`(x: Int, y: Int, index: Int) {
+            test(x, y, index)
         }
 
         private fun test(x: Int, y: Int, index: Int) {
@@ -97,6 +59,18 @@ class RectangleTest {
     @Nested
     inner class IsInside {
 
+        @ParameterizedTest(name = "x={0} y={1}")
+        @MethodSource("ofws.math.RectangleTest#outside")
+        fun `Test coordinates outside`(x: Int, y: Int) {
+            assertFalse(rectangle.isInside(x, y))
+        }
+
+        @ParameterizedTest(name = "x={0} y={1}")
+        @MethodSource("ofws.math.RectangleTest#inside")
+        fun `Test coordinates inside`(x: Int, y: Int) {
+            assertTrue(rectangle.isInside(x, y))
+        }
+
         @Test
         fun `Test if x is inside`() {
             testGetParentX(0, false)
@@ -125,6 +99,61 @@ class RectangleTest {
             assertEquals(inside, rectangle.isInsideForY(y))
         }
 
+    }
+
+    companion object {
+
+        @JvmStatic
+        fun inside() = listOf(
+            of(1, 2, 0),
+            of(2, 2, 1),
+            of(3, 2, 2),
+
+            of(1, 3, 3),
+            of(2, 3, 4),
+            of(3, 3, 5),
+
+            of(1, 4, 6),
+            of(2, 4, 7),
+            of(3, 4, 8),
+
+            of(1, 5, 9),
+            of(2, 5, 10),
+            of(3, 5, 11),
+        )
+
+        @JvmStatic
+        fun outside() = listOf(
+            of(0, 0),
+            of(1, 0),
+            of(2, 0),
+            of(3, 0),
+            of(4, 0),
+
+            of(0, 1),
+            of(1, 1),
+            of(2, 1),
+            of(3, 1),
+            of(4, 1),
+
+            of(0, 2),
+            of(4, 2),
+
+            of(0, 3),
+            of(4, 3),
+
+            of(0, 4),
+            of(4, 4),
+
+            of(0, 5),
+            of(4, 5),
+
+            of(0, 6),
+            of(1, 6),
+            of(2, 6),
+            of(3, 6),
+            of(4, 6),
+        )
     }
 
 }

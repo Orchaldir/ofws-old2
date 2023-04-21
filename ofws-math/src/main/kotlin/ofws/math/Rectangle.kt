@@ -25,9 +25,6 @@ data class Rectangle(
 
     // inside check
 
-    fun isInside(parentX: Int, parentY: Int, size: Size1d) =
-        isInside(parentX, parentY) && isInside(parentX + size.size, parentY + size.size)
-
     fun isInside(parentX: Int, parentY: Int) = isInsideForX(parentX) && isInsideForY(parentY)
 
     fun isInsideForX(parentX: Int) = size.isInsideForX(parentX - startX)
