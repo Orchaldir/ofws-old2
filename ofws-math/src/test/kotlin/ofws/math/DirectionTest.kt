@@ -25,18 +25,18 @@ class DirectionTest {
     }
 
     @Nested
-    inner class IsMatch {
+    inner class IsNeighbor {
 
         @ParameterizedTest
         @EnumSource(Direction::class)
         fun `Each direction matches itself`(d: Direction) {
-            assertTrue(d.isMatch(d.x, d.y))
+            assertTrue(d.isNeighbor(d.x, d.y))
         }
 
         @ParameterizedTest
         @EnumSource(Direction::class)
         fun `Directions don't match other values`(d: Direction) {
-            assertFalse(d.isMatch(2, 1))
+            assertFalse(d.isNeighbor(2, 1))
         }
 
     }

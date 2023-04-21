@@ -6,7 +6,13 @@ enum class Direction(val x: Int, val y: Int) {
     SOUTH(0, 1),
     WEST(-1, 0);
 
-    fun isMatch(x: Int, y: Int) = x == this.x && y == this.y
+    /**
+     * Does the offset point to one of the 4 neighbors?
+     */
+    fun isNeighbor(offsetX: Int, offsetY: Int) = offsetX == this.x && offsetY == this.y
 }
 
-fun getDirection(x: Int, y: Int) = Direction.values().firstOrNull { d -> d.isMatch(x, y) }
+/**
+ * Returns a direction, if the offset points to one of the 4 neighbors.
+ */
+fun getDirection(offsetX: Int, offsetY: Int) = Direction.values().firstOrNull { d -> d.isNeighbor(offsetX, offsetY) }

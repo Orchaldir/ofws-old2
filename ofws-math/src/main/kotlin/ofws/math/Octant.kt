@@ -11,6 +11,9 @@ enum class Octant {
     WEST,
     NORTH_WEST;
 
+    /**
+     * Converts a point (x &  y) inside the octant's coordinate frame to the parent coordinate frame.
+     */
     fun getGlobal(originX: Int, originY: Int, x: Int, y: Int) = when (this) {
         NORTH -> Pair(originX + y, originY + x)
         NORTH_EAST -> Pair(originX + x, originY + y)
