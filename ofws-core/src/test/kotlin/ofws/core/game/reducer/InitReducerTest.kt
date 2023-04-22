@@ -51,9 +51,9 @@ class InitReducerTest {
         }
 
         @Test
-        fun `Init snake footprint`() {
+        fun `Init snake footprint that partly overlaps`() {
             test(
-                SnakeFootprint(listOf(index0, index1, index3)), mapOf(
+                SnakeFootprint(listOf(index0, index1, index3, index3)), mapOf(
                     index0 to entity,
                     index1 to entity,
                     index3 to entity,
