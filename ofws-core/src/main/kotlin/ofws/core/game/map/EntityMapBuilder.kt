@@ -25,13 +25,11 @@ data class EntityMapBuilder(
     }
 
     fun addEntity(index: TileIndex, entity: Entity, size: Size1d): EntityMapBuilder {
-        val indices = this.size.getIndices(index, size)
-
-        if (indices.isEmpty()) {
-            throw IllegalArgumentException("Can not set $entity at $index with size $size!")
+        if (!this.size.isInside(index, size)) {
+            throw IllegalArgumentException("Can not add $entity at $index with $size, which is outside the map!")
         }
 
-        indices.forEach { i -> addEntity(i, entity) }
+        this.size.getIndices(index, size).forEach { i -> addEntity(i, entity) }
 
         return this
     }
