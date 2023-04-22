@@ -6,7 +6,7 @@ import ofws.math.map.TileIndex
 
 data class EntityMap(
     private val size: Size2d,
-    private val entities: Map<TileIndex, Entity>
+    private val entities: Map<TileIndex, Entity> = mapOf()
 ) {
 
     fun getEntity(x: Int, y: Int): Entity? {
@@ -15,5 +15,12 @@ data class EntityMap(
     }
 
     fun getEntity(index: TileIndex) = entities[index]
+
+    fun hasEntity(x: Int, y: Int):Boolean {
+        val index = size.getIndexIfInside(x, y) ?: return false
+        return hasEntity(index)
+    }
+
+    fun hasEntity(index: TileIndex) = entities.containsKey(index)
 
 }

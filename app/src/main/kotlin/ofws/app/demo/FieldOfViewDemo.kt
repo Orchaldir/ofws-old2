@@ -6,8 +6,10 @@ import javafx.scene.input.MouseButton
 import javafx.stage.Stage
 import mu.KotlinLogging
 import ofws.app.TileApplication
+import ofws.core.game.map.GameMap
 import ofws.core.game.map.Terrain
 import ofws.core.render.Color
+import ofws.core.render.GameRenderer
 import ofws.math.Range
 import ofws.math.fov.FovConfig
 import ofws.math.fov.ShadowCasting
@@ -26,6 +28,8 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
         repeat(500) { setTile(TileIndex(rng.nextInt(size.tiles)), Terrain.WALL) }
         build()
     }
+    private val gameMap = GameMap(map)
+    private lateinit var gameRenderer: GameRenderer
 
     private var fovIndex = size.getIndex(30, 22)
     private val fovAlgorithm = ShadowCasting()
@@ -34,6 +38,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
 
     override fun start(primaryStage: Stage) {
         init(primaryStage, "FieldOfView Demo")
+        gameRenderer = GameRenderer(map.size, tileRenderer)
         update()
     }
 
@@ -56,25 +61,13 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
         visibleTiles.forEach { renderNode(it, Color.GREEN) }
         renderNode(fovIndex, Color.BLUE)
 
-        for (tile in knownTiles) {
-            renderTile(tile)
-        }
+        gameRenderer.renderTiles(gameMap, knownTiles)
 
         logger.info("render(): finished")
     }
 
     private fun renderNode(index: TileIndex, color: Color) {
         tileRenderer.renderFullTile(color, size.getX(index), size.getY(index))
-    }
-
-    private fun renderTile(index: TileIndex) {
-        val symbol = if (map.getTile(index) == Terrain.FLOOR) {
-            '.'
-        } else {
-            '#'
-        }
-
-        tileRenderer.renderUnicodeTile(symbol, Color.WHITE, map.size.getX(index), map.size.getY(index))
     }
 
     override fun onKeyReleased(keyCode: KeyCode) {

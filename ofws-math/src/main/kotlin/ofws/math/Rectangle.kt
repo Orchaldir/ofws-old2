@@ -8,6 +8,8 @@ data class Rectangle(
     val size: Size2d
 ) {
 
+    constructor(size: Size2d) : this(0, 0, size)
+
     /**
      * Converts from the parent coordinate frame to the rectangle's coordinate frame.
      */
