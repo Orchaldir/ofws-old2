@@ -9,12 +9,12 @@ import org.junit.jupiter.api.Test
 
 class EntityMapTest {
 
+    private val map = EntityMapBuilder(Size2d(2, 1))
+        .setEntity(TileIndex(1), Entity(42))
+        .build()
+
     @Nested
     inner class GetEntity {
-
-        private val map = EntityMapBuilder(Size2d(2, 1))
-            .setEntity(TileIndex(1), Entity(42))
-            .build()
 
         @Test
         fun `Get no entity`() {
@@ -42,10 +42,6 @@ class EntityMapTest {
     @Nested
     inner class HasEntity {
 
-        private val map = EntityMapBuilder(Size2d(2, 1))
-            .setEntity(TileIndex(1), Entity(42))
-            .build()
-
         @Test
         fun `Has no entity`() {
             assertFalse(map.hasEntity(0, 0))
@@ -67,6 +63,11 @@ class EntityMapTest {
         fun `Has entity with index`() {
             assertTrue(map.hasEntity(TileIndex(1)))
         }
+    }
+
+    @Test
+    fun `Create a builder`() {
+        assertEquals(map, map.builder().build())
     }
 
 }

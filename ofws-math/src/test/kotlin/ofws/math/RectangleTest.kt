@@ -10,7 +10,13 @@ import org.junit.jupiter.params.provider.MethodSource
 
 class RectangleTest {
 
-    val rectangle = Rectangle(1, 2, Size2d(3, 4))
+    private val size = Size2d(3, 4)
+    private val rectangle = Rectangle(1, 2, size)
+
+    @Test
+    fun `Test simple constructor`() {
+        assertEquals(Rectangle(0, 0, size), Rectangle(size))
+    }
 
     @Nested
     inner class ConvertToInside {
