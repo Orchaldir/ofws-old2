@@ -8,18 +8,22 @@ import mu.KotlinLogging
 import ofws.app.TileApplication
 import ofws.core.game.action.Action
 import ofws.core.game.action.Init
+import ofws.core.game.action.MoveTo
 import ofws.core.game.component.Footprint
 import ofws.core.game.component.Graphic
 import ofws.core.game.component.SimpleFootprint
+import ofws.core.game.component.getPosition
 import ofws.core.game.map.GameMap
 import ofws.core.game.map.Terrain
 import ofws.core.game.reducer.INIT_REDUCER
+import ofws.core.game.reducer.MOVE_TO_REDUCER
 import ofws.core.render.Color
 import ofws.core.render.FullTile
 import ofws.core.render.GameRenderer
 import ofws.core.render.UnicodeTile
 import ofws.ecs.EcsBuilder
 import ofws.ecs.EcsState
+import ofws.ecs.Entity
 import ofws.math.Range
 import ofws.math.fov.FovConfig
 import ofws.math.fov.ShadowCasting
@@ -39,7 +43,6 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
     private lateinit var gameRenderer: GameRenderer
     private lateinit var store: DefaultStore<Action, EcsState>
 
-    private var fovIndex = size.getIndex(30, 22)
     private val fovAlgorithm = ShadowCasting()
     private var visibleTiles = setOf<TileIndex>()
     private val knownTiles = mutableSetOf<TileIndex>()
@@ -63,16 +66,18 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
 
         val ecsState = with(EcsBuilder()) {
             addData(GameMap(map))
-            with(createEntity()) {
-                add(SimpleFootprint(fovIndex) as Footprint)
-                add(Graphic(FullTile(Color.BLUE)))
-            }
+            val entity = createEntity()
+                .add(SimpleFootprint(size.getIndex(30, 22)) as Footprint)
+                .add(Graphic(FullTile(Color.BLUE)))
+                .entity
+            addData(entity)
             build()
         }
 
         val reducer: Reducer<Action, EcsState> = { state, action ->
             when (action) {
                 is Init -> INIT_REDUCER(state, action)
+                is MoveTo -> MOVE_TO_REDUCER(state, action)
                 else -> noFollowUps(state)
             }
         }
@@ -84,7 +89,10 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
 
     private fun update(state: EcsState) {
         logger.info("update()")
-        val config = FovConfig(size, fovIndex, Range(max = 10), createIsBlocking(state))
+        val entity = state.getData<Entity>()!!
+        val footprint = state.getStorage<Footprint>()?.get(entity)!!
+        val index = getPosition(footprint)
+        val config = FovConfig(size, index, Range(max = 10), createIsBlocking(state))
 
         visibleTiles = fovAlgorithm.calculateVisibleCells(config)
         knownTiles.addAll(visibleTiles)
@@ -123,8 +131,9 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
         val isBlocking = createIsBlocking(store.getState())
 
         if (!isBlocking(newIndex)) {
-            fovIndex = newIndex
-            update(store.getState())
+            val state = store.getState()
+            val entity = state.getData<Entity>()!!
+            store.dispatch(MoveTo(entity, newIndex))
         }
     }
 

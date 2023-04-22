@@ -12,6 +12,28 @@ data class EntityMapBuilder(
 
     fun build() = EntityMap(size, entities)
 
+    fun removeEntity(index: TileIndex, entity: Entity): EntityMapBuilder {
+        val removed = entities.remove(index)
+
+        if (removed != entity) {
+            throw IllegalArgumentException("Removed entity $removed instead of $entity at index $index!")
+        }
+
+        return this
+    }
+
+    fun removeEntity(index: TileIndex, entity: Entity, size: Size1d): EntityMapBuilder {
+        val indices = this.size.getIndices(index, size)
+
+        if (indices.isEmpty()) {
+            throw IllegalArgumentException("Can not remove entity $entity at index $index with size $size!")
+        }
+
+        indices.forEach { i -> removeEntity(i, entity) }
+
+        return this
+    }
+
     fun setEntity(index: TileIndex, entity: Entity): EntityMapBuilder {
         val overwritten = entities.put(index, entity)
 
