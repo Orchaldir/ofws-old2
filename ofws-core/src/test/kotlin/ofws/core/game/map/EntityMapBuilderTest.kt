@@ -81,7 +81,12 @@ class EntityMapBuilderTest {
         }
 
         @Test
-        fun `An an entity can not remove another`() {
+        fun `Exception if there is no entity to remove`() {
+            assertThrows(IllegalArgumentException::class.java) { builder1.removeEntity(index1, entity0) }
+        }
+
+        @Test
+        fun `One entity can not remove another`() {
             assertThrows(IllegalArgumentException::class.java) { builder1.removeEntity(index0, entity1) }
         }
 
@@ -96,7 +101,12 @@ class EntityMapBuilderTest {
         }
 
         @Test
-        fun `An an entity can not remove another`() {
+        fun `Exception if there is no entity to remove`() {
+            assertThrows(IllegalArgumentException::class.java) { builder2.removeEntity(index2, entity0, TWO) }
+        }
+
+        @Test
+        fun `One entity can not remove another`() {
             assertThrows(IllegalArgumentException::class.java) { builder2.removeEntity(index0, entity1, TWO) }
         }
 

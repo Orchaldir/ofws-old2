@@ -14,7 +14,7 @@ data class EntityMapBuilder(
         val overwritten = entities.put(index, entity)
 
         if (overwritten != null && overwritten != entity) {
-            throw IllegalArgumentException("Overwritten entity $overwritten with $entity at index $index!")
+            throw IllegalArgumentException("Overwritten $overwritten with $entity at index $index!")
         }
 
         return this
@@ -24,7 +24,7 @@ data class EntityMapBuilder(
         val indices = this.size.getIndices(index, size)
 
         if (indices.isEmpty()) {
-            throw IllegalArgumentException("Can not set entity $entity at index $index with size $size!")
+            throw IllegalArgumentException("Can not set $entity at index $index with size $size!")
         }
 
         indices.forEach { i -> addEntity(i, entity) }
@@ -37,8 +37,11 @@ data class EntityMapBuilder(
     fun removeEntity(index: TileIndex, entity: Entity): EntityMapBuilder {
         val removed = entities.remove(index)
 
-        if (removed != entity) {
-            throw IllegalArgumentException("Removed entity $removed instead of $entity at index $index!")
+        if (removed == null) {
+            throw IllegalArgumentException("$entity was not at index $index to remove!")
+        }
+        else if (removed != entity) {
+            throw IllegalArgumentException("Removed $removed instead of $entity at index $index!")
         }
 
         return this
@@ -48,7 +51,7 @@ data class EntityMapBuilder(
         val indices = this.size.getIndices(index, size)
 
         if (indices.isEmpty()) {
-            throw IllegalArgumentException("Can not remove entity $entity at index $index with size $size!")
+            throw IllegalArgumentException("Can not remove $entity at index $index with size $size!")
         }
 
         indices.forEach { i -> removeEntity(i, entity) }
