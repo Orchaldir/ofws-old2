@@ -9,7 +9,9 @@ import ofws.app.TileApplication
 import ofws.core.game.map.GameMap
 import ofws.core.game.map.Terrain
 import ofws.core.render.Color
+import ofws.core.render.FullTile
 import ofws.core.render.GameRenderer
+import ofws.core.render.UnicodeTile
 import ofws.math.Range
 import ofws.math.fov.FovConfig
 import ofws.math.fov.ShadowCasting
@@ -35,6 +37,9 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
     private val fovAlgorithm = ShadowCasting()
     private var visibleTiles = setOf<TileIndex>()
     private val knownTiles = mutableSetOf<TileIndex>()
+    private val floorTile = UnicodeTile('.', Color.WHITE)
+    private val wallTile = FullTile(Color.WHITE)
+    private val visibleTile = FullTile(Color.GREEN)
 
     override fun start(primaryStage: Stage) {
         init(primaryStage, "FieldOfView Demo")
@@ -58,10 +63,9 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
 
         renderer.clear()
 
-        visibleTiles.forEach { renderNode(it, Color.GREEN) }
+        gameRenderer.renderTiles(gameMap, { visibleTile }, visibleTiles)
         renderNode(fovIndex, Color.BLUE)
-
-        gameRenderer.renderTiles(gameMap, knownTiles)
+        gameRenderer.renderTiles(gameMap, ::getTile, knownTiles)
 
         logger.info("render(): finished")
     }
@@ -92,6 +96,12 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
 
     private fun isBlocking(index: TileIndex) =
         map.getTile(index) == Terrain.WALL
+
+    private fun getTile(terrain: Terrain) = if (terrain == Terrain.FLOOR) {
+        floorTile
+    } else {
+        wallTile
+    }
 }
 
 fun main() {

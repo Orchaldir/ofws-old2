@@ -13,26 +13,31 @@ class GameRenderer(
 
     constructor(size: Size2d, renderer: TileRenderer) : this(Rectangle(size), renderer)
 
-    fun renderMap(map: GameMap) {
+    fun renderMap(map: GameMap, getTile: (tile: Terrain) -> Tile) {
         for (y in 0 until area.size.y) {
             for (x in 0 until area.size.x) {
                 val mapIndex = area.size.getIndex(x, y)
 
-                renderTile(map, mapIndex, x, y)
+                renderTile(map, getTile, mapIndex, x, y)
             }
         }
     }
 
-    fun renderTiles(map: GameMap, indices: Set<TileIndex>) {
+    fun renderTiles(
+        map: GameMap,
+        getTile: (tile: Terrain) -> Tile,
+        indices: Set<TileIndex>
+    ) {
         for (index in indices) {
             val (x, y) = area.size.getPoint(index)
 
-            renderTile(map, index, x, y)
+            renderTile(map, getTile, index, x, y)
         }
     }
 
     private fun renderTile(
         map: GameMap,
+        getTile: (tile: Terrain) -> Tile,
         index: TileIndex,
         x: Int,
         y: Int
@@ -42,14 +47,9 @@ class GameRenderer(
         }
 
         val terrain = map.tilemap.getTile(index)
+        val tile = getTile(terrain)
 
-        val symbol = if (terrain == Terrain.FLOOR) {
-            '.'
-        } else {
-            '#'
-        }
-
-        renderer.renderUnicodeTile(symbol, Color.WHITE, area.startX + x, area.startY + y)
+        renderTile(renderer, tile, x, y)
     }
 
 }

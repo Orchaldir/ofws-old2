@@ -16,7 +16,7 @@ data class EntityMap(
 
     fun getEntity(index: TileIndex) = entities[index]
 
-    fun hasEntity(x: Int, y: Int):Boolean {
+    fun hasEntity(x: Int, y: Int): Boolean {
         val index = size.getIndexIfInside(x, y) ?: return false
         return hasEntity(index)
     }
