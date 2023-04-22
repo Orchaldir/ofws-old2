@@ -3,7 +3,7 @@ package ofws.redux
 class DefaultStore<Action, State>(
     private var state: State,
     reducer: Reducer<Action, State>,
-    middlewareList: List<Middleware<Action, State>>,
+    middlewareList: List<Middleware<Action, State>> = listOf(),
 ) : Store<Action, State> {
 
     private val subscribers = mutableSetOf<StoreSubscriber<State>>()

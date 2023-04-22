@@ -23,4 +23,6 @@ data class EntityMap(
 
     fun hasEntity(index: TileIndex) = entities.containsKey(index)
 
+    fun builder() = EntityMapBuilder(size, entities.toMutableMap())
+
 }
