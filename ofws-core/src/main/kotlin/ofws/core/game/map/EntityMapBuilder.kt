@@ -11,10 +11,14 @@ data class EntityMapBuilder(
 ) {
 
     fun addEntity(index: TileIndex, entity: Entity): EntityMapBuilder {
+        if (!size.isInside(index)) {
+            throw IllegalArgumentException("Can not add $entity at $index, which is outside the map!")
+        }
+
         val overwritten = entities.put(index, entity)
 
         if (overwritten != null && overwritten != entity) {
-            throw IllegalArgumentException("Overwritten $overwritten with $entity at index $index!")
+            throw IllegalArgumentException("Overwritten $overwritten with $entity at $index!")
         }
 
         return this
@@ -24,7 +28,7 @@ data class EntityMapBuilder(
         val indices = this.size.getIndices(index, size)
 
         if (indices.isEmpty()) {
-            throw IllegalArgumentException("Can not set $entity at index $index with size $size!")
+            throw IllegalArgumentException("Can not set $entity at $index with size $size!")
         }
 
         indices.forEach { i -> addEntity(i, entity) }
@@ -38,23 +42,16 @@ data class EntityMapBuilder(
         val removed = entities.remove(index)
 
         if (removed == null) {
-            throw IllegalArgumentException("$entity was not at index $index to remove!")
-        }
-        else if (removed != entity) {
-            throw IllegalArgumentException("Removed $removed instead of $entity at index $index!")
+            throw IllegalArgumentException("$entity was not at $index to remove!")
+        } else if (removed != entity) {
+            throw IllegalArgumentException("Removed $removed instead of $entity at $index!")
         }
 
         return this
     }
 
     fun removeEntity(index: TileIndex, entity: Entity, size: Size1d): EntityMapBuilder {
-        val indices = this.size.getIndices(index, size)
-
-        if (indices.isEmpty()) {
-            throw IllegalArgumentException("Can not remove $entity at index $index with size $size!")
-        }
-
-        indices.forEach { i -> removeEntity(i, entity) }
+        this.size.getIndices(index, size).forEach { i -> removeEntity(i, entity) }
 
         return this
     }
