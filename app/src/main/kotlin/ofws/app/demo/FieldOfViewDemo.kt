@@ -6,12 +6,17 @@ import javafx.scene.input.MouseButton
 import javafx.stage.Stage
 import mu.KotlinLogging
 import ofws.app.TileApplication
+import ofws.core.game.component.Footprint
+import ofws.core.game.component.Graphic
+import ofws.core.game.component.SimpleFootprint
 import ofws.core.game.map.GameMap
 import ofws.core.game.map.Terrain
 import ofws.core.render.Color
 import ofws.core.render.FullTile
 import ofws.core.render.GameRenderer
 import ofws.core.render.UnicodeTile
+import ofws.ecs.EcsBuilder
+import ofws.ecs.EcsState
 import ofws.math.Range
 import ofws.math.fov.FovConfig
 import ofws.math.fov.ShadowCasting
@@ -32,6 +37,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
     }
     private val gameMap = GameMap(map)
     private lateinit var gameRenderer: GameRenderer
+    private lateinit var state: EcsState
 
     private var fovIndex = size.getIndex(30, 22)
     private val fovAlgorithm = ShadowCasting()
@@ -43,7 +49,17 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
 
     override fun start(primaryStage: Stage) {
         init(primaryStage, "FieldOfView Demo")
+
         gameRenderer = GameRenderer(map.size, tileRenderer)
+
+        state = with(EcsBuilder()) {
+            with(createEntity()) {
+                add(SimpleFootprint(fovIndex) as Footprint)
+                add(Graphic(FullTile(Color.BLUE)))
+            }
+            build()
+        }
+
         update()
     }
 
@@ -63,15 +79,13 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
 
         renderer.clear()
 
-        gameRenderer.renderTiles(gameMap, { visibleTile }, visibleTiles)
-        renderNode(fovIndex, Color.BLUE)
-        gameRenderer.renderTiles(gameMap, ::getTile, knownTiles)
+        with(gameRenderer) {
+            renderTiles(gameMap, { visibleTile }, visibleTiles)
+            renderEntities(state)
+            renderTiles(gameMap, ::getTile, knownTiles)
+        }
 
         logger.info("render(): finished")
-    }
-
-    private fun renderNode(index: TileIndex, color: Color) {
-        tileRenderer.renderFullTile(color, size.getX(index), size.getY(index))
     }
 
     override fun onKeyReleased(keyCode: KeyCode) {
