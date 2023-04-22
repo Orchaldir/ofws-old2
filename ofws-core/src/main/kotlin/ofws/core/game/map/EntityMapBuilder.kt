@@ -10,6 +10,28 @@ data class EntityMapBuilder(
     private val entities: MutableMap<TileIndex, Entity> = mutableMapOf(),
 ) {
 
+    fun addEntity(index: TileIndex, entity: Entity): EntityMapBuilder {
+        val overwritten = entities.put(index, entity)
+
+        if (overwritten != null && overwritten != entity) {
+            throw IllegalArgumentException("Overwritten entity $overwritten with $entity at index $index!")
+        }
+
+        return this
+    }
+
+    fun addEntity(index: TileIndex, entity: Entity, size: Size1d): EntityMapBuilder {
+        val indices = this.size.getIndices(index, size)
+
+        if (indices.isEmpty()) {
+            throw IllegalArgumentException("Can not set entity $entity at index $index with size $size!")
+        }
+
+        indices.forEach { i -> addEntity(i, entity) }
+
+        return this
+    }
+
     fun build() = EntityMap(size, entities)
 
     fun removeEntity(index: TileIndex, entity: Entity): EntityMapBuilder {
@@ -30,28 +52,6 @@ data class EntityMapBuilder(
         }
 
         indices.forEach { i -> removeEntity(i, entity) }
-
-        return this
-    }
-
-    fun setEntity(index: TileIndex, entity: Entity): EntityMapBuilder {
-        val overwritten = entities.put(index, entity)
-
-        if (overwritten != null && overwritten != entity) {
-            throw IllegalArgumentException("Overwritten entity $overwritten with $entity at index $index!")
-        }
-
-        return this
-    }
-
-    fun setEntity(index: TileIndex, entity: Entity, size: Size1d): EntityMapBuilder {
-        val indices = this.size.getIndices(index, size)
-
-        if (indices.isEmpty()) {
-            throw IllegalArgumentException("Can not set entity $entity at index $index with size $size!")
-        }
-
-        indices.forEach { i -> setEntity(i, entity) }
 
         return this
     }

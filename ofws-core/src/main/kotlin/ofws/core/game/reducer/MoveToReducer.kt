@@ -32,17 +32,17 @@ fun updateMap(map: EntityMap, entity: Entity, footprint: Footprint, position: Ti
 fun updateMap(map: EntityMapBuilder, entity: Entity, footprint: Footprint, position: TileIndex) = when (footprint) {
     is SimpleFootprint -> map
         .removeEntity(footprint.position, entity)
-        .setEntity(position, entity)
+        .addEntity(position, entity)
 
     is BigFootprint -> map
         .removeEntity(footprint.position, entity, footprint.size)
-        .setEntity(position, entity, footprint.size)
+        .addEntity(position, entity, footprint.size)
 
     is SnakeFootprint -> with(map) {
         val last = footprint.positions.last()
         if (footprint.positions.count { i -> i == last } == 1) {
             removeEntity(last, entity)
         }
-        setEntity(position, entity)
+        addEntity(position, entity)
     }
 }

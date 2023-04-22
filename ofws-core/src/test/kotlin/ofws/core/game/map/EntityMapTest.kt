@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 class EntityMapTest {
 
     private val map = EntityMapBuilder(Size2d(2, 1))
-        .setEntity(TileIndex(1), Entity(42))
+        .addEntity(TileIndex(1), Entity(42))
         .build()
 
     @Nested
