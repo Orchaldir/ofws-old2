@@ -41,15 +41,15 @@ private fun initFootprints(state: EcsState, updatedData: MutableList<Any>) {
     updatedData += map.copy(entityMap = mapBuilder.build())
 }
 
-private fun addToMap(builder: EntityMapBuilder, entity: Entity, body: Footprint) = when (body) {
+private fun addToMap(builder: EntityMapBuilder, entity: Entity, footprint: Footprint) = when (footprint) {
     is SimpleFootprint -> builder
-        .addEntity(index = body.position, entity = entity)
+        .addEntity(footprint.position, entity)
 
     is BigFootprint -> builder
-        .addEntity(index = body.position, entity = entity, size = body.size)
+        .addEntity(footprint.position, entity, footprint.size)
 
     is SnakeFootprint -> {
-        body.positions.forEach { p -> builder.addEntity(p, entity) }
+        footprint.positions.forEach { p -> builder.addEntity(p, entity) }
         builder
     }
 }
