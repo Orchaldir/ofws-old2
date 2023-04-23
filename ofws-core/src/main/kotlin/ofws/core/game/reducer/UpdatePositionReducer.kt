@@ -1,6 +1,6 @@
 package ofws.core.game.reducer
 
-import ofws.core.game.action.MoveTo
+import ofws.core.game.action.UpdatePosition
 import ofws.core.game.component.*
 import ofws.core.game.map.EntityMap
 import ofws.core.game.map.EntityMapBuilder
@@ -12,7 +12,7 @@ import ofws.math.map.TileIndex
 import ofws.redux.Reducer
 import ofws.redux.noFollowUps
 
-val MOVE_TO_REDUCER: Reducer<MoveTo, EcsState> = a@{ state, action ->
+val UPDATE_POSITION_REDUCER: Reducer<UpdatePosition, EcsState> = a@{ state, action ->
     val map = state.getData<GameMap>()!!
     val bodyStorage = state.getStorage<Footprint>()!!
     val footprint = bodyStorage.getOrThrow(action.entity)

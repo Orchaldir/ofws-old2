@@ -1,6 +1,6 @@
 package ofws.core.game.reducer
 
-import ofws.core.game.action.MoveTo
+import ofws.core.game.action.UpdatePosition
 import ofws.core.game.component.BigFootprint
 import ofws.core.game.component.Footprint
 import ofws.core.game.component.SimpleFootprint
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-class MoveReducerTest {
+class UpdatePositionTest {
 
     private val size = Size2d(2, 3)
     private val tilemap = TileMapBuilder(size, FLOOR).build()
@@ -86,7 +86,7 @@ class MoveReducerTest {
             build()
         }
 
-        val (newState, actions) = MOVE_TO_REDUCER(state, MoveTo(entity, index2))
+        val (newState, actions) = UPDATE_POSITION_REDUCER(state, UpdatePosition(entity, index2))
         val newMap = newState.getData<GameMap>()!!
 
         assertTrue(actions.isEmpty())

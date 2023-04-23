@@ -8,7 +8,7 @@ import mu.KotlinLogging
 import ofws.app.TileApplication
 import ofws.core.game.action.Action
 import ofws.core.game.action.Init
-import ofws.core.game.action.MoveTo
+import ofws.core.game.action.UpdatePosition
 import ofws.core.game.component.Footprint
 import ofws.core.game.component.Graphic
 import ofws.core.game.component.SimpleFootprint
@@ -16,7 +16,7 @@ import ofws.core.game.component.getPosition
 import ofws.core.game.map.GameMap
 import ofws.core.game.map.Terrain
 import ofws.core.game.reducer.INIT_REDUCER
-import ofws.core.game.reducer.MOVE_TO_REDUCER
+import ofws.core.game.reducer.UPDATE_POSITION_REDUCER
 import ofws.core.render.Color
 import ofws.core.render.FullTile
 import ofws.core.render.GameRenderer
@@ -77,7 +77,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
         val reducer: Reducer<Action, EcsState> = { state, action ->
             when (action) {
                 is Init -> INIT_REDUCER(state, action)
-                is MoveTo -> MOVE_TO_REDUCER(state, action)
+                is UpdatePosition -> UPDATE_POSITION_REDUCER(state, action)
                 else -> noFollowUps(state)
             }
         }
@@ -133,7 +133,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
         if (!isBlocking(newIndex)) {
             val state = store.getState()
             val entity = state.getData<Entity>()!!
-            store.dispatch(MoveTo(entity, newIndex))
+            store.dispatch(UpdatePosition(entity, newIndex))
         }
     }
 
