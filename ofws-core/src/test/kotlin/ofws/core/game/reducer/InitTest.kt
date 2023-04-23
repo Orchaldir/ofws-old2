@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-class InitReducerTest {
+class InitTest {
 
     @Nested
     inner class InitFootprints {
