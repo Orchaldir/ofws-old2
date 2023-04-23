@@ -24,14 +24,13 @@ private fun initFootprints(state: EcsState, updatedData: MutableList<Any>) {
         logger.info("Skip init of footprints, because of missing map")
         return
     }
-    val storage = state.getStorage<Footprint>() ?: run {
+    state.getStorage<Footprint>() ?: run {
         logger.info("Skip init of missing footprints")
         return
     }
     val builder = map.entityMap.builder()
 
-    for (entity in storage.getIds()) {
-        val footprint = storage.getOrThrow(entity)
+    for ((entity, footprint) in state.query1<Footprint>()) {
         logger.info("Init $footprint for $entity")
         builder.addFootprint(entity, footprint)
     }

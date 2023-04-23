@@ -26,7 +26,7 @@ class MessageLogRenderer(
 
             val y = area.startY + i * fontSize.size
             val color = colors.getOrDefault(message.type, Color.WHITE)
-            val text =  String.format("%${digits}d: %s", size - i, message.text)
+            val text = String.format("%${digits}d: %s", size - i, message.text)
             tileRenderer.renderText(text, color, area.startX, y, fontSize)
         }
     }
