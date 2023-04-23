@@ -19,15 +19,16 @@ import ofws.core.game.map.Terrain
 import ofws.core.game.reducer.INIT_REDUCER
 import ofws.core.game.reducer.MOVE_REDUCER
 import ofws.core.game.reducer.UPDATE_POSITION_REDUCER
-import ofws.core.render.Color
-import ofws.core.render.FullTile
-import ofws.core.render.GameRenderer
-import ofws.core.render.UnicodeTile
+import ofws.core.log.MessageLog
+import ofws.core.log.inform
+import ofws.core.render.*
 import ofws.ecs.EcsBuilder
 import ofws.ecs.EcsState
 import ofws.ecs.Entity
 import ofws.math.Direction.*
 import ofws.math.Range
+import ofws.math.Rectangle
+import ofws.math.Size2d
 import ofws.math.fov.FovConfig
 import ofws.math.fov.ShadowCasting
 import ofws.math.map.TileIndex
@@ -42,8 +43,12 @@ import kotlin.system.exitProcess
 
 private val logger = KotlinLogging.logger {}
 
+private const val LOG_SIZE = 5
+
 class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
+    private val mapSize = Size2d(size.x, size.y - LOG_SIZE)
     private lateinit var gameRenderer: GameRenderer
+    private lateinit var messageRenderer: MessageLogRenderer
     private lateinit var store: DefaultStore<Action, EcsState>
 
     private val fovAlgorithm = ShadowCasting()
@@ -58,19 +63,21 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
     override fun start(primaryStage: Stage) {
         init(primaryStage, "FieldOfView Demo")
 
-        val map = with(TileMapBuilder(size, Terrain.FLOOR)) {
+        val map = with(TileMapBuilder(mapSize, Terrain.FLOOR)) {
             addBorder(Terrain.WALL)
             val rng = Random
-            repeat(500) { setTile(TileIndex(rng.nextInt(size.tiles)), Terrain.WALL) }
+            repeat(500) { setTile(TileIndex(rng.nextInt(mapSize.tiles)), Terrain.WALL) }
             build()
         }
 
-        gameRenderer = GameRenderer(size, tileRenderer)
+        gameRenderer = GameRenderer(Rectangle(0, LOG_SIZE, mapSize), tileRenderer)
+        messageRenderer = MessageLogRenderer(Rectangle(Size2d(size.x, LOG_SIZE)), tileRenderer)
 
         val ecsState = with(EcsBuilder()) {
             addData(GameMap(map))
+            addData(MessageLog(listOf(inform("Welcome! Use the arrow key to move around."))))
             val entity = createEntity()
-                .add(SimpleFootprint(size.getIndex(30, 22)) as Footprint)
+                .add(SimpleFootprint(mapSize.getIndex(30, 22)) as Footprint)
                 .add(Graphic(FullTile(Color.BLUE)))
                 .entity
             addData(entity)
@@ -96,7 +103,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
         val entity = state.getData<Entity>()!!
         val footprint = state.getStorage<Footprint>()?.get(entity)!!
         val index = getPosition(footprint)
-        val config = FovConfig(size, index, Range(max = 10), createIsBlocking(state))
+        val config = FovConfig(mapSize, index, Range(max = 10), createIsBlocking(state))
 
         visibleTiles = fovAlgorithm.calculateVisibleCells(config)
         knownTiles.addAll(visibleTiles)
@@ -115,6 +122,8 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
             renderEntities(state)
             renderTiles(gameMap, ::getTile, knownTiles)
         }
+
+        messageRenderer.render(state.getData()!!)
 
         logger.info("render(): finished")
     }
@@ -136,7 +145,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
     override fun onTileClicked(x: Int, y: Int, button: MouseButton) {
         logger.info("onTileClicked(): x=$x y=$y button=$button")
 
-        val newIndex = size.getIndex(x, y)
+        val newIndex = gameRenderer.area.convertToInside(x, y) ?: return
         val isBlocking = createIsBlocking(store.getState())
 
         if (!isBlocking(newIndex)) {

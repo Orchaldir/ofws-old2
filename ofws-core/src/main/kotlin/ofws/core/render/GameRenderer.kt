@@ -70,7 +70,7 @@ class GameRenderer(
         val terrain = map.tilemap.getTile(index)
         val tile = getTile(terrain)
 
-        renderTile(renderer, tile, x, y)
+        renderTile(renderer, tile, area.startX + x, area.startY + y)
     }
 
 }

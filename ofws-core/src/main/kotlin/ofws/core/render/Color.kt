@@ -12,6 +12,7 @@ data class Color(
         val PINK = Color(255u, 192u, 203u)
         val RED = Color(255u, 0u, 0u)
         val WHITE = Color(255u, 255u, 255u)
+        val YELLOW = Color(255u, 255u, 0u)
     }
 
     fun getRedDouble() = red.toDouble() / 255.0
