@@ -24,14 +24,14 @@ class GameMapTest {
     @Nested
     inner class CheckWalkability {
 
-        private val blocked = TileIndex(0)
+        private val blocked = TileIndex(7)
         private val index4 = TileIndex(4)
 
         private val entity0 = Entity(0)
         private val entity1 = Entity(1)
 
         private val tilemap = TileMapBuilder(3, 5, FLOOR)
-            .setTile(1, 2, WALL)
+            .setTile(blocked, WALL)
             .build()
         private val map = GameMap(tilemap)
         private val mapWithEntity = GameMap(tilemap, EntityMap(size, mapOf(index4 to entity0)))
@@ -73,7 +73,7 @@ class GameMapTest {
 
         @Test
         fun `Entity can walk in its own cell`() {
-            assertEquals(Walkable(index4), mapWithEntity.checkWalkability(index4, entity0, TWO))
+            assertEquals(Walkable(index4), mapWithEntity.checkWalkability(index4, entity0))
         }
 
         @Test
@@ -83,7 +83,7 @@ class GameMapTest {
 
         private fun assertWalkable(index: Int) {
             val position = TileIndex(index)
-            assertEquals(Walkable(position), map.checkWalkability(position, entity0, TWO))
+            assertEquals(Walkable(position), map.checkWalkability(position, entity0))
         }
 
         private fun assertBigIsBlocked(index: Int) {
