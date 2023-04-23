@@ -1,7 +1,8 @@
 package ofws.core.game.reducer
 
 import ofws.core.game.action.UpdatePosition
-import ofws.core.game.component.*
+import ofws.core.game.component.Footprint
+import ofws.core.game.component.updateFootprint
 import ofws.core.game.map.EntityMap
 import ofws.core.game.map.GameMap
 import ofws.ecs.EcsState
@@ -25,6 +26,6 @@ val UPDATE_POSITION_REDUCER: Reducer<UpdatePosition, EcsState> = a@{ state, acti
 }
 
 fun updateMap(map: EntityMap, entity: Entity, old: Footprint, new: Footprint) = map.builder()
-        .removeFootprint(entity, old)
-        .addFootprint(entity, new)
-        .build()
+    .removeFootprint(entity, old)
+    .addFootprint(entity, new)
+    .build()

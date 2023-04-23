@@ -61,6 +61,20 @@ data class Size2d(
         return indices
     }
 
+    fun getNeighbor(index: TileIndex, direction: Direction) = getOffset(index, direction.x, direction.y)
+
+    private fun getOffset(index: TileIndex, deltaX: Int, deltaY: Int): TileIndex? {
+        val (x, y) = getPoint(index)
+        val offsetX = x + deltaX
+        val offsetY = y + deltaY
+
+        return if (isInside(offsetX, offsetY)) {
+            getIndex(offsetX, offsetY)
+        } else {
+            null
+        }
+    }
+
     fun getPoint(index: TileIndex) = Pair(getX(index), getY(index))
 
     fun getX(index: TileIndex) = index.index % x

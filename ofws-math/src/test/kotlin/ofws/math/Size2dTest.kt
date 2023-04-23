@@ -1,5 +1,6 @@
 package ofws.math
 
+import ofws.math.Direction.*
 import ofws.math.map.TileIndex
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
@@ -101,6 +102,37 @@ class Size2dTest {
     @MethodSource("ofws.math.Size2dTest#inside")
     fun `Get y from index`(index: Int, x: Int, y: Int) {
         assertEquals(y, size.getY(TileIndex(index)))
+    }
+
+    @Nested
+    inner class GetNeighbor {
+
+        private val size = Size2d(3, 4)
+        private val center = TileIndex(4)
+
+        @Test
+        fun `Get valid neighbors`() {
+            testValid(NORTH, 1)
+            testValid(EAST, 5)
+            testValid(SOUTH, 7)
+            testValid(WEST, 3)
+        }
+
+        @Test
+        fun `Get null if outside`() {
+            testNoNeighbor(1, NORTH)
+            testNoNeighbor(5, EAST)
+            testNoNeighbor(10, SOUTH)
+            testNoNeighbor(3, WEST)
+        }
+
+        private fun testValid(direction: Direction, result: Int) {
+            assertEquals(TileIndex(result), size.getNeighbor(center, direction)!!)
+        }
+
+        private fun testNoNeighbor(index: Int, direction: Direction) {
+            assertNull(size.getNeighbor(TileIndex(index), direction))
+        }
     }
 
     @Nested
