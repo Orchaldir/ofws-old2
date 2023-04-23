@@ -151,7 +151,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
         if (!isBlocking(newIndex)) {
             val state = store.getState()
             val entity = state.getData<Entity>()!!
-            store.dispatch(UpdatePosition(entity, newIndex))
+            store.dispatch(UpdatePosition(entity, newIndex, NORTH))
         }
     }
 

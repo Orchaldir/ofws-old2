@@ -7,18 +7,17 @@ import ofws.core.game.map.EntityMap
 import ofws.core.game.map.GameMap
 import ofws.ecs.EcsState
 import ofws.ecs.Entity
-import ofws.math.Direction
 import ofws.redux.Reducer
 import ofws.redux.noFollowUps
 
 val UPDATE_POSITION_REDUCER: Reducer<UpdatePosition, EcsState> = a@{ state, action ->
     val map = state.getData<GameMap>()!!
-    val bodyStorage = state.getStorage<Footprint>()!!
-    val footprint = bodyStorage.getOrThrow(action.entity)
+    val storage = state.getStorage<Footprint>()!!
+    val footprint = storage.getOrThrow(action.entity)
 
-    val newFootprint = updateFootprint(footprint, action.index, Direction.NORTH)
+    val newFootprint = updateFootprint(footprint, action.index, action.direction)
     val newMap = updateMap(map, action.entity, footprint, newFootprint)
-    val newFootprintStorage = bodyStorage.updateAndRemove(mapOf(action.entity to newFootprint))
+    val newFootprintStorage = storage.updateAndRemove(mapOf(action.entity to newFootprint))
     val newState = state.copy(listOf(newFootprintStorage), listOf(newMap))
 
     noFollowUps(newState)
