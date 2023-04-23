@@ -8,6 +8,7 @@ import mu.KotlinLogging
 import ofws.app.TileApplication
 import ofws.core.game.action.Action
 import ofws.core.game.action.Init
+import ofws.core.game.action.Move
 import ofws.core.game.action.UpdatePosition
 import ofws.core.game.component.Footprint
 import ofws.core.game.component.Graphic
@@ -16,6 +17,7 @@ import ofws.core.game.component.getPosition
 import ofws.core.game.map.GameMap
 import ofws.core.game.map.Terrain
 import ofws.core.game.reducer.INIT_REDUCER
+import ofws.core.game.reducer.MOVE_REDUCER
 import ofws.core.game.reducer.UPDATE_POSITION_REDUCER
 import ofws.core.render.Color
 import ofws.core.render.FullTile
@@ -24,6 +26,7 @@ import ofws.core.render.UnicodeTile
 import ofws.ecs.EcsBuilder
 import ofws.ecs.EcsState
 import ofws.ecs.Entity
+import ofws.math.Direction.*
 import ofws.math.Range
 import ofws.math.fov.FovConfig
 import ofws.math.fov.ShadowCasting
@@ -77,6 +80,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
         val reducer: Reducer<Action, EcsState> = { state, action ->
             when (action) {
                 is Init -> INIT_REDUCER(state, action)
+                is Move -> MOVE_REDUCER(state, action)
                 is UpdatePosition -> UPDATE_POSITION_REDUCER(state, action)
                 else -> noFollowUps(state)
             }
@@ -117,8 +121,13 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
 
     override fun onKeyReleased(keyCode: KeyCode) {
         logger.info("onKeyReleased(): keyCode=$keyCode")
+        val entity = store.getState().getData<Entity>()!!
 
         when (keyCode) {
+            KeyCode.UP -> store.dispatch(Move(entity, NORTH))
+            KeyCode.RIGHT -> store.dispatch(Move(entity, EAST))
+            KeyCode.DOWN -> store.dispatch(Move(entity, SOUTH))
+            KeyCode.LEFT -> store.dispatch(Move(entity, WEST))
             KeyCode.ESCAPE -> exitProcess(0)
             else -> return
         }
