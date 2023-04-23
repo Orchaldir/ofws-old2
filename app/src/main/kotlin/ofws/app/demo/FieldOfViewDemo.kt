@@ -146,13 +146,9 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
         logger.info("onTileClicked(): x=$x y=$y button=$button")
 
         val newIndex = gameRenderer.area.convertToInside(x, y) ?: return
-        val isBlocking = createIsBlocking(store.getState())
-
-        if (!isBlocking(newIndex)) {
-            val state = store.getState()
-            val entity = state.getData<Entity>()!!
-            store.dispatch(UpdatePosition(entity, newIndex, NORTH))
-        }
+        val state = store.getState()
+        val entity = state.getData<Entity>()!!
+        store.dispatch(UpdatePosition(entity, newIndex, NORTH))
     }
 
     private fun createIsBlocking(state: EcsState): (index: TileIndex) -> Boolean {

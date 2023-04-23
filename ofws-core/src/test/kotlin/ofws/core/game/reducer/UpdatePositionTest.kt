@@ -10,6 +10,7 @@ import ofws.core.game.map.GameMap
 import ofws.core.game.map.Terrain.FLOOR
 import ofws.ecs.EcsBuilder
 import ofws.ecs.Entity
+import ofws.math.Direction.NORTH
 import ofws.math.Size1d.Companion.TWO
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
@@ -86,7 +87,7 @@ class UpdatePositionTest {
             build()
         }
 
-        val (newState, actions) = UPDATE_POSITION_REDUCER(state, UpdatePosition(entity, index2))
+        val (newState, actions) = UPDATE_POSITION_REDUCER(state, UpdatePosition(entity, index2, NORTH))
         val newMap = newState.getData<GameMap>()!!
 
         assertTrue(actions.isEmpty())
