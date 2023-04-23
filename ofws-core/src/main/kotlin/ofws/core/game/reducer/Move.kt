@@ -1,16 +1,15 @@
 package ofws.core.game.reducer
 
 import ofws.core.game.action.Move
-import ofws.core.game.component.*
-import ofws.core.game.map.*
-import ofws.core.log.addMessage
-import ofws.core.log.warn
+import ofws.core.game.component.Footprint
+import ofws.core.game.component.getPosition
+import ofws.core.game.component.getSize
+import ofws.core.game.map.GameMap
+import ofws.core.game.map.then
 import ofws.ecs.EcsState
 import ofws.ecs.Entity
-import ofws.ecs.storage.ComponentStorage
 import ofws.math.Direction
 import ofws.redux.Reducer
-import ofws.redux.noFollowUps
 
 val MOVE_REDUCER: Reducer<Move, EcsState> = a@{ state, action ->
     val map = state.getData<GameMap>()!!
@@ -19,57 +18,14 @@ val MOVE_REDUCER: Reducer<Move, EcsState> = a@{ state, action ->
 
     val walkability = getNewPosition(map, action.entity, footprint, action.direction)
 
-    val newState = when (walkability) {
-        is Walkable -> move(state, map, action.entity, footprintStorage, footprint, walkability, action.direction)
-        else -> handleError(state, walkability)
-    }
-
-    noFollowUps(newState)
+    updatePosition(state, map, action.entity, action.direction, footprint, walkability)
 }
 
-fun getNewPosition(map: GameMap, entity: Entity, footprint: Footprint, direction: Direction) = when (footprint) {
-    is SimpleFootprint -> map.getSize().getNeighbor(footprint.position, direction) then { position ->
+fun getNewPosition(map: GameMap, entity: Entity, footprint: Footprint, direction: Direction) =
+    map.getSize().getNeighbor(getPosition(footprint), direction) then { position ->
         map.checkWalkability(
             position,
-            entity = entity
+            entity,
+            getSize(footprint),
         )
     }
-
-    is BigFootprint -> map.getSize().getNeighbor(footprint.position, direction) then { position ->
-        map.checkWalkability(
-            position,
-            size = footprint.size,
-            entity = entity
-        )
-    }
-
-    is SnakeFootprint -> map.getSize().getNeighbor(footprint.positions.first(), direction) then { position ->
-        map.checkWalkability(
-            position,
-            entity = entity
-        )
-    }
-}
-
-private fun move(
-    state: EcsState,
-    map: GameMap,
-    entity: Entity,
-    storage: ComponentStorage<Footprint>,
-    footprint: Footprint,
-    walkable: Walkable,
-    direction: Direction,
-): EcsState {
-    val newFootprint = updateFootprint(footprint, walkable.position, direction)
-    val newMap = updateMap(map, entity, footprint, newFootprint)
-    val newStorage = storage.updateAndRemove(mapOf(entity to newFootprint))
-
-    return state.copy(listOf(newStorage), listOf(newMap))
-}
-
-fun handleError(state: EcsState, walkability: Walkability) = when (walkability) {
-    BlockedByObstacle -> addMessage(state, warn("Blocked by obstacle"))
-    is BlockedByEntity -> addMessage(state, warn(state, "Blocked by %s", walkability.entity))
-    OutsideMap -> addMessage(state, warn("Blocked by map border"))
-    else -> throw IllegalArgumentException("Unknown error!")
-}
