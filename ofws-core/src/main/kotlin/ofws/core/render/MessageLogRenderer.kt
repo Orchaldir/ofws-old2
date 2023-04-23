@@ -6,6 +6,7 @@ import ofws.core.log.MessageType.WARN
 import ofws.math.Rectangle
 import ofws.math.Size1d
 import ofws.math.Size1d.Companion.ONE
+import kotlin.math.log10
 
 class MessageLogRenderer(
     private val area: Rectangle,
@@ -15,6 +16,9 @@ class MessageLogRenderer(
 ) {
 
     fun render(messageLog: MessageLog) {
+        val size = messageLog.messages.size
+        val digits = size.countDigits()
+
         for ((i, message) in messageLog.messages.reversed().withIndex()) {
             if (i >= area.size.y) {
                 return
@@ -22,8 +26,14 @@ class MessageLogRenderer(
 
             val y = area.startY + i * fontSize.size
             val color = colors.getOrDefault(message.type, Color.WHITE)
-            tileRenderer.renderText(message.text, color, area.startX, y, fontSize)
+            val text =  String.format("%${digits}d: %s", size - i, message.text)
+            tileRenderer.renderText(text, color, area.startX, y, fontSize)
         }
     }
 
+}
+
+private fun Int.countDigits() = when (this) {
+    0 -> 1
+    else -> log10(toDouble()).toInt() + 1
 }

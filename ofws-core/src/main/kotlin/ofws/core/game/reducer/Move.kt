@@ -4,7 +4,7 @@ import ofws.core.game.action.Move
 import ofws.core.game.component.*
 import ofws.core.game.map.*
 import ofws.core.log.addMessage
-import ofws.core.log.inform
+import ofws.core.log.warn
 import ofws.ecs.EcsState
 import ofws.ecs.Entity
 import ofws.ecs.storage.ComponentStorage
@@ -68,8 +68,8 @@ private fun move(
 }
 
 fun handleError(state: EcsState, walkability: Walkability) = when (walkability) {
-    BlockedByObstacle -> addMessage(state, inform("Blocked by obstacle"))
-    is BlockedByEntity -> addMessage(state, inform(state, "Blocked by %s", walkability.entity))
-    OutsideMap -> addMessage(state, inform("Blocked by map border"))
+    BlockedByObstacle -> addMessage(state, warn("Blocked by obstacle"))
+    is BlockedByEntity -> addMessage(state, warn(state, "Blocked by %s", walkability.entity))
+    OutsideMap -> addMessage(state, warn("Blocked by map border"))
     else -> throw IllegalArgumentException("Unknown error!")
 }

@@ -75,7 +75,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
 
         val ecsState = with(EcsBuilder()) {
             addData(GameMap(map))
-            addData(MessageLog(listOf(inform("Welcome! Use the arrow key to move around."))))
+            addData(MessageLog(listOf(inform("Welcome! Use the arrow keys to move around."))))
             val entity = createEntity()
                 .add(SimpleFootprint(mapSize.getIndex(30, 22)) as Footprint)
                 .add(Graphic(FullTile(Color.BLUE)))
