@@ -2,14 +2,9 @@ package ofws.core.game.reducer
 
 import mu.KotlinLogging
 import ofws.core.game.action.Init
-import ofws.core.game.component.BigFootprint
 import ofws.core.game.component.Footprint
-import ofws.core.game.component.SimpleFootprint
-import ofws.core.game.component.SnakeFootprint
-import ofws.core.game.map.EntityMapBuilder
 import ofws.core.game.map.GameMap
 import ofws.ecs.EcsState
-import ofws.ecs.Entity
 import ofws.redux.Reducer
 import ofws.redux.noFollowUps
 
@@ -35,21 +30,8 @@ private fun initFootprints(state: EcsState, updatedData: MutableList<Any>) {
     for (entity in footprintStorage.getIds()) {
         val footprint = footprintStorage.getOrThrow(entity)
         logger.info("Init $footprint for $entity")
-        addToMap(mapBuilder, entity, footprint)
+        mapBuilder.addFootprint(entity, footprint)
     }
 
     updatedData += map.copy(entityMap = mapBuilder.build())
-}
-
-private fun addToMap(builder: EntityMapBuilder, entity: Entity, footprint: Footprint) = when (footprint) {
-    is SimpleFootprint -> builder
-        .addEntity(footprint.position, entity)
-
-    is BigFootprint -> builder
-        .addEntity(footprint.position, entity, footprint.size)
-
-    is SnakeFootprint -> {
-        footprint.positions.forEach { p -> builder.addEntity(p, entity) }
-        builder
-    }
 }
