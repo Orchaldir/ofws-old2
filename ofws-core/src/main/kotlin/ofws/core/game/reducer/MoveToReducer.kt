@@ -29,16 +29,16 @@ val MOVE_TO_REDUCER: Reducer<MoveTo, EcsState> = a@{ state, action ->
 fun updateMap(map: EntityMap, entity: Entity, footprint: Footprint, position: TileIndex) =
     updateMap(map.builder(), entity, footprint, position).build()
 
-fun updateMap(map: EntityMapBuilder, entity: Entity, footprint: Footprint, position: TileIndex) = when (footprint) {
-    is SimpleFootprint -> map
+fun updateMap(builder: EntityMapBuilder, entity: Entity, footprint: Footprint, position: TileIndex) = when (footprint) {
+    is SimpleFootprint -> builder
         .removeEntity(footprint.position, entity)
         .addEntity(position, entity)
 
-    is BigFootprint -> map
+    is BigFootprint -> builder
         .removeEntity(footprint.position, entity, footprint.size)
         .addEntity(position, entity, footprint.size)
 
-    is SnakeFootprint -> with(map) {
+    is SnakeFootprint -> with(builder) {
         val last = footprint.positions.last()
         if (footprint.positions.count { i -> i == last } == 1) {
             removeEntity(last, entity)
