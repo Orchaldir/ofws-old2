@@ -18,7 +18,15 @@ class GameMapTest {
     @Test
     fun `Test simple constructor`() {
         val tilemap = TileMapBuilder(size, FLOOR).build()
+
         assertEquals(GameMap(tilemap, EntityMap(size)), GameMap(tilemap))
+    }
+
+    @Test
+    fun `Get the maps size`() {
+        val map = GameMap(TileMapBuilder(size, FLOOR).build())
+
+        assertEquals(size, map.getSize())
     }
 
     @Nested

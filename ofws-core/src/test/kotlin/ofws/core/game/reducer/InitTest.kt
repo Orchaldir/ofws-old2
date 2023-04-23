@@ -34,6 +34,26 @@ class InitTest {
         private val entity = Entity(0)
 
         @Test
+        fun `Init without map`() {
+            val state = with(EcsBuilder()) {
+                createEntity().add(index0)
+                build()
+            }
+
+            INIT_REDUCER(state, Init)
+        }
+
+        @Test
+        fun `Init without footprints`() {
+            val state = with(EcsBuilder()) {
+                addData(map)
+                build()
+            }
+
+            INIT_REDUCER(state, Init)
+        }
+
+        @Test
         fun `Init simple footprint`() {
             test(SimpleFootprint(index1), mapOf(index1 to entity))
         }
