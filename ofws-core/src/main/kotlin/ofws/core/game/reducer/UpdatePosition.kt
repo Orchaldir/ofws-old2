@@ -17,13 +17,15 @@ val UPDATE_POSITION_REDUCER: Reducer<UpdatePosition, EcsState> = a@{ state, acti
     val footprint = bodyStorage.getOrThrow(action.entity)
 
     val newFootprint = updateFootprint(footprint, action.index, Direction.NORTH)
-    val newEntityMap = updateMap(map.entityMap, action.entity, footprint, newFootprint)
-    val newMap = map.copy(entityMap = newEntityMap)
+    val newMap = updateMap(map, action.entity, footprint, newFootprint)
     val newFootprintStorage = bodyStorage.updateAndRemove(mapOf(action.entity to newFootprint))
     val newState = state.copy(listOf(newFootprintStorage), listOf(newMap))
 
     noFollowUps(newState)
 }
+
+fun updateMap(map: GameMap, entity: Entity, old: Footprint, new: Footprint) = map
+    .copy(entityMap = updateMap(map.entityMap, entity, old, new))
 
 fun updateMap(map: EntityMap, entity: Entity, old: Footprint, new: Footprint) = map.builder()
     .removeFootprint(entity, old)

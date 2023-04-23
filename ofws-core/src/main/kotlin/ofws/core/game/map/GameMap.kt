@@ -42,4 +42,6 @@ data class GameMap(
         return Walkable(position)
     }
 
+    fun getSize() = tilemap.size
+
 }
