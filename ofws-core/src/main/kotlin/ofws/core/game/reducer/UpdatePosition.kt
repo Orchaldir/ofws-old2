@@ -64,7 +64,7 @@ private fun updateMap(map: EntityMap, entity: Entity, old: Footprint, new: Footp
 
 private fun handleError(state: EcsState, walkability: Walkability) = when (walkability) {
     BlockedByObstacle -> addMessage(state, warn("Blocked by obstacle"))
-    is BlockedByEntity -> addMessage(state, warn(state, "Blocked by %s", walkability.entity))
-    OutsideMap -> addMessage(state, warn("Blocked by map border"))
+    is BlockedByEntity -> addMessage(state, warn("New position is full"))
+    OutsideMap -> addMessage(state, warn("New position is outside the map"))
     else -> throw IllegalArgumentException("Unknown error!")
 }
