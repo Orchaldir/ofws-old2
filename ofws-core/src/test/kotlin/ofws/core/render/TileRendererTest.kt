@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test
 
 class TileRendererTest {
 
-    val renderer = mockk<Renderer>(relaxed = true)
-    val tileRenderer = TileRenderer(renderer, 100, 200, Size2d(30, 40))
+    private val renderer = mockk<Renderer>(relaxed = true)
+    private val tileRenderer = TileRenderer(renderer, 100, 200, Size2d(30, 40))
 
     @Nested
     inner class GetTileX {

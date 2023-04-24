@@ -6,6 +6,8 @@ data class MessageLog(val messages: List<Message>) {
 
     constructor() : this(emptyList())
 
+    constructor(message: Message) : this(listOf(message))
+
     fun add(message: Message) = MessageLog(messages + message)
 
     fun add(newMessages: List<Message>) = MessageLog(messages + newMessages)
