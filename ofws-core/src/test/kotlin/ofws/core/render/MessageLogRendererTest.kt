@@ -56,14 +56,23 @@ class MessageLogRendererTest {
 
     @Test
     fun `More messages than the area can contain`() {
-        renderer.render(MessageLog((0..20).map { warn("Test $it") }))
+        renderer.render(MessageLog((0..11).map { warn("Test $it") }))
 
         verifySequence {
-            tileRenderer.renderText("21: Test 20", YELLOW, 10, 20, ONE)
-            tileRenderer.renderText("20: Test 19", YELLOW, 10, 21, ONE)
-            tileRenderer.renderText("19: Test 18", YELLOW, 10, 22, ONE)
-            tileRenderer.renderText("18: Test 17", YELLOW, 10, 23, ONE)
-            tileRenderer.renderText("17: Test 16", YELLOW, 10, 24, ONE)
+            tileRenderer.renderText("12: Test 11", YELLOW, 10, 20, ONE)
+            tileRenderer.renderText("11: Test 10", YELLOW, 10, 21, ONE)
+            tileRenderer.renderText("10: Test 9", YELLOW, 10, 22, ONE)
+            tileRenderer.renderText(" 9: Test 8", YELLOW, 10, 23, ONE)
+            tileRenderer.renderText(" 8: Test 7", YELLOW, 10, 24, ONE)
+        }
+    }
+
+    @Test
+    fun `Too long messages are cut off`() {
+        renderer.render(MessageLog(inform("This message is too long!!")))
+
+        verifySequence {
+            tileRenderer.renderText("1: This message", WHITE, 10, 20, ONE)
         }
     }
 
