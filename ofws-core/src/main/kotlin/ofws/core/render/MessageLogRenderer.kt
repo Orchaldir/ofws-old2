@@ -8,7 +8,7 @@ import ofws.math.Size1d
 import ofws.math.Size1d.Companion.ONE
 import kotlin.math.log10
 
-class MessageLogRenderer(
+data class MessageLogRenderer(
     private val area: Rectangle,
     private val tileRenderer: TileRenderer,
     private val colors: Map<MessageType, Color> = mapOf(WARN to Color.YELLOW),

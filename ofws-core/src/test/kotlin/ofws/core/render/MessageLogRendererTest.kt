@@ -11,6 +11,7 @@ import ofws.core.render.Color.Companion.WHITE
 import ofws.core.render.Color.Companion.YELLOW
 import ofws.math.Rectangle
 import ofws.math.Size1d.Companion.ONE
+import ofws.math.Size1d.Companion.TWO
 import ofws.math.Size2d
 import org.junit.jupiter.api.Test
 
@@ -20,7 +21,7 @@ class MessageLogRendererTest {
     private val renderer = MessageLogRenderer(Rectangle(10, 20, Size2d(15, 5)), tileRenderer)
 
     @Test
-    fun `Render no messages`() {
+    fun `No messages`() {
         renderer.render(MessageLog())
 
         verify { tileRenderer wasNot Called }
@@ -64,6 +65,17 @@ class MessageLogRendererTest {
             tileRenderer.renderText("10: Test 9", YELLOW, 10, 22, ONE)
             tileRenderer.renderText(" 9: Test 8", YELLOW, 10, 23, ONE)
             tileRenderer.renderText(" 8: Test 7", YELLOW, 10, 24, ONE)
+        }
+    }
+
+    @Test
+    fun `Use a bigger  font size`() {
+        val bigger = renderer.copy(fontSize = TWO)
+        bigger.render(MessageLog(listOf(inform("abc"), warn("def"))))
+
+        verifySequence {
+            tileRenderer.renderText("2: def", YELLOW, 10, 20, TWO)
+            tileRenderer.renderText("1: abc", WHITE, 10, 22, TWO)
         }
     }
 
