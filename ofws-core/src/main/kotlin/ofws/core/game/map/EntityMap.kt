@@ -4,6 +4,9 @@ import ofws.ecs.Entity
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
 
+/**
+ * Stores which entity occupies each tile.
+ */
 data class EntityMap(
     private val size: Size2d,
     private val entities: Map<TileIndex, Entity> = mapOf()

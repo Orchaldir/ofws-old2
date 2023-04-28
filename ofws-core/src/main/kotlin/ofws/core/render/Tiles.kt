@@ -3,6 +3,9 @@ package ofws.core.render
 import ofws.math.Size1d
 import ofws.math.Size1d.Companion.ONE
 
+/**
+ * A tile defines how each part of a [TileRenderer] is rendered.
+ */
 sealed class Tile
 object EmptyTile : Tile()
 data class FullTile(val color: Color) : Tile()

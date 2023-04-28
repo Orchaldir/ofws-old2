@@ -5,6 +5,9 @@ import ofws.math.Size1d.Companion.ONE
 import ofws.math.Size2d
 import ofws.math.requireGreater
 
+/**
+ * A renderer using a grid of [Tiles][Tile].
+ */
 class TileRenderer(
     private val renderer: Renderer,
     private val startPixelX: Int,

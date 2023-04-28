@@ -7,6 +7,9 @@ import ofws.math.Size1d.Companion.ONE
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
 
+/**
+ * A Footprint component defines which tiles an entity occupies.
+ */
 sealed class Footprint
 data class SimpleFootprint(val position: TileIndex, val direction: Direction = NORTH) : Footprint()
 data class BigFootprint(val position: TileIndex, val size: Size1d, val direction: Direction = NORTH) : Footprint()

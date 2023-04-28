@@ -17,13 +17,16 @@ class GameRenderer(
 
     constructor(size: Size2d, renderer: TileRenderer) : this(Rectangle(size), renderer)
 
+    /**
+     * Renders all entities with a [Footprint] & [Graphic] component.
+     */
     fun renderEntities(state: EcsState) {
         for ((_, footprint, graphic) in state.query2<Footprint, Graphic>()) {
-            renderBody(footprint, graphic)
+            renderEntity(footprint, graphic)
         }
     }
 
-    private fun renderBody(body: Footprint, graphic: Graphic) = when (body) {
+    private fun renderEntity(body: Footprint, graphic: Graphic) = when (body) {
         is SimpleFootprint -> renderTile(graphic.get(0), body.position)
         is BigFootprint -> renderTile(graphic.get(0), body.position, body.size)
         is SnakeFootprint -> for (pos in body.positions) {
@@ -31,9 +34,9 @@ class GameRenderer(
         }
     }
 
-    private fun renderTile(tile: Tile, index: TileIndex, bodySize: Size1d = ONE) =
-        renderTile(renderer, tile, area.getParentX(index), area.getParentY(index), bodySize)
-
+    /**
+     * Renders a whole map.
+     */
     fun renderMap(map: GameMap, getTile: (tile: Terrain) -> Tile) {
         for (y in 0 until area.size.y) {
             for (x in 0 until area.size.x) {
@@ -44,6 +47,9 @@ class GameRenderer(
         }
     }
 
+    /**
+     * Renders part of a map.
+     */
     fun renderTiles(
         map: GameMap,
         getTile: (tile: Terrain) -> Tile,
@@ -72,5 +78,8 @@ class GameRenderer(
 
         renderTile(renderer, tile, area.startX + x, area.startY + y)
     }
+
+    private fun renderTile(tile: Tile, index: TileIndex, bodySize: Size1d = ONE) =
+        renderTile(renderer, tile, area.getParentX(index), area.getParentY(index), bodySize)
 
 }

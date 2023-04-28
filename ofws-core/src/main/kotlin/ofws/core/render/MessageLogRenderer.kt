@@ -8,6 +8,10 @@ import ofws.math.Size1d
 import ofws.math.Size1d.Companion.ONE
 import kotlin.math.log10
 
+/**
+ * Renders a [MessageLog] in specific part of the window.
+ * Starts with the newest [Message][ofws.core.log.Message] on top.
+ */
 data class MessageLogRenderer(
     private val area: Rectangle,
     private val tileRenderer: TileRenderer,

@@ -6,6 +6,9 @@ import ofws.core.render.UnicodeTile
 
 val DEFAULT_GRAPHIC = UnicodeTile('?', Color.PINK)
 
+/**
+ * The Graphic component defines a list of [Tile]s for rendering.
+ */
 data class Graphic(val tiles: List<Tile>) {
 
     constructor(tile: Tile) : this(listOf(tile))

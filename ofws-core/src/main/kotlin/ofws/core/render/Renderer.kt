@@ -1,5 +1,8 @@
 package ofws.core.render
 
+/**
+ * A generic renderer using pixels as coordinates.
+ */
 interface Renderer {
 
     fun clear()
