@@ -76,10 +76,10 @@ class GameRenderer(
         val terrain = map.tilemap.getTile(index)
         val tile = getTile(terrain)
 
-        renderTile(renderer, tile, area.startX + x, area.startY + y)
+        renderer.renderTile(tile, area.startX + x, area.startY + y)
     }
 
     private fun renderTile(tile: Tile, index: TileIndex, bodySize: Size1d = ONE) =
-        renderTile(renderer, tile, area.getParentX(index), area.getParentY(index), bodySize)
+        renderer.renderTile(tile, area.getParentX(index), area.getParentY(index), bodySize)
 
 }

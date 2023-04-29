@@ -1,7 +1,11 @@
 package ofws.core.render
 
+import io.mockk.Called
 import io.mockk.mockk
+import io.mockk.verify
 import io.mockk.verifySequence
+import ofws.core.render.Color.Companion.GREEN
+import ofws.core.render.Color.Companion.RED
 import ofws.math.Size1d.Companion.FOUR
 import ofws.math.Size1d.Companion.THREE
 import ofws.math.Size1d.Companion.TWO
@@ -60,27 +64,66 @@ class TileRendererTest {
     }
 
     @Nested
+    inner class RenderTile {
+
+        @Test
+        fun `An empty tile renders nothing`() {
+            tileRenderer.renderTile(EmptyTile, 1, 2, THREE)
+
+            verify { renderer wasNot Called }
+        }
+
+        @Test
+        fun `An empty tile renders nothing with default size`() {
+            tileRenderer.renderTile(EmptyTile, 1, 2)
+
+            verify { renderer wasNot Called }
+        }
+
+        @Test
+        fun `A full tile renders a full tile`() {
+            tileRenderer.renderTile(FullTile(RED), 5, 6, TWO)
+
+            verifyFull(60, 80)
+        }
+
+        @Test
+        fun `A full tile renders a full tile with default size`() {
+            tileRenderer.renderTile(FullTile(RED), 5, 6)
+
+            verifyFull(30, 40)
+        }
+
+        @Test
+        fun `A unicode tile renders a unicode character`() {
+            tileRenderer.renderTile(UnicodeTile('T'.code, GREEN), 2, 3, FOUR)
+
+            verifyUnicode('T', 160, 220, 400)
+        }
+
+        @Test
+        fun `A unicode tile renders a unicode  with default size`() {
+            tileRenderer.renderTile(UnicodeTile('@'.code, GREEN), 2, 3)
+
+            verifyUnicode('@', 40, 175, 340)
+        }
+    }
+
+    @Nested
     inner class RenderFullTile {
 
         @Test
         fun `Render full tile with default size`() {
-            tileRenderer.renderFullTile(Color.RED, 5, 6)
+            tileRenderer.renderFullTile(RED, 5, 6)
 
-            verify(30, 40)
+            verifyFull(30, 40)
         }
 
         @Test
         fun `Render full tile`() {
-            tileRenderer.renderFullTile(Color.RED, 5, 6, THREE)
+            tileRenderer.renderFullTile(RED, 5, 6, THREE)
 
-            verify(90, 120)
-        }
-
-        private fun verify(width: Int, height: Int) {
-            verifySequence {
-                renderer.setColor(Color.RED)
-                renderer.renderRectangle(250, 440, width, height)
-            }
+            verifyFull(90, 120)
         }
     }
 
@@ -89,38 +132,30 @@ class TileRendererTest {
 
         @Test
         fun `Render character with default size`() {
-            tileRenderer.renderUnicodeTile('@', Color.GREEN, 2, 3)
+            tileRenderer.renderUnicodeTile('@', GREEN, 2, 3)
 
-            verify('@', 40, 175, 340)
+            verifyUnicode('@', 40, 175, 340)
         }
 
         @Test
         fun `Render character`() {
-            tileRenderer.renderUnicodeTile('?', Color.GREEN, 2, 3, FOUR)
+            tileRenderer.renderUnicodeTile('?', GREEN, 2, 3, FOUR)
 
-            verify('?', 160, 220, 400)
+            verifyUnicode('?', 160, 220, 400)
         }
 
         @Test
         fun `Render code point with default size`() {
-            tileRenderer.renderUnicodeTile('@'.code, Color.GREEN, 2, 3)
+            tileRenderer.renderUnicodeTile('@'.code, GREEN, 2, 3)
 
-            verify('@', 40, 175, 340)
+            verifyUnicode('@', 40, 175, 340)
         }
 
         @Test
         fun `Render code point`() {
-            tileRenderer.renderUnicodeTile('?'.code, Color.GREEN, 2, 3, FOUR)
+            tileRenderer.renderUnicodeTile('?'.code, GREEN, 2, 3, FOUR)
 
-            verify('?', 160, 220, 400)
-        }
-
-        private fun verify(unicode: Char, fontSize: Int, x: Int, y: Int) {
-            verifySequence {
-                renderer.setColor(Color.GREEN)
-                renderer.setFont(fontSize)
-                renderer.renderUnicode(unicode.code, x, y)
-            }
+            verifyUnicode('?', 160, 220, 400)
         }
     }
 
@@ -143,10 +178,10 @@ class TileRendererTest {
 
         @Test
         fun `Render emoji`() {
-            tileRenderer.renderText("🌳🚀", Color.RED, 0, 0)
+            tileRenderer.renderText("🌳🚀", RED, 0, 0)
 
             verifySequence {
-                renderer.setColor(Color.RED)
+                renderer.setColor(RED)
                 renderer.setFont(40)
                 renderer.renderUnicode(127795, 115, 220)
                 renderer.renderUnicode(128640, 145, 220)
@@ -162,6 +197,21 @@ class TileRendererTest {
                 renderer.renderUnicode('s'.code, x2, y)
                 renderer.renderUnicode('t'.code, x3, y)
             }
+        }
+    }
+
+    private fun verifyFull(width: Int, height: Int) {
+        verifySequence {
+            renderer.setColor(RED)
+            renderer.renderRectangle(250, 440, width, height)
+        }
+    }
+
+    private fun verifyUnicode(unicode: Char, fontSize: Int, x: Int, y: Int) {
+        verifySequence {
+            renderer.setColor(GREEN)
+            renderer.setFont(fontSize)
+            renderer.renderUnicode(unicode.code, x, y)
         }
     }
 

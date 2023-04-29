@@ -41,6 +41,19 @@ class TileRenderer(
         }
     }
 
+    fun renderTile(
+        tile: Tile,
+        x: Int,
+        y: Int,
+        size: Size1d = ONE
+    ) {
+        when (tile) {
+            is FullTile -> renderFullTile(tile.color, x, y, size)
+            is UnicodeTile -> renderUnicodeTile(tile.codePoint, tile.color, x, y, size)
+            is EmptyTile -> return
+        }
+    }
+
     fun renderUnicodeTile(
         character: Char,
         color: Color,
