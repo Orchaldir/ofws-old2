@@ -10,7 +10,7 @@ import ofws.math.Size1d.Companion.ONE
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
 
-class GameRenderer(
+data class GameRenderer(
     val area: Rectangle,
     val renderer: TileRenderer,
 ) {
@@ -54,13 +54,15 @@ class GameRenderer(
      */
     fun renderTiles(
         map: GameMap,
+        indices: Set<TileIndex>,
         getTile: (tile: Terrain) -> Tile,
-        indices: Set<TileIndex>
     ) {
         for (index in indices) {
-            val (x, y) = area.size.getPoint(index)
+            val (x, y) = map.getSize().getPoint(index)
 
-            renderTile(map, getTile, index, x, y)
+            if (area.size.isInside(x, y)) {
+                renderTile(map, getTile, index, x, y)
+            }
         }
     }
 

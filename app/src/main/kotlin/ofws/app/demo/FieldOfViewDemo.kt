@@ -118,9 +118,9 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
         renderer.clear()
 
         with(gameRenderer) {
-            renderTiles(gameMap, { visibleTile }, visibleTiles)
+            renderTiles(gameMap, visibleTiles) { visibleTile }
             renderEntities(state)
-            renderTiles(gameMap, ::getTile, knownTiles)
+            renderTiles(gameMap, knownTiles, ::getTile)
         }
 
         messageRenderer.render(state.getData()!!)
