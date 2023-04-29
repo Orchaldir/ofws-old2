@@ -1,6 +1,8 @@
 package ofws.math
 
 import ofws.math.map.TileIndex
+import kotlin.math.absoluteValue
+import kotlin.math.max
 
 /**
  * A [Size2d] defines a 2d rectangle starting at the origin.
@@ -26,6 +28,22 @@ data class Size2d(
      */
     val tiles: Int
         get() = x * y
+
+    /**
+     * Returns the Chebyshev distance between 2 tiles.
+     */
+    fun getDistance(from: TileIndex, to: TileIndex): Int {
+        val (fromX, fromY) = getPoint(from)
+        val (toX, toY) = getPoint(to)
+
+        return getDistance(fromX, fromY, toX, toY)
+    }
+
+    /**
+     * Returns the Chebyshev distance between 2 tiles.
+     */
+    fun getDistance(fromX: Int, fromY: Int, toX: Int, toY: Int) =
+        max((toX - fromX).absoluteValue, (toY - fromY).absoluteValue)
 
     /**
      * Returns the [TileIndex] of [x] & [y], but the calculation is only valid inside the defined rectangle.

@@ -37,6 +37,35 @@ class Size2dTest {
     }
 
     @Nested
+    inner class GetDistance {
+        private val size = Size2d(5, 5)
+        private val from = size.getIndex(2, 3)
+
+        @Test
+        fun `Test distance 0`() {
+            assertDistance(0, 0, 0)
+        }
+
+        @Test
+        fun `Test distance 1`() {
+            assertDistance(-1, -1, 1)
+            assertDistance(0, -1, 1)
+            assertDistance(1, -1, 1)
+            assertDistance(-1, 0, 1)
+            assertDistance(1, 0, 1)
+            assertDistance(-1, 1, 1)
+            assertDistance(0, 1, 1)
+            assertDistance(1, 1, 1)
+        }
+
+        private fun assertDistance(diffX: Int, diffY: Int, distance: Int) {
+            val to = size.getIndex(2 + diffX, 3 + diffY)
+            assertEquals(distance, size.getDistance(from, to))
+            assertEquals(distance, size.getDistance(2, 3, 2 + diffX, 3 + diffY))
+        }
+    }
+
+    @Nested
     inner class GetIndex {
         @ParameterizedTest(name = "index={0} x={1} y={2}")
         @MethodSource("ofws.math.Size2dTest#inside")
@@ -49,7 +78,7 @@ class Size2dTest {
     inner class GetIndexIfInside {
         @ParameterizedTest(name = "index={0} x={1} y={2}")
         @MethodSource("ofws.math.Size2dTest#inside")
-        fun `Return a index, if inside`(index: Int, x: Int, y: Int) {
+        fun `Return an index, if inside`(index: Int, x: Int, y: Int) {
             assertEquals(TileIndex(index), size.getIndexIfInside(x, y)!!)
         }
 
