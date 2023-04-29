@@ -41,13 +41,13 @@ class ShadowCasting : FovAlgorithm {
         val (originX, originY) = config.mapSize.getPoint(config.index)
         var top = parentTop
         var bottom = parentBottom
-        logger.info("$octant startX=$startX top=$top bottom=$bottom")
+        logger.debug("$octant startX=$startX top=$top bottom=$bottom")
 
         for (localX in startX..config.range.max) {
             val topY = top.calculateTopX(localX)
             val bottomY = bottom.calculateBottomX(localX)
 
-            logger.info("x=$localX topY=$topY bottomY=$bottomY")
+            logger.trace("x=$localX topY=$topY bottomY=$bottomY")
 
             var status = Status.UNDEFINED
 
@@ -59,7 +59,7 @@ class ShadowCasting : FovAlgorithm {
 
                 val isBlocking = config.isBlocking(index)
 
-                logger.info("  x=$localX y=$localY isBlocking=$isBlocking previous=$status")
+                logger.trace("  x=$localX y=$localY isBlocking=$isBlocking previous=$status")
 
                 if (isBlocking && status == Status.CLEAR) {
                     // create a slope above the current blocker

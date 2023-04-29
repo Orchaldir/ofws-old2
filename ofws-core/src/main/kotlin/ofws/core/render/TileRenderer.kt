@@ -1,13 +1,18 @@
 package ofws.core.render
 
-import ofws.math.Size
+import ofws.math.Size1d
+import ofws.math.Size1d.Companion.ONE
+import ofws.math.Size2d
 import ofws.math.requireGreater
 
+/**
+ * A renderer using a grid of [Tiles][Tile].
+ */
 class TileRenderer(
     private val renderer: Renderer,
     private val startPixelX: Int,
     private val startPixelY: Int,
-    private val tileSize: Size,
+    private val tileSize: Size2d,
 ) {
 
     init {
@@ -20,19 +25,32 @@ class TileRenderer(
         color: Color,
         x: Int,
         y: Int,
-        size: Int = 1
+        size: Size1d = ONE
     ) {
         with(renderer) {
             setColor(color)
-            setFont(size * tileSize.y)
+            setFont(size.size * tileSize.y)
 
             var centerX = getCenterPixelX(x, size)
             val centerY = getCenterPixelY(y, size)
 
             for (character in text.codePoints()) {
                 renderUnicode(character, centerX, centerY)
-                centerX += size * tileSize.x
+                centerX += size.size * tileSize.x
             }
+        }
+    }
+
+    fun renderTile(
+        tile: Tile,
+        x: Int,
+        y: Int,
+        size: Size1d = ONE
+    ) {
+        when (tile) {
+            is FullTile -> renderFullTile(tile.color, x, y, size)
+            is UnicodeTile -> renderUnicodeTile(tile.codePoint, tile.color, x, y, size)
+            is EmptyTile -> return
         }
     }
 
@@ -41,7 +59,7 @@ class TileRenderer(
         color: Color,
         x: Int,
         y: Int,
-        size: Int = 1
+        size: Size1d = ONE
     ) = renderUnicodeTile(character.code, color, x, y, size)
 
     fun renderUnicodeTile(
@@ -49,11 +67,11 @@ class TileRenderer(
         color: Color,
         x: Int,
         y: Int,
-        size: Int = 1
+        size: Size1d = ONE
     ) {
         with(renderer) {
             setColor(color)
-            setFont(size * tileSize.y)
+            setFont(size.size * tileSize.y)
             renderUnicode(codePoint, getCenterPixelX(x, size), getCenterPixelY(y, size))
         }
     }
@@ -62,10 +80,10 @@ class TileRenderer(
         color: Color,
         x: Int,
         y: Int,
-        size: Int = 1
+        size: Size1d = ONE
     ) {
         renderer.setColor(color)
-        renderer.renderRectangle(getStartPixelX(x), getStartPixelY(y), tileSize.x * size, tileSize.y * size)
+        renderer.renderRectangle(getStartPixelX(x), getStartPixelY(y), tileSize.x * size.size, tileSize.y * size.size)
     }
 
     fun getX(pixelX: Int) = (pixelX - startPixelX) / tileSize.x + if (pixelX < startPixelX) -1 else 0
@@ -76,8 +94,8 @@ class TileRenderer(
 
     private fun getStartPixelY(y: Int) = startPixelY + y * tileSize.y
 
-    private fun getCenterPixelX(x: Int, size: Int) = getStartPixelX(x) + size * tileSize.x / 2
+    private fun getCenterPixelX(x: Int, size: Size1d) = getStartPixelX(x) + size.size * tileSize.x / 2
 
-    private fun getCenterPixelY(y: Int, size: Int) = getStartPixelY(y) + size * tileSize.y / 2
+    private fun getCenterPixelY(y: Int, size: Size1d) = getStartPixelY(y) + size.size * tileSize.y / 2
 
 }

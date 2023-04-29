@@ -4,6 +4,7 @@ import javafx.application.Application
 import javafx.stage.Stage
 import ofws.app.TileApplication
 import ofws.core.render.Color
+import ofws.math.Size1d.Companion.FOUR
 
 class RenderingDemo : TileApplication(50, 20, 22, 32) {
 
@@ -25,8 +26,8 @@ class RenderingDemo : TileApplication(50, 20, 22, 32) {
         with(tileRenderer) {
             renderFullTile(Color.GREEN, 5, 10)
             renderFullTile(Color.BLUE, 6, 10)
-            renderUnicodeTile('@', Color.RED, 5, 11, 4)
-            renderText("This is a test.", Color.WHITE, 0, 0, 1)
+            renderUnicodeTile('@', Color.RED, 5, 11, FOUR)
+            renderText("This is a test.", Color.WHITE, 0, 0)
         }
     }
 }

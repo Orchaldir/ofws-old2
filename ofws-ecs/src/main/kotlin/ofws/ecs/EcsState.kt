@@ -20,7 +20,7 @@ data class EcsState(
     inline fun <reified T : Any> getStorage(): ComponentStorage<T>? = getStorage(T::class)
 
     fun <T> getStorageOrThrow(kClass: KClass<*>): ComponentStorage<T> {
-        return getStorage(kClass) ?: throw NoSuchElementException("No storage for type ${getType(kClass)}!")
+        return getStorage(kClass) ?: throw NoSuchElementException("No storage for type '${getType(kClass)}'!")
     }
 
     inline fun <reified T : Any> getStorageOrThrow(): ComponentStorage<T> = getStorageOrThrow(T::class)
@@ -54,6 +54,12 @@ data class EcsState(
         return EcsState(entities, newStorageMap, newDataMap)
     }
 
+    fun <T> query1(classT: KClass<*>): Query1<T> {
+        val storage: ComponentStorage<T> = getStorageOrThrow(classT)
+
+        return Query1(storage.getIds().toMutableList(), storage)
+    }
+
     fun <A, B> query2(classA: KClass<*>, classB: KClass<*>): Query2<A, B> {
         val storageA: ComponentStorage<A> = getStorageOrThrow(classA)
         val storageB: ComponentStorage<B> = getStorageOrThrow(classB)
@@ -61,6 +67,8 @@ data class EcsState(
 
         return Query2(sharedEntities.toMutableList(), storageA, storageB)
     }
+
+    inline fun <reified T : Any> query1(): Query1<T> = query1(T::class)
 
     inline fun <reified A : Any, reified B : Any> query2(): Query2<A, B> = query2(A::class, B::class)
 
