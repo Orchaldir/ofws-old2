@@ -40,9 +40,11 @@ class GameRenderer(
     fun renderMap(map: GameMap, getTile: (tile: Terrain) -> Tile) {
         for (y in 0 until area.size.y) {
             for (x in 0 until area.size.x) {
-                val mapIndex = area.size.getIndex(x, y)
+                val mapIndex = map.getSize().getIndexIfInside(x, y)
 
-                renderTile(map, getTile, mapIndex, x, y)
+                if (mapIndex != null) {
+                    renderTile(map, getTile, mapIndex, x, y)
+                }
             }
         }
     }
