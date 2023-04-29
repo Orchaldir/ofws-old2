@@ -61,6 +61,13 @@ data class Size2d(
     }
 
     /**
+     * Returns all indices of the map.
+     */
+    fun getIndices(): List<TileIndex> {
+        return (0 until tiles).map { TileIndex(it) }
+    }
+
+    /**
      * Returns a list of [TileIndex] that are inside the map and the desired rectangle.
      */
     fun getIndices(index: TileIndex, size: Size1d): List<TileIndex> {

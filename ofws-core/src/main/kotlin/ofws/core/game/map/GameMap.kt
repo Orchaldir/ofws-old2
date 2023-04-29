@@ -4,6 +4,7 @@ import ofws.ecs.Entity
 import ofws.math.Size1d
 import ofws.math.map.TileIndex
 import ofws.math.map.TileMap
+import ofws.math.pathfinding.graph.OccupancyMap
 
 data class GameMap(
     val tilemap: TileMap<Terrain>,
@@ -40,6 +41,22 @@ data class GameMap(
         }
 
         return Walkable(position)
+    }
+
+    fun createOccupancyMap(entity: Entity): OccupancyMap {
+        val list = getSize()
+            .getIndices()
+            .map { checkWalkability(it, entity) is Walkable }
+
+        return OccupancyMap(list, getSize())
+    }
+
+    fun createOccupancyMap(entity: Entity, entitySize: Size1d): OccupancyMap {
+        val list = getSize()
+            .getIndices()
+            .map { checkWalkability(it, entity, entitySize) is Walkable }
+
+        return OccupancyMap(list, getSize())
     }
 
     fun getSize() = tilemap.size
