@@ -4,6 +4,7 @@ import io.mockk.Called
 import io.mockk.mockk
 import io.mockk.verifySequence
 import ofws.core.game.component.*
+import ofws.core.game.map.EntityMap
 import ofws.core.game.map.GameMap
 import ofws.core.game.map.Terrain
 import ofws.core.game.map.Terrain.FLOOR
@@ -11,6 +12,7 @@ import ofws.core.game.map.Terrain.WALL
 import ofws.core.render.Color.Companion.BLUE
 import ofws.core.render.Color.Companion.WHITE
 import ofws.ecs.EcsBuilder
+import ofws.ecs.Entity
 import ofws.math.Rectangle
 import ofws.math.Size1d.Companion.TWO
 import ofws.math.Size2d
@@ -117,12 +119,28 @@ class GameRendererTest {
         @Test
         fun `Render a map inside the render area`() {
             val map = GameMap(
-                TileMapBuilder(2, 3, FLOOR)
+                TileMapBuilder(size, FLOOR)
                     .setTile(0, 1, WALL)
                     .build()
             )
 
             verifyRenderMap(map)
+        }
+
+        @Test
+        fun `An entity occludes a tile`() {
+            val map = GameMap(
+                TileMapBuilder(2, 1, FLOOR)
+                    .setTile(1, 0, WALL)
+                    .build(),
+                EntityMap(size, mapOf(TileIndex(0) to Entity(0)))
+            )
+
+            renderer.renderMap(map) { getTile(it) }
+
+            verifySequence {
+                tileRenderer.renderTile(wallTile, 11, 20)
+            }
         }
 
         @Test
