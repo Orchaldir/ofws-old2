@@ -3,11 +3,16 @@ package ofws.core.render
 import io.mockk.Called
 import io.mockk.mockk
 import io.mockk.verifySequence
+import ofws.core.game.component.*
 import ofws.core.game.map.GameMap
 import ofws.core.game.map.Terrain
 import ofws.core.game.map.Terrain.FLOOR
 import ofws.core.game.map.Terrain.WALL
+import ofws.core.render.Color.Companion.BLUE
+import ofws.core.render.Color.Companion.WHITE
+import ofws.ecs.EcsBuilder
 import ofws.math.Rectangle
+import ofws.math.Size1d.Companion.TWO
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
 import ofws.math.map.TileMapBuilder
@@ -17,12 +22,14 @@ import org.junit.jupiter.api.Test
 
 class GameRendererTest {
 
-    private val floorTile = UnicodeTile('.', Color.WHITE)
-    private val wallTile = FullTile(Color.WHITE)
+    private val entityTile = UnicodeTile('@', BLUE)
+    private val floorTile = UnicodeTile('.', WHITE)
+    private val wallTile = FullTile(WHITE)
     private val tileRenderer = mockk<TileRenderer>(relaxed = true)
     private val size = Size2d(2, 3)
+    private val bigSize = Size2d(3, 4)
     private val bigMap = GameMap(
-        TileMapBuilder(3, 4, FLOOR)
+        TileMapBuilder(bigSize, FLOOR)
             .setTile(0, 1, WALL)
             .setTile(1, 3, WALL)
             .setTile(2, 0, WALL)
@@ -37,10 +44,78 @@ class GameRendererTest {
     }
 
     @Nested
+    inner class RenderEntities {
+
+        @Test
+        fun `Render a simple footprint`() {
+            val state = with(EcsBuilder()) {
+                createEntity()
+                    .add(SimpleFootprint(TileIndex(4)) as Footprint)
+                    .add(Graphic(entityTile))
+                build()
+            }
+
+            renderer.renderEntities(state, bigSize)
+
+            verifySequence {
+                tileRenderer.renderTile(entityTile, 11, 21)
+            }
+        }
+
+        @Test
+        fun `Render a big footprint`() {
+            val state = with(EcsBuilder()) {
+                createEntity()
+                    .add(BigFootprint(TileIndex(1), TWO) as Footprint)
+                    .add(Graphic(entityTile))
+                build()
+            }
+
+            renderer.renderEntities(state, bigSize)
+
+            verifySequence {
+                tileRenderer.renderTile(entityTile, 11, 20, TWO)
+            }
+        }
+
+        @Test
+        fun `Render a snake footprint`() {
+            val state = with(EcsBuilder()) {
+                createEntity()
+                    .add(SnakeFootprint(listOf(TileIndex(1), TileIndex(4))) as Footprint)
+                    .add(Graphic(entityTile))
+                build()
+            }
+
+            renderer.renderEntities(state, bigSize)
+
+            verifySequence {
+                tileRenderer.renderTile(entityTile, 11, 20)
+                tileRenderer.renderTile(entityTile, 11, 21)
+            }
+        }
+
+        @Test
+        fun `Skip entity outside the render area`() {
+            val state = with(EcsBuilder()) {
+                createEntity()
+                    .add(SimpleFootprint(TileIndex(2)) as Footprint)
+                    .add(Graphic(entityTile))
+                build()
+            }
+
+            renderer.renderEntities(state, bigSize)
+
+            verifySequence { tileRenderer wasNot Called }
+        }
+
+    }
+
+    @Nested
     inner class RenderMap {
 
         @Test
-        fun `Render a map inside the area`() {
+        fun `Render a map inside the render area`() {
             val map = GameMap(
                 TileMapBuilder(2, 3, FLOOR)
                     .setTile(0, 1, WALL)
@@ -74,7 +149,7 @@ class GameRendererTest {
     inner class RenderTiles {
 
         @Test
-        fun `Render tiles inside the area`() {
+        fun `Render tiles inside the render area`() {
             renderer.renderTiles(bigMap, setOf(TileIndex(0), TileIndex(3))) { getTile(it) }
 
             verifySequence {

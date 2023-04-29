@@ -119,7 +119,7 @@ class FieldOfViewDemo : TileApplication(60, 45, 20, 20) {
 
         with(gameRenderer) {
             renderTiles(gameMap, visibleTiles) { visibleTile }
-            renderEntities(state)
+            renderEntities(state, gameMap.getSize())
             renderTiles(gameMap, knownTiles, ::getTile)
         }
 

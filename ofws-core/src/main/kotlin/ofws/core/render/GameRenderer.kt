@@ -20,17 +20,25 @@ data class GameRenderer(
     /**
      * Renders all entities with a [Footprint] & [Graphic] component.
      */
-    fun renderEntities(state: EcsState) {
+    fun renderEntities(state: EcsState, mapSize2d: Size2d) {
         for ((_, footprint, graphic) in state.query2<Footprint, Graphic>()) {
-            renderEntity(footprint, graphic)
+            renderEntity(mapSize2d, footprint, graphic)
         }
     }
 
-    private fun renderEntity(body: Footprint, graphic: Graphic) = when (body) {
-        is SimpleFootprint -> renderTile(graphic.get(0), body.position)
-        is BigFootprint -> renderTile(graphic.get(0), body.position, body.size)
+    private fun renderEntity(mapSize2d: Size2d, body: Footprint, graphic: Graphic) = when (body) {
+        is SimpleFootprint -> renderEntityTile(mapSize2d, graphic.get(0), body.position)
+        is BigFootprint -> renderEntityTile(mapSize2d, graphic.get(0), body.position, body.size)
         is SnakeFootprint -> for (pos in body.positions) {
-            renderTile(graphic.get(0), pos)
+            renderEntityTile(mapSize2d, graphic.get(0), pos)
+        }
+    }
+
+    private fun renderEntityTile(mapSize2d: Size2d, tile: Tile, index: TileIndex, bodySize: Size1d = ONE) {
+        val (x, y) = mapSize2d.getPoint(index)
+
+        if (area.size.isInside(x, y)) {
+            renderer.renderTile(tile, area.startX + x, area.startY + y, bodySize)
         }
     }
 
@@ -82,8 +90,5 @@ data class GameRenderer(
 
         renderer.renderTile(tile, area.startX + x, area.startY + y)
     }
-
-    private fun renderTile(tile: Tile, index: TileIndex, bodySize: Size1d = ONE) =
-        renderer.renderTile(tile, area.getParentX(index), area.getParentY(index), bodySize)
 
 }
