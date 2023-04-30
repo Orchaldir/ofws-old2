@@ -65,7 +65,7 @@ class AStarTest {
     }
 
     @Test
-    fun `Start is an  obstacle`() {
+    fun `Start is an obstacle`() {
         val graph = OccupancyMap(listOf(o, f, f), Size2d(3, 1))
 
         val result = aStar.find(graph, TileIndex(0), TileIndex(2), TWO)
@@ -74,7 +74,7 @@ class AStarTest {
     }
 
     @Test
-    fun `Only goal is an  obstacle`() {
+    fun `Only goal is an obstacle`() {
         val graph = OccupancyMap(listOf(f, f, o), Size2d(3, 1))
 
         val result = aStar.find(graph, TileIndex(0), TileIndex(2), THREE)
@@ -83,7 +83,7 @@ class AStarTest {
     }
 
     @Test
-    fun `1 of 2 goals is an  obstacle`() {
+    fun `1 of 2 goals is an obstacle`() {
         val graph = OccupancyMap(listOf(f, f, f, o), Size2d(4, 1))
 
         val result = aStar.find(graph, TileIndex(2), toSet(0, 3), THREE)
@@ -92,7 +92,7 @@ class AStarTest {
     }
 
     @Test
-    fun `All goals are an  obstacle`() {
+    fun `All goals are an obstacle`() {
         val graph = OccupancyMap(listOf(o, f, o), Size2d(3, 1))
 
         val result = aStar.find(graph, TileIndex(1), toSet(0, 2), THREE)
