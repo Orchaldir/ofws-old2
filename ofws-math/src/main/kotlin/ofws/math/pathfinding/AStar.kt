@@ -7,6 +7,7 @@ import ofws.math.pathfinding.graph.Graph
 import java.util.*
 
 private val logger = KotlinLogging.logger {}
+
 class AStar {
 
     fun find(graph: Graph, start: TileIndex, goal: TileIndex, pathSize: Size1d) =
