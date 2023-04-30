@@ -7,6 +7,7 @@ data class Color(
 ) {
 
     companion object {
+        val BLACK = Color(0u, 0u, 0u)
         val BLUE = Color(0u, 0u, 255u)
         val GREEN = Color(0u, 255u, 0u)
         val PINK = Color(255u, 192u, 203u)

@@ -12,8 +12,13 @@ import ofws.core.game.map.Terrain.FLOOR
 import ofws.core.game.map.Terrain.WALL
 import ofws.core.log.MessageLog
 import ofws.core.render.*
+import ofws.core.render.Color.Companion.BLACK
+import ofws.core.render.Color.Companion.BLUE
+import ofws.core.render.Color.Companion.GREEN
+import ofws.core.render.Color.Companion.RED
 import ofws.ecs.Entity
 import ofws.math.Rectangle
+import ofws.math.Size1d
 import ofws.math.Size1d.Companion.ONE
 import ofws.math.Size1d.Companion.THREE
 import ofws.math.Size1d.Companion.TWO
@@ -21,6 +26,7 @@ import ofws.math.Size2d
 import ofws.math.map.TileIndex
 import ofws.math.map.TileMapBuilder
 import ofws.math.pathfinding.AStar
+import ofws.math.pathfinding.Path
 import kotlin.random.Random
 import kotlin.system.exitProcess
 
@@ -71,9 +77,28 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
 
         gameRenderer.renderMap(gameMap, ::getTile)
 
+        if (start != null && goal != null) {
+            val path = pathfinding.find(occupancyMap, start!!, goal!!, pathSize)
+
+            if (path is Path) {
+                path.indices.forEach { renderNode(it, "P", BLUE, ONE) }
+            }
+        }
+
+        renderNode(start, "S", GREEN, pathSize)
+        renderNode(goal, "G", RED, pathSize)
+
         messageRenderer.render(messageLog)
 
         logger.info("render(): finished")
+    }
+
+    private fun renderNode(position: TileIndex?, tile: String, color: Color, nodeSize: Size1d) {
+        if (position is TileIndex) {
+            val (x, y) = gameRenderer.area.convertToParent(position)
+            tileRenderer.renderFullTile(BLACK, x, y, nodeSize)
+            tileRenderer.renderText(tile, color, x, y, nodeSize)
+        }
     }
 
     override fun onKeyReleased(keyCode: KeyCode) {

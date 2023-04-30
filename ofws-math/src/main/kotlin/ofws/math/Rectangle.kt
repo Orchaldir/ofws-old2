@@ -16,6 +16,11 @@ data class Rectangle(
     fun convertToInside(parentX: Int, parentY: Int) = size.getIndexIfInside(parentX - startX, parentY - startY)
 
     /**
+     * Converts from the rectangle's coordinate frame to the parent coordinate frame.
+     */
+    fun convertToParent(index: TileIndex) = Pair(getParentX(index), getParentY(index))
+
+    /**
      * Returns the x coordinate in the parent coordinate frame for a tile of the rectangle.
      */
     fun getParentX(index: TileIndex) = startX + size.getX(index)
