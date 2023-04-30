@@ -11,6 +11,7 @@ import ofws.core.game.map.Terrain
 import ofws.core.game.map.Terrain.FLOOR
 import ofws.core.game.map.Terrain.WALL
 import ofws.core.log.MessageLog
+import ofws.core.log.inform
 import ofws.core.render.*
 import ofws.core.render.Color.Companion.BLACK
 import ofws.core.render.Color.Companion.BLUE
@@ -46,13 +47,21 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
     }
     private val gameMap = GameMap(map)
     private var occupancyMap = gameMap.createOccupancyMap(entity)
-    private var messageLog = MessageLog()
+    private var messageLog = MessageLog(
+        listOf(
+            inform("Right click on the map to select the start"),
+            inform("Left click on the map to select the goal"),
+            inform("Press F1-F3 to change the size"),
+            inform("Press Space to switch rendering mode"),
+        )
+    )
 
     private lateinit var gameRenderer: GameRenderer
     private lateinit var messageRenderer: MessageLogRenderer
     private val pathfinding = AStar()
 
     // options
+    private var renderOccupancyMap = false
     private var start: TileIndex? = null
     private var goal: TileIndex? = null
     private var pathSize = ONE
@@ -75,7 +84,11 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
 
         renderer.clear()
 
-        gameRenderer.renderMap(gameMap, ::getTile)
+        if (renderOccupancyMap) {
+            gameRenderer.renderOccupancyMap(tileRenderer, occupancyMap)
+        } else {
+            gameRenderer.renderMap(gameMap, ::getTile)
+        }
 
         if (start != null && goal != null) {
             val path = pathfinding.find(occupancyMap, start!!, goal!!, pathSize)
@@ -108,6 +121,7 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
             KeyCode.DIGIT1 -> pathSize = ONE
             KeyCode.DIGIT2 -> pathSize = TWO
             KeyCode.DIGIT3 -> pathSize = THREE
+            KeyCode.SPACE -> renderOccupancyMap = !renderOccupancyMap
             KeyCode.ESCAPE -> exitProcess(0)
             else -> return
         }

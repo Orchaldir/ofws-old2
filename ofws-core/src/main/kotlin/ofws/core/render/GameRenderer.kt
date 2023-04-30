@@ -9,6 +9,7 @@ import ofws.math.Size1d
 import ofws.math.Size1d.Companion.ONE
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
+import ofws.math.pathfinding.graph.OccupancyMap
 
 data class GameRenderer(
     val area: Rectangle,
@@ -52,6 +53,20 @@ data class GameRenderer(
 
                 if (mapIndex != null) {
                     renderTile(map, getTile, mapIndex, x, y)
+                }
+            }
+        }
+    }
+
+    fun renderOccupancyMap(renderer: TileRenderer, map: OccupancyMap) {
+        for (y in 0 until area.size.y) {
+            for (x in 0 until area.size.x) {
+                val mapIndex = map.size.getIndexIfInside(x, y)
+
+                if (mapIndex != null) {
+                    val color = if (map.isValid(mapIndex)) Color.GREEN else Color.RED
+
+                    renderer.renderFullTile(color, area.startX + x, area.startY + y)
                 }
             }
         }
