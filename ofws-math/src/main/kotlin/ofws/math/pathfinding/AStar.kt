@@ -46,28 +46,38 @@ class AStar {
                 return backtrack(currentNode, pathSize)
             }
 
-            for (neighbor in graph.getNeighbors(currentNode.index)) {
-                var neighborNode = list[neighbor.index.index]
-
-                if (neighborNode == null) {
-                    neighborNode = AStarNode(neighbor.index)
-                    list[neighbor.index.index] = neighborNode
-                }
-
-                val newCost = currentNode.costSoFar + neighbor.cost
-
-                if (newCost < neighborNode.costSoFar) {
-                    neighborNode.costSoFar = newCost
-                    neighborNode.heuristic = newCost + graph.estimate(neighbor.index, start)
-                    neighborNode.previous = currentNode
-                    openNodes.add(neighborNode)
-                }
-            }
+            updateNeighbors(graph, list, openNodes, currentNode, start)
         }
 
         logger.debug("Failed to find a path.")
 
         return NoPathFound(goals = goals, size = pathSize)
+    }
+
+    private fun updateNeighbors(
+        graph: Graph,
+        list: Array<AStarNode?>,
+        openNodes: PriorityQueue<AStarNode>,
+        currentNode: AStarNode,
+        start: TileIndex
+    ) {
+        for (neighbor in graph.getNeighbors(currentNode.index)) {
+            var neighborNode = list[neighbor.index.index]
+
+            if (neighborNode == null) {
+                neighborNode = AStarNode(neighbor.index)
+                list[neighbor.index.index] = neighborNode
+            }
+
+            val newCost = currentNode.costSoFar + neighbor.cost
+
+            if (newCost < neighborNode.costSoFar) {
+                neighborNode.costSoFar = newCost
+                neighborNode.heuristic = newCost + graph.estimate(neighbor.index, start)
+                neighborNode.previous = currentNode
+                openNodes.add(neighborNode)
+            }
+        }
     }
 
     private fun backtrack(startNode: AStarNode, pathSize: Size1d): Path {

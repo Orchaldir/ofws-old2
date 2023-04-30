@@ -2,6 +2,7 @@ package ofws.math
 
 import ofws.math.Direction.*
 import ofws.math.map.TileIndex
+import ofws.math.map.toList
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -63,6 +64,11 @@ class Size2dTest {
             assertEquals(distance, size.getDistance(from, to))
             assertEquals(distance, size.getDistance(2, 3, 2 + diffX, 3 + diffY))
         }
+    }
+
+    @Test
+    fun `Get all indices`() {
+        assertEquals(toList(0, 1, 2, 3, 4, 5), size.getIndices())
     }
 
     @Nested
