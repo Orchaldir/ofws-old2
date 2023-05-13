@@ -7,42 +7,38 @@ import ofws.math.Size1d.Companion.TWO
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
 import ofws.math.map.TileMapBuilder
+import ofws.math.pathfinding.graph.OccupancyMap
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class GameMapTest {
 
+    private val entity0 = Entity(0)
+    private val entity1 = Entity(1)
+
     private val size = Size2d(3, 5)
+    private val blocked = TileIndex(7)
+    private val index4 = TileIndex(4)
+
+    private val tilemap = TileMapBuilder(size, FLOOR)
+        .setTile(blocked, WALL)
+        .build()
+    private val map = GameMap(tilemap)
+    private val mapWithEntity = GameMap(tilemap, EntityMap(size, mapOf(index4 to entity0)))
 
     @Test
     fun `Test simple constructor`() {
-        val tilemap = TileMapBuilder(size, FLOOR).build()
-
         assertEquals(GameMap(tilemap, EntityMap(size)), GameMap(tilemap))
     }
 
     @Test
     fun `Get the maps size`() {
-        val map = GameMap(TileMapBuilder(size, FLOOR).build())
-
         assertEquals(size, map.getSize())
     }
 
     @Nested
     inner class CheckWalkability {
-
-        private val blocked = TileIndex(7)
-        private val index4 = TileIndex(4)
-
-        private val entity0 = Entity(0)
-        private val entity1 = Entity(1)
-
-        private val tilemap = TileMapBuilder(3, 5, FLOOR)
-            .setTile(blocked, WALL)
-            .build()
-        private val map = GameMap(tilemap)
-        private val mapWithEntity = GameMap(tilemap, EntityMap(size, mapOf(index4 to entity0)))
 
         @Test
         fun `A wall blocks an entity`() {
@@ -101,5 +97,55 @@ class GameMapTest {
         private fun assertBigIsOutside(index: Int) {
             assertEquals(OutsideMap, map.checkWalkability(TileIndex(index), entity0, TWO))
         }
+    }
+
+    @Nested
+    inner class CreateOccupancyMap {
+
+        @Test
+        fun `Entity of size 1`() {
+            val occupancyMap = OccupancyMap(
+                listOf(
+                    true, true, true,
+                    true, true, true,
+                    true, false, true,
+                    true, true, true,
+                    true, true, true,
+                ), size
+            )
+
+            assertEquals(occupancyMap, map.createOccupancyMap(entity0))
+        }
+
+        @Test
+        fun `Entity of size 1 blocked by other entity`() {
+            val occupancyMap = OccupancyMap(
+                listOf(
+                    true, true, true,
+                    true, false, true,
+                    true, false, true,
+                    true, true, true,
+                    true, true, true,
+                ), size
+            )
+
+            assertEquals(occupancyMap, mapWithEntity.createOccupancyMap(entity1))
+        }
+
+        @Test
+        fun `Entity of size 3`() {
+            val occupancyMap = OccupancyMap(
+                listOf(
+                    true, true, false,
+                    false, false, false,
+                    false, false, false,
+                    true, true, false,
+                    false, false, false,
+                ), size
+            )
+
+            assertEquals(occupancyMap, map.createOccupancyMap(entity0, TWO))
+        }
+
     }
 }

@@ -3,13 +3,13 @@ package ofws.math.pathfinding.graph
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
 
-abstract class PathfindingMap(val size: Size2d) : Graph {
+abstract class PathfindingMap : Graph {
 
-    override fun getSize() = size.tiles
+    abstract fun getSize(): Size2d
 
     override fun getNeighbors(index: TileIndex): List<Neighbor> {
         val neighbors = mutableListOf<Neighbor>()
-        val (x, y) = size.getPoint(index)
+        val (x, y) = getSize().getPoint(index)
 
         addNeighbor(neighbors, x + 1, y)
         addNeighbor(neighbors, x, y + 1)

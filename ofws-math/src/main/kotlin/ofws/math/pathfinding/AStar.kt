@@ -17,7 +17,7 @@ class AStar {
         logger.debug("Find path from $start to $goals.")
 
         val openNodes = PriorityQueue<AStarNode>()
-        val list = arrayOfNulls<AStarNode>(graph.getSize())
+        val list = arrayOfNulls<AStarNode>(graph.getNodeCount())
         var isAnyGoalReachable = false
 
         for (goal in goals) {

@@ -61,7 +61,7 @@ data class GameRenderer(
     fun renderOccupancyMap(renderer: TileRenderer, map: OccupancyMap) {
         for (y in 0 until area.size.y) {
             for (x in 0 until area.size.x) {
-                val mapIndex = map.size.getIndexIfInside(x, y)
+                val mapIndex = map.getSize().getIndexIfInside(x, y)
 
                 if (mapIndex != null) {
                     val color = if (map.isValid(mapIndex)) Color.GREEN else Color.RED

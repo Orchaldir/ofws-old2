@@ -3,10 +3,12 @@ package ofws.math.pathfinding.graph
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
 
-class OccupancyMap(
+data class OccupancyMap(
     private val occupancy: List<Boolean>,
-    size: Size2d,
-) : PathfindingMap(size) {
+    private val size: Size2d,
+) : PathfindingMap() {
+    override fun getNodeCount() = size.tiles
+    override fun getSize() = size
 
     override fun isValid(index: TileIndex) = occupancy[index.index]
 

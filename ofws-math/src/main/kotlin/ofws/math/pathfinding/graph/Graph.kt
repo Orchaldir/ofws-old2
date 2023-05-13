@@ -4,7 +4,7 @@ import ofws.math.map.TileIndex
 
 interface Graph {
 
-    fun getSize(): Int
+    fun getNodeCount(): Int
 
     fun isValid(index: TileIndex): Boolean
 
