@@ -18,14 +18,14 @@ class GameMapTest {
     private val entity1 = Entity(1)
 
     private val size = Size2d(3, 5)
-    private val blocked = TileIndex(7)
-    private val index4 = TileIndex(4)
+    private val blocked = size.getIndex(1, 2)
+    private val occupied = size.getIndex(1, 1)
 
     private val tilemap = TileMapBuilder(size, FLOOR)
         .setTile(blocked, WALL)
         .build()
     private val map = GameMap(tilemap)
-    private val mapWithEntity = GameMap(tilemap, EntityMap(size, mapOf(index4 to entity0)))
+    private val mapWithEntity = GameMap(tilemap, EntityMap(size, mapOf(occupied to entity0)))
 
     @Test
     fun `Test simple constructor`() {
@@ -47,7 +47,7 @@ class GameMapTest {
 
         @Test
         fun `A floor is walkable`() {
-            for (index in (1 until size.tiles).filter { it != 7 }) {
+            for (index in (1 until size.tiles).filter { it != blocked.index }) {
                 assertWalkable(index)
             }
         }
@@ -77,12 +77,12 @@ class GameMapTest {
 
         @Test
         fun `Entity can walk in its own cell`() {
-            assertEquals(Walkable(index4), mapWithEntity.checkWalkability(index4, entity0))
+            assertEquals(Walkable(occupied), mapWithEntity.checkWalkability(occupied, entity0))
         }
 
         @Test
         fun `Entity is blocked by another entity`() {
-            assertEquals(BlockedByEntity(entity0), mapWithEntity.checkWalkability(index4, entity1, TWO))
+            assertEquals(BlockedByEntity(entity0), mapWithEntity.checkWalkability(occupied, entity1, TWO))
         }
 
         private fun assertWalkable(index: Int) {
@@ -103,7 +103,7 @@ class GameMapTest {
     inner class CreateOccupancyMap {
 
         @Test
-        fun `Entity of size 1`() {
+        fun `Entity of size 1 is not blocked by itself`() {
             val occupancyMap = OccupancyMap(
                 listOf(
                     true, true, true,
@@ -114,11 +114,11 @@ class GameMapTest {
                 ), size
             )
 
-            assertEquals(occupancyMap, map.createOccupancyMap(entity0))
+            assertEquals(occupancyMap, mapWithEntity.createOccupancyMap(entity0))
         }
 
         @Test
-        fun `Entity of size 1 blocked by other entity`() {
+        fun `Entity of size 1 is blocked by another entity`() {
             val occupancyMap = OccupancyMap(
                 listOf(
                     true, true, true,
@@ -133,7 +133,7 @@ class GameMapTest {
         }
 
         @Test
-        fun `Entity of size 3`() {
+        fun `Entity of size 2`() {
             val occupancyMap = OccupancyMap(
                 listOf(
                     true, true, false,
