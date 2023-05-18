@@ -99,12 +99,4 @@ class AStarAlgorithm : PathfindingAlgorithm {
         logger.debug("Found path with ${indices.size} nodes.")
         return Path(size = pathSize, totalCost = startNode.costSoFar, indices = indices)
     }
-
-    data class AStarNode(val index: TileIndex) : Comparable<AStarNode> {
-        var costSoFar = Int.MAX_VALUE
-        var heuristic = 0
-        var previous: AStarNode? = null
-
-        override fun compareTo(other: AStarNode) = heuristic.compareTo(other.heuristic)
-    }
 }
