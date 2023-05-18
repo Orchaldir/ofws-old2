@@ -58,7 +58,7 @@ data class GameRenderer(
         }
     }
 
-    fun renderOccupancyMap(renderer: TileRenderer, map: OccupancyMap) {
+    fun renderOccupancyMap(map: OccupancyMap) {
         for (y in 0 until area.size.y) {
             for (x in 0 until area.size.x) {
                 val mapIndex = map.getSize().getIndexIfInside(x, y)

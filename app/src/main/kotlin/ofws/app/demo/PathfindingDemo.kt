@@ -85,7 +85,7 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
         renderer.clear()
 
         if (renderOccupancyMap) {
-            gameRenderer.renderOccupancyMap(tileRenderer, occupancyMap)
+            gameRenderer.renderOccupancyMap(occupancyMap)
         } else {
             gameRenderer.renderMap(gameMap, ::getTile)
         }
