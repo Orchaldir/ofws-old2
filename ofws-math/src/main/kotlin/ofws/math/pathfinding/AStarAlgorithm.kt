@@ -35,7 +35,7 @@ class AStarAlgorithm(private var nodes: Array<AStarNode?>) : PathfindingAlgorith
         logger.debug("Find path from $start to $goals.")
 
         val openNodes = PriorityQueue<AStarNode>()
-        nodes = arrayOfNulls<AStarNode>(graph.getNodeCount())
+        nodes = arrayOfNulls(graph.getNodeCount())
         var isAnyGoalReachable = false
 
         for (goal in goals) {
@@ -47,6 +47,7 @@ class AStarAlgorithm(private var nodes: Array<AStarNode?>) : PathfindingAlgorith
 
                 val goalNode = AStarNode(goal)
                 goalNode.costToNode = 0
+                goalNode.heuristic = graph.estimate(goal, start)
                 openNodes.add(goalNode)
                 nodes[goal.index] = goalNode
             }
