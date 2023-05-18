@@ -27,7 +27,9 @@ import ofws.math.Size2d
 import ofws.math.map.TileIndex
 import ofws.math.map.TileMapBuilder
 import ofws.math.pathfinding.AStarAlgorithm
+import ofws.math.pathfinding.NotSearched
 import ofws.math.pathfinding.Path
+import ofws.math.pathfinding.PathfindingResult
 import kotlin.random.Random
 import kotlin.system.exitProcess
 
@@ -52,7 +54,7 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
             inform("Right click on the map to select the start"),
             inform("Left click on the map to select the goal"),
             inform("Press 1-3 to change the size"),
-            inform("Press F1-F3 to switch rendering mode"),
+            inform("Press F1-F4 to switch rendering mode"),
         )
     )
 
@@ -64,6 +66,7 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
         RENDER_MAP,
         RENDER_OCCUPANCY_MAP,
         RENDER_COST,
+        RENDER_HEURISTIC,
     }
 
     // options
@@ -90,18 +93,17 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
 
         renderer.clear()
 
+        val path = findPath()
+
         when (renderMode) {
             RenderMode.RENDER_MAP -> gameRenderer.renderMap(gameMap, ::getTile)
             RenderMode.RENDER_OCCUPANCY_MAP -> gameRenderer.renderOccupancyMap(occupancyMap)
             RenderMode.RENDER_COST -> gameRenderer.renderCosts(mapSize, pathfinding.getCostsToNode())
+            RenderMode.RENDER_HEURISTIC -> gameRenderer.renderCosts(mapSize, pathfinding.getHeuristics())
         }
 
-        if (start != null && goal != null) {
-            val path = pathfinding.find(occupancyMap, start!!, goal!!, pathSize)
-
-            if (path is Path) {
-                path.indices.forEach { renderNode(it, "P", BLUE, ONE) }
-            }
+        if (path is Path) {
+            path.indices.forEach { renderNode(it, "P", BLUE, ONE) }
         }
 
         renderNode(start, "S", GREEN, pathSize)
@@ -110,6 +112,14 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
         messageRenderer.render(messageLog)
 
         logger.info("render(): finished")
+    }
+
+    private fun findPath(): PathfindingResult {
+        if (start != null && goal != null) {
+            return pathfinding.find(occupancyMap, start!!, goal!!, pathSize)
+        }
+
+        return NotSearched
     }
 
     private fun renderNode(position: TileIndex?, tile: String, color: Color, nodeSize: Size1d) {
@@ -130,6 +140,7 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
             KeyCode.F1 -> renderMode = RenderMode.RENDER_MAP
             KeyCode.F2 -> renderMode = RenderMode.RENDER_OCCUPANCY_MAP
             KeyCode.F3 -> renderMode = RenderMode.RENDER_COST
+            KeyCode.F4 -> renderMode = RenderMode.RENDER_HEURISTIC
             KeyCode.ESCAPE -> exitProcess(0)
             else -> return
         }

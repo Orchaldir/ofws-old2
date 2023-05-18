@@ -1,5 +1,6 @@
 package ofws.core.render
 
+import mu.KotlinLogging
 import ofws.core.game.component.*
 import ofws.core.game.map.GameMap
 import ofws.core.game.map.Terrain
@@ -12,6 +13,8 @@ import ofws.math.map.TileIndex
 import ofws.math.pathfinding.graph.OccupancyMap
 import kotlin.math.max
 import kotlin.math.min
+
+private val logger = KotlinLogging.logger {}
 
 data class GameRenderer(
     val area: Rectangle,
@@ -39,6 +42,8 @@ data class GameRenderer(
         }
 
         val diff = (maxCost - minCost).toDouble()
+
+        logger.info("renderCosts(): min=$minCost max=$maxCost")
 
         for (y in 0 until area.size.y) {
             for (x in 0 until area.size.x) {
