@@ -6,7 +6,7 @@ import ofws.math.map.TileIndex
  * The per node information of the [AStarAlgorithm].
  */
 data class AStarNode(val index: TileIndex) : Comparable<AStarNode> {
-    var costSoFar = Int.MAX_VALUE
+    var costToNode = Int.MAX_VALUE
     var heuristic = 0
     var previous: AStarNode? = null
 

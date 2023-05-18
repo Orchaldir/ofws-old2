@@ -12,7 +12,21 @@ private val logger = KotlinLogging.logger {}
  * A famous [pathfinding algorithm][PathfindingAlgorithm].
  * See [wikipedia](https://en.wikipedia.org/wiki/A*_search_algorithm).
  */
-class AStarAlgorithm : PathfindingAlgorithm {
+class AStarAlgorithm(private var nodes: Array<AStarNode?>) : PathfindingAlgorithm {
+
+    constructor(): this(emptyArray())
+
+    fun getCostsToNode(): List<Int?> {
+        return nodes.map {
+            it?.costToNode
+        }
+    }
+
+    fun getHeuristics(): List<Int?> {
+        return nodes.map {
+            it?.heuristic
+        }
+    }
 
     override fun find(graph: PathfindingGraph, start: TileIndex, goal: TileIndex, pathSize: Size1d) =
         find(graph, start, setOf(goal), pathSize)
@@ -21,7 +35,7 @@ class AStarAlgorithm : PathfindingAlgorithm {
         logger.debug("Find path from $start to $goals.")
 
         val openNodes = PriorityQueue<AStarNode>()
-        val list = arrayOfNulls<AStarNode>(graph.getNodeCount())
+        nodes = arrayOfNulls<AStarNode>(graph.getNodeCount())
         var isAnyGoalReachable = false
 
         for (goal in goals) {
@@ -32,9 +46,9 @@ class AStarAlgorithm : PathfindingAlgorithm {
                 isAnyGoalReachable = true
 
                 val goalNode = AStarNode(goal)
-                goalNode.costSoFar = 0
+                goalNode.costToNode = 0
                 openNodes.add(goalNode)
-                list[goal.index] = goalNode
+                nodes[goal.index] = goalNode
             }
         }
 
@@ -50,7 +64,7 @@ class AStarAlgorithm : PathfindingAlgorithm {
                 return backtrack(currentNode, pathSize)
             }
 
-            updateNeighbors(graph, list, openNodes, currentNode, start)
+            updateNeighbors(graph, nodes, openNodes, currentNode, start)
         }
 
         logger.debug("Failed to find a path.")
@@ -73,10 +87,10 @@ class AStarAlgorithm : PathfindingAlgorithm {
                 list[neighbor.index.index] = neighborNode
             }
 
-            val newCost = currentNode.costSoFar + neighbor.cost
+            val newCost = currentNode.costToNode + neighbor.cost
 
-            if (newCost < neighborNode.costSoFar) {
-                neighborNode.costSoFar = newCost
+            if (newCost < neighborNode.costToNode) {
+                neighborNode.costToNode = newCost
                 neighborNode.heuristic = newCost + graph.estimate(neighbor.index, start)
                 neighborNode.previous = currentNode
                 openNodes.add(neighborNode)
@@ -97,6 +111,6 @@ class AStarAlgorithm : PathfindingAlgorithm {
         }
 
         logger.debug("Found path with ${indices.size} nodes.")
-        return Path(size = pathSize, totalCost = startNode.costSoFar, indices = indices)
+        return Path(size = pathSize, totalCost = startNode.costToNode, indices = indices)
     }
 }

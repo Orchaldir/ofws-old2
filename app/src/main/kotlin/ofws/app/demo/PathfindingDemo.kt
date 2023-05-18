@@ -51,8 +51,8 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
         listOf(
             inform("Right click on the map to select the start"),
             inform("Left click on the map to select the goal"),
-            inform("Press F1-F3 to change the size"),
-            inform("Press Space to switch rendering mode"),
+            inform("Press 1-3 to change the size"),
+            inform("Press F1-F3 to switch rendering mode"),
         )
     )
 
@@ -60,8 +60,14 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
     private lateinit var messageRenderer: MessageLogRenderer
     private val pathfinding = AStarAlgorithm()
 
+    private enum class RenderMode {
+        RENDER_MAP,
+        RENDER_OCCUPANCY_MAP,
+        RENDER_COST,
+    }
+
     // options
-    private var renderOccupancyMap = false
+    private var renderMode = RenderMode.RENDER_MAP
     private var start: TileIndex? = null
     private var goal: TileIndex? = null
     private var pathSize = ONE
@@ -84,10 +90,10 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
 
         renderer.clear()
 
-        if (renderOccupancyMap) {
-            gameRenderer.renderOccupancyMap(occupancyMap)
-        } else {
-            gameRenderer.renderMap(gameMap, ::getTile)
+        when (renderMode) {
+            RenderMode.RENDER_MAP -> gameRenderer.renderMap(gameMap, ::getTile)
+            RenderMode.RENDER_OCCUPANCY_MAP -> gameRenderer.renderOccupancyMap(occupancyMap)
+            RenderMode.RENDER_COST -> gameRenderer.renderCosts(mapSize, pathfinding.getCostsToNode())
         }
 
         if (start != null && goal != null) {
@@ -121,7 +127,9 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
             KeyCode.DIGIT1 -> pathSize = ONE
             KeyCode.DIGIT2 -> pathSize = TWO
             KeyCode.DIGIT3 -> pathSize = THREE
-            KeyCode.SPACE -> renderOccupancyMap = !renderOccupancyMap
+            KeyCode.F1 -> renderMode = RenderMode.RENDER_MAP
+            KeyCode.F2 -> renderMode = RenderMode.RENDER_OCCUPANCY_MAP
+            KeyCode.F3 -> renderMode = RenderMode.RENDER_COST
             KeyCode.ESCAPE -> exitProcess(0)
             else -> return
         }

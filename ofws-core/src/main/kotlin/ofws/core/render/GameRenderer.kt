@@ -10,6 +10,8 @@ import ofws.math.Size1d.Companion.ONE
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
 import ofws.math.pathfinding.graph.OccupancyMap
+import kotlin.math.max
+import kotlin.math.min
 
 data class GameRenderer(
     val area: Rectangle,
@@ -17,6 +19,38 @@ data class GameRenderer(
 ) {
 
     constructor(size: Size2d, renderer: TileRenderer) : this(Rectangle(size), renderer)
+
+    /**
+     * Renders if an entity can occupy a tile or not.
+     */
+    fun renderCosts(size: Size2d, costs: List<Int?>) {
+        if (size.tiles != costs.size) {
+            return
+        }
+
+        var maxCost = Int.MIN_VALUE
+        var minCost = Int.MAX_VALUE
+
+        costs.forEach {
+            if (it != null) {
+                maxCost = max(maxCost, it)
+                minCost = min(minCost, it)
+            }
+        }
+
+        val diff = (maxCost - minCost).toDouble()
+
+        for (y in 0 until area.size.y) {
+            for (x in 0 until area.size.x) {
+                val mapIndex = size.getIndexIfInside(x, y) ?: continue
+                val cost = costs[mapIndex.index] ?: continue
+                val factor = (cost - minCost) / diff
+                val color = Color.RED.lerp(Color.GREEN, factor)
+
+                renderer.renderFullTile(color, area.startX + x, area.startY + y)
+            }
+        }
+    }
 
     /**
      * Renders all entities with a [Footprint] & [Graphic] component.
