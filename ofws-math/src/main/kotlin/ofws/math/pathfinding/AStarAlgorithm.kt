@@ -12,7 +12,7 @@ private val logger = KotlinLogging.logger {}
  * A famous [pathfinding algorithm][PathfindingAlgorithm].
  * See [wikipedia](https://en.wikipedia.org/wiki/A*_search_algorithm).
  */
-class AStar : PathfindingAlgorithm {
+class AStarAlgorithm : PathfindingAlgorithm {
 
     override fun find(graph: PathfindingGraph, start: TileIndex, goal: TileIndex, pathSize: Size1d) =
         find(graph, start, setOf(goal), pathSize)
@@ -84,6 +84,9 @@ class AStar : PathfindingAlgorithm {
         }
     }
 
+    /**
+     * Backtrack the path from the start to the nearest goal.
+     */
     private fun backtrack(startNode: AStarNode, pathSize: Size1d): Path {
         val indices = mutableListOf<TileIndex>()
         var currentNode: AStarNode? = startNode.previous
@@ -97,7 +100,7 @@ class AStar : PathfindingAlgorithm {
         return Path(size = pathSize, totalCost = startNode.costSoFar, indices = indices)
     }
 
-    private data class AStarNode(val index: TileIndex) : Comparable<AStarNode> {
+    data class AStarNode(val index: TileIndex) : Comparable<AStarNode> {
         var costSoFar = Int.MAX_VALUE
         var heuristic = 0
         var previous: AStarNode? = null

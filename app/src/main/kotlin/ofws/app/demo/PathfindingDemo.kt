@@ -26,7 +26,7 @@ import ofws.math.Size1d.Companion.TWO
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
 import ofws.math.map.TileMapBuilder
-import ofws.math.pathfinding.AStar
+import ofws.math.pathfinding.AStarAlgorithm
 import ofws.math.pathfinding.Path
 import kotlin.random.Random
 import kotlin.system.exitProcess
@@ -58,7 +58,7 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
 
     private lateinit var gameRenderer: GameRenderer
     private lateinit var messageRenderer: MessageLogRenderer
-    private val pathfinding = AStar()
+    private val pathfinding = AStarAlgorithm()
 
     // options
     private var renderOccupancyMap = false

@@ -11,7 +11,7 @@ import ofws.math.pathfinding.graph.OccupancyMap
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class AStarTest {
+class AStarAlgorithmTest {
 
     private val f = true
     private val o = false
@@ -25,7 +25,7 @@ class AStarTest {
     )
     private val largeSize = Size2d(6, 5)
     private val largeGraph = OccupancyMap(largeMap, largeSize)
-    private val aStar = AStar()
+    private val aStar = AStarAlgorithm()
 
     @Test
     fun `Find a valid plan`() {
