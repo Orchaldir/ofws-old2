@@ -10,6 +10,8 @@ import ofws.core.game.map.Terrain
 import ofws.core.game.map.Terrain.FLOOR
 import ofws.core.game.map.Terrain.WALL
 import ofws.core.render.Color.Companion.BLUE
+import ofws.core.render.Color.Companion.GREEN
+import ofws.core.render.Color.Companion.RED
 import ofws.core.render.Color.Companion.WHITE
 import ofws.ecs.EcsBuilder
 import ofws.ecs.Entity
@@ -161,6 +163,22 @@ class GameRendererTest {
             }
         }
 
+    }
+
+    @Test
+    fun `Render an occupancy map inside the render area`() {
+        val map = bigMap.createOccupancyMap(Entity(0))
+
+        renderer.renderOccupancyMap(map)
+
+        verifySequence {
+            tileRenderer.renderFullTile(GREEN, 10, 20)
+            tileRenderer.renderFullTile(GREEN, 11, 20)
+            tileRenderer.renderFullTile(RED, 10, 21)
+            tileRenderer.renderFullTile(GREEN, 11, 21)
+            tileRenderer.renderFullTile(GREEN, 10, 22)
+            tileRenderer.renderFullTile(GREEN, 11, 22)
+        }
     }
 
     @Nested

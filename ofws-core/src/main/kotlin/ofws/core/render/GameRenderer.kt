@@ -58,6 +58,9 @@ data class GameRenderer(
         }
     }
 
+    /**
+     * Renders if an entity can occupy a tile or not.
+     */
     fun renderOccupancyMap(map: OccupancyMap) {
         for (y in 0 until area.size.y) {
             for (x in 0 until area.size.x) {
