@@ -2,7 +2,10 @@ package ofws.math.pathfinding.graph
 
 import ofws.math.map.TileIndex
 
-interface Graph {
+/**
+ * A graph used by [pathfinding algorithms][ofws.math.pathfinding.PathfindingAlgorithm].
+ */
+interface PathfindingGraph {
 
     fun getNodeCount(): Int
 

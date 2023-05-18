@@ -3,6 +3,10 @@ package ofws.math.pathfinding.graph
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
 
+/**
+ * A [PathfindingMap] that only cares if an entity can occupy a tile or not.
+ * All valid moves have a fixed cost of 1.
+ */
 data class OccupancyMap(
     private val occupancy: List<Boolean>,
     private val size: Size2d,

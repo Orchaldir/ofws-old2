@@ -3,7 +3,10 @@ package ofws.math.pathfinding.graph
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
 
-abstract class PathfindingMap : Graph {
+/**
+ * A [PathfindingGraph] that works with [tilemaps][ofws.math.map.TileMap].
+ */
+abstract class PathfindingMap : PathfindingGraph {
 
     abstract fun getSize(): Size2d
 

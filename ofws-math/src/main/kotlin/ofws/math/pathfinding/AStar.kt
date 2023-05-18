@@ -3,17 +3,21 @@ package ofws.math.pathfinding
 import mu.KotlinLogging
 import ofws.math.Size1d
 import ofws.math.map.TileIndex
-import ofws.math.pathfinding.graph.Graph
+import ofws.math.pathfinding.graph.PathfindingGraph
 import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
-class AStar {
+/**
+ * A famous [pathfinding algorithm][PathfindingAlgorithm].
+ * See [wikipedia](https://en.wikipedia.org/wiki/A*_search_algorithm).
+ */
+class AStar : PathfindingAlgorithm {
 
-    fun find(graph: Graph, start: TileIndex, goal: TileIndex, pathSize: Size1d) =
+    override fun find(graph: PathfindingGraph, start: TileIndex, goal: TileIndex, pathSize: Size1d) =
         find(graph, start, setOf(goal), pathSize)
 
-    fun find(graph: Graph, start: TileIndex, goals: Set<TileIndex>, pathSize: Size1d): PathfindingResult {
+    override fun find(graph: PathfindingGraph, start: TileIndex, goals: Set<TileIndex>, pathSize: Size1d): PathfindingResult {
         logger.debug("Find path from $start to $goals.")
 
         val openNodes = PriorityQueue<AStarNode>()
@@ -55,7 +59,7 @@ class AStar {
     }
 
     private fun updateNeighbors(
-        graph: Graph,
+        graph: PathfindingGraph,
         list: Array<AStarNode?>,
         openNodes: PriorityQueue<AStarNode>,
         currentNode: AStarNode,
