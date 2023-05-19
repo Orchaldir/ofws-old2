@@ -27,7 +27,7 @@ data class Color(
         Color(lerp(red, other.red, factor), lerp(green, other.green, factor), lerp(blue, other.blue, factor))
 
     private fun lerp(start: UByte, end: UByte, factor: Double): UByte {
-        if (factor > 1.0) {
+        if (factor >= 1.0) {
             return end
         }
 

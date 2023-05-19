@@ -24,35 +24,36 @@ data class GameRenderer(
     constructor(size: Size2d, renderer: TileRenderer) : this(Rectangle(size), renderer)
 
     /**
-     * Renders if an entity can occupy a tile or not.
+     * Renders an integer for each tile.
+     * It maps the range between the min & max value to a factor between 0 & 1.
      */
-    fun renderCosts(size: Size2d, costs: List<Int?>) {
-        if (size.tiles != costs.size) {
+    fun renderInts(size: Size2d, values: List<Int?>, getTile: (factor: Double) -> Tile) {
+        if (size.tiles != values.size) {
             return
         }
 
-        var maxCost = Int.MIN_VALUE
-        var minCost = Int.MAX_VALUE
+        var maxValue = Int.MIN_VALUE
+        var minValue = Int.MAX_VALUE
 
-        costs.forEach {
+        values.forEach {
             if (it != null) {
-                maxCost = max(maxCost, it)
-                minCost = min(minCost, it)
+                maxValue = max(maxValue, it)
+                minValue = min(minValue, it)
             }
         }
 
-        val diff = (maxCost - minCost).toDouble()
+        val diff = (maxValue - minValue).toDouble()
 
-        logger.info("renderCosts(): min=$minCost max=$maxCost")
+        logger.info("renderCosts(): min=$minValue max=$maxValue")
 
         for (y in 0 until area.size.y) {
             for (x in 0 until area.size.x) {
                 val mapIndex = size.getIndexIfInside(x, y) ?: continue
-                val cost = costs[mapIndex.index] ?: continue
-                val factor = (cost - minCost) / diff
-                val color = Color.RED.lerp(Color.GREEN, factor)
+                val value = values[mapIndex.index] ?: continue
+                val factor = (value - minValue) / diff
+                val tile = getTile(factor)
 
-                renderer.renderFullTile(color, area.startX + x, area.startY + y)
+                renderer.renderTile(tile, area.startX + x, area.startY + y)
             }
         }
     }
@@ -85,7 +86,7 @@ data class GameRenderer(
     /**
      * Renders a whole map.
      */
-    fun renderMap(map: GameMap, getTile: (tile: Terrain) -> Tile) {
+    fun renderMap(map: GameMap, getTile: (terrain: Terrain) -> Tile) {
         for (y in 0 until area.size.y) {
             for (x in 0 until area.size.x) {
                 val mapIndex = map.getSize().getIndexIfInside(x, y)

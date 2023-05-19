@@ -98,8 +98,8 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
         when (renderMode) {
             RenderMode.RENDER_MAP -> gameRenderer.renderMap(gameMap, ::getTile)
             RenderMode.RENDER_OCCUPANCY_MAP -> gameRenderer.renderOccupancyMap(occupancyMap)
-            RenderMode.RENDER_COST -> gameRenderer.renderCosts(mapSize, pathfinding.getCostsToNode())
-            RenderMode.RENDER_HEURISTIC -> gameRenderer.renderCosts(mapSize, pathfinding.getHeuristics())
+            RenderMode.RENDER_COST -> gameRenderer.renderInts(mapSize, pathfinding.getCostsToNode(), ::getTileForCost)
+            RenderMode.RENDER_HEURISTIC -> gameRenderer.renderInts(mapSize, pathfinding.getHeuristics(), ::getTileForCost)
         }
 
         if (path is Path) {
@@ -171,6 +171,8 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
     } else {
         wallTile
     }
+
+    private fun getTileForCost(factor: Double) = FullTile(RED.lerp(GREEN, factor))
 }
 
 fun main() {
