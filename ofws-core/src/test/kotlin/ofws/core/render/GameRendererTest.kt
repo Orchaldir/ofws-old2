@@ -20,6 +20,7 @@ import ofws.math.Rectangle
 import ofws.math.Size1d.Companion.TWO
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
+import ofws.math.map.TileMap
 import ofws.math.map.TileMapBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
@@ -34,11 +35,7 @@ class GameRendererTest {
     private val size = Size2d(2, 3)
     private val bigSize = Size2d(3, 4)
     private val bigMap = GameMap(
-        TileMapBuilder(bigSize, FLOOR)
-            .setTile(0, 1, WALL)
-            .setTile(1, 3, WALL)
-            .setTile(2, 0, WALL)
-            .build()
+        TileMapBuilder(bigSize, FLOOR).setTile(0, 1, WALL).setTile(1, 3, WALL).setTile(2, 0, WALL).build()
     )
 
     private val renderer = GameRenderer(Rectangle(10, 20, size), tileRenderer)
@@ -62,10 +59,20 @@ class GameRendererTest {
         }
 
         @Test
-        fun `Render more integers than visible`() {
+        fun `Render more integers than the render area`() {
             renderer.renderInts(bigSize, listOf(10, 20, 11, null, 15, 11, 20, 10, 11, 11, 11, 11), ::getTile)
 
             verifyRendering()
+        }
+
+        @Test
+        fun `Render less integers than the render area`() {
+            renderer.renderInts(Size2d(1, 2), listOf(10, 20), ::getTile)
+
+            verifySequence {
+                tileRenderer.renderTile(tile0, 10, 20)
+                tileRenderer.renderTile(tile1, 10, 21)
+            }
         }
 
         @Test
@@ -99,9 +106,7 @@ class GameRendererTest {
         @Test
         fun `Render a simple footprint`() {
             val state = with(EcsBuilder()) {
-                createEntity()
-                    .add(SimpleFootprint(TileIndex(4)) as Footprint)
-                    .add(Graphic(entityTile))
+                createEntity().add(SimpleFootprint(TileIndex(4)) as Footprint).add(Graphic(entityTile))
                 build()
             }
 
@@ -115,9 +120,7 @@ class GameRendererTest {
         @Test
         fun `Render a big footprint`() {
             val state = with(EcsBuilder()) {
-                createEntity()
-                    .add(BigFootprint(TileIndex(1), TWO) as Footprint)
-                    .add(Graphic(entityTile))
+                createEntity().add(BigFootprint(TileIndex(1), TWO) as Footprint).add(Graphic(entityTile))
                 build()
             }
 
@@ -131,8 +134,7 @@ class GameRendererTest {
         @Test
         fun `Render a snake footprint`() {
             val state = with(EcsBuilder()) {
-                createEntity()
-                    .add(SnakeFootprint(listOf(TileIndex(1), TileIndex(4))) as Footprint)
+                createEntity().add(SnakeFootprint(listOf(TileIndex(1), TileIndex(4))) as Footprint)
                     .add(Graphic(entityTile))
                 build()
             }
@@ -148,9 +150,7 @@ class GameRendererTest {
         @Test
         fun `Skip entity outside the render area`() {
             val state = with(EcsBuilder()) {
-                createEntity()
-                    .add(SimpleFootprint(TileIndex(2)) as Footprint)
-                    .add(Graphic(entityTile))
+                createEntity().add(SimpleFootprint(TileIndex(2)) as Footprint).add(Graphic(entityTile))
                 build()
             }
 
@@ -167,9 +167,7 @@ class GameRendererTest {
         @Test
         fun `Render a map inside the render area`() {
             val map = GameMap(
-                TileMapBuilder(size, FLOOR)
-                    .setTile(0, 1, WALL)
-                    .build()
+                TileMapBuilder(size, FLOOR).setTile(0, 1, WALL).build()
             )
 
             verifyRenderMap(map)
@@ -178,9 +176,7 @@ class GameRendererTest {
         @Test
         fun `An entity occludes a tile`() {
             val map = GameMap(
-                TileMapBuilder(2, 1, FLOOR)
-                    .setTile(1, 0, WALL)
-                    .build(),
+                TileMapBuilder(2, 1, FLOOR).setTile(1, 0, WALL).build(),
                 EntityMap(size, mapOf(TileIndex(0) to Entity(0)))
             )
 
@@ -211,19 +207,36 @@ class GameRendererTest {
 
     }
 
-    @Test
-    fun `Render an occupancy map inside the render area`() {
-        val map = bigMap.createOccupancyMap(Entity(0))
+    @Nested
+    inner class RenderOccupancyMap {
 
-        renderer.renderOccupancyMap(map)
+        @Test
+        fun `Render an occupancy map inside the render area`() {
+            val map = bigMap.createOccupancyMap(Entity(0))
 
-        verifySequence {
-            tileRenderer.renderFullTile(GREEN, 10, 20)
-            tileRenderer.renderFullTile(GREEN, 11, 20)
-            tileRenderer.renderFullTile(RED, 10, 21)
-            tileRenderer.renderFullTile(GREEN, 11, 21)
-            tileRenderer.renderFullTile(GREEN, 10, 22)
-            tileRenderer.renderFullTile(GREEN, 11, 22)
+            renderer.renderOccupancyMap(map)
+
+            verifySequence {
+                tileRenderer.renderFullTile(GREEN, 10, 20)
+                tileRenderer.renderFullTile(GREEN, 11, 20)
+                tileRenderer.renderFullTile(RED, 10, 21)
+                tileRenderer.renderFullTile(GREEN, 11, 21)
+                tileRenderer.renderFullTile(GREEN, 10, 22)
+                tileRenderer.renderFullTile(GREEN, 11, 22)
+            }
+        }
+
+        @Test
+        fun `Render smaller occupancy map`() {
+            val map = GameMap(TileMap(Size2d(1, 2), listOf(FLOOR, WALL)))
+            val occupancyMap = map.createOccupancyMap(Entity(0))
+
+            renderer.renderOccupancyMap(occupancyMap)
+
+            verifySequence {
+                tileRenderer.renderFullTile(GREEN, 10, 20)
+                tileRenderer.renderFullTile(RED, 10, 21)
+            }
         }
     }
 
