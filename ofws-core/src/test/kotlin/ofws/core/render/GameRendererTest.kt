@@ -2,6 +2,7 @@ package ofws.core.render
 
 import io.mockk.Called
 import io.mockk.mockk
+import io.mockk.verify
 import io.mockk.verifySequence
 import ofws.core.game.component.*
 import ofws.core.game.map.EntityMap
@@ -47,27 +48,48 @@ class GameRendererTest {
         assertEquals(GameRenderer(Rectangle(0, 0, size), tileRenderer), GameRenderer(size, tileRenderer))
     }
 
-    @Test
-    fun `Render integers`() {
-        val tile0 = FullTile(RED)
-        val tile1 = FullTile(GREEN)
-        val tile2 = FullTile(BLUE)
+    @Nested
+    inner class RenderIntegers {
+        private val tile0 = FullTile(RED)
+        private val tile1 = FullTile(GREEN)
+        private val tile2 = FullTile(BLUE)
 
-        renderer.renderInts(size, listOf(10, 20, null, 15, 20, 10)) {
-            when (it) {
-                0.0 -> tile0
-                1.0 -> tile1
-                0.5 -> tile2
-                else -> EmptyTile
-            }
+        @Test
+        fun `Render integers`() {
+            renderer.renderInts(size, listOf(10, 20, null, 15, 20, 10), ::getTile)
+
+            verifyRendering()
         }
 
-        verifySequence {
-            tileRenderer.renderTile(tile0, 10, 20)
-            tileRenderer.renderTile(tile1, 11, 20)
-            tileRenderer.renderTile(tile2, 11, 21)
-            tileRenderer.renderTile(tile1, 10, 22)
-            tileRenderer.renderTile(tile0, 11, 22)
+        @Test
+        fun `Render more integers than visible`() {
+            renderer.renderInts(bigSize, listOf(10, 20, 11, null, 15, 11, 20, 10, 11, 11, 11, 11), ::getTile)
+
+            verifyRendering()
+        }
+
+        @Test
+        fun `Size & integers don't match`() {
+            renderer.renderInts(size, listOf(10), ::getTile)
+
+            verify { tileRenderer wasNot Called }
+        }
+
+        private fun getTile(factor: Double) = when (factor) {
+            0.0 -> tile0
+            1.0 -> tile1
+            0.5 -> tile2
+            else -> EmptyTile
+        }
+
+        private fun verifyRendering() {
+            verifySequence {
+                tileRenderer.renderTile(tile0, 10, 20)
+                tileRenderer.renderTile(tile1, 11, 20)
+                tileRenderer.renderTile(tile2, 11, 21)
+                tileRenderer.renderTile(tile1, 10, 22)
+                tileRenderer.renderTile(tile0, 11, 22)
+            }
         }
     }
 
