@@ -39,6 +39,12 @@ class RectangleTest {
 
     }
 
+    @ParameterizedTest(name = "index={2} -> x={0} y={1}")
+    @MethodSource("ofws.math.RectangleTest#inside")
+    fun `Convert index to parent coordinates`(x: Int, y: Int, index: Int) {
+        assertEquals(Pair(x, y), rectangle.convertToParent(TileIndex(index)))
+    }
+
     @Test
     fun `Get the x coordinate of an index`() {
         testGetParentX(6, 1)

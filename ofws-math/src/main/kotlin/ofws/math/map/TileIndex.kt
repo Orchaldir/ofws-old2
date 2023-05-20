@@ -5,3 +5,7 @@ package ofws.math.map
  */
 @JvmInline
 value class TileIndex(val index: Int)
+
+fun toList(vararg indices: Int) = indices.map { TileIndex(it) }
+
+fun toSet(vararg indices: Int) = indices.map { TileIndex(it) }.toSet()

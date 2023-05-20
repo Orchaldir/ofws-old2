@@ -1,5 +1,6 @@
 package ofws.core.render
 
+import mu.KotlinLogging
 import ofws.core.game.component.*
 import ofws.core.game.map.GameMap
 import ofws.core.game.map.Terrain
@@ -9,6 +10,11 @@ import ofws.math.Size1d
 import ofws.math.Size1d.Companion.ONE
 import ofws.math.Size2d
 import ofws.math.map.TileIndex
+import ofws.math.pathfinding.graph.OccupancyMap
+import kotlin.math.max
+import kotlin.math.min
+
+private val logger = KotlinLogging.logger {}
 
 data class GameRenderer(
     val area: Rectangle,
@@ -16,6 +22,41 @@ data class GameRenderer(
 ) {
 
     constructor(size: Size2d, renderer: TileRenderer) : this(Rectangle(size), renderer)
+
+    /**
+     * Renders an integer for each tile.
+     * It maps the range between the min & max value to a factor between 0 & 1.
+     */
+    fun renderInts(size: Size2d, values: List<Int?>, getTile: (factor: Double) -> Tile) {
+        if (size.tiles != values.size) {
+            return
+        }
+
+        var maxValue = Int.MIN_VALUE
+        var minValue = Int.MAX_VALUE
+
+        values.forEach {
+            if (it != null) {
+                maxValue = max(maxValue, it)
+                minValue = min(minValue, it)
+            }
+        }
+
+        val diff = (maxValue - minValue).toDouble()
+
+        logger.info("renderCosts(): min=$minValue max=$maxValue")
+
+        for (y in 0 until area.size.y) {
+            for (x in 0 until area.size.x) {
+                val mapIndex = size.getIndexIfInside(x, y) ?: continue
+                val value = values[mapIndex.index] ?: continue
+                val factor = (value - minValue) / diff
+                val tile = getTile(factor)
+
+                renderer.renderTile(tile, area.startX + x, area.startY + y)
+            }
+        }
+    }
 
     /**
      * Renders all entities with a [Footprint] & [Graphic] component.
@@ -45,13 +86,30 @@ data class GameRenderer(
     /**
      * Renders a whole map.
      */
-    fun renderMap(map: GameMap, getTile: (tile: Terrain) -> Tile) {
+    fun renderMap(map: GameMap, getTile: (terrain: Terrain) -> Tile) {
         for (y in 0 until area.size.y) {
             for (x in 0 until area.size.x) {
                 val mapIndex = map.getSize().getIndexIfInside(x, y)
 
                 if (mapIndex != null) {
                     renderTile(map, getTile, mapIndex, x, y)
+                }
+            }
+        }
+    }
+
+    /**
+     * Renders if an entity can occupy a tile or not.
+     */
+    fun renderOccupancyMap(map: OccupancyMap) {
+        for (y in 0 until area.size.y) {
+            for (x in 0 until area.size.x) {
+                val mapIndex = map.getSize().getIndexIfInside(x, y)
+
+                if (mapIndex != null) {
+                    val color = if (map.isValid(mapIndex)) Color.GREEN else Color.RED
+
+                    renderer.renderFullTile(color, area.startX + x, area.startY + y)
                 }
             }
         }
