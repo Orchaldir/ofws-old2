@@ -17,6 +17,7 @@ import ofws.core.render.Color.Companion.BLACK
 import ofws.core.render.Color.Companion.BLUE
 import ofws.core.render.Color.Companion.GREEN
 import ofws.core.render.Color.Companion.RED
+import ofws.core.render.Color.Companion.YELLOW
 import ofws.ecs.Entity
 import ofws.math.Rectangle
 import ofws.math.Size1d
@@ -99,15 +100,21 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
             RenderMode.RENDER_MAP -> gameRenderer.renderMap(gameMap, ::getTile)
             RenderMode.RENDER_OCCUPANCY_MAP -> gameRenderer.renderOccupancyMap(occupancyMap)
             RenderMode.RENDER_COST -> gameRenderer.renderInts(mapSize, pathfinding.getCostsToNode(), ::getTileForCost)
-            RenderMode.RENDER_HEURISTIC -> gameRenderer.renderInts(mapSize, pathfinding.getHeuristics(), ::getTileForCost)
+            RenderMode.RENDER_HEURISTIC -> gameRenderer.renderInts(
+                mapSize,
+                pathfinding.getHeuristics(),
+                ::getTileForCost
+            )
         }
 
         if (path is Path) {
-            path.indices.forEach { renderNode(it, "P", BLUE, ONE) }
+            path.indices
+                .dropLast(1)
+                .forEach { renderNode(it, "P", BLUE, ONE) }
         }
 
-        renderNode(start, "S", GREEN, pathSize)
-        renderNode(goal, "G", RED, pathSize)
+        renderNode(start, "S", YELLOW, pathSize)
+        renderNode(goal, "G", YELLOW, pathSize)
 
         messageRenderer.render(messageLog)
 
@@ -125,7 +132,9 @@ class PathfindingDemo : TileApplication(60, 45, 20, 20) {
     private fun renderNode(position: TileIndex?, tile: String, color: Color, nodeSize: Size1d) {
         if (position is TileIndex) {
             val (x, y) = gameRenderer.area.convertToParent(position)
-            tileRenderer.renderFullTile(BLACK, x, y, nodeSize)
+            if (renderMode == RenderMode.RENDER_MAP) {
+                tileRenderer.renderFullTile(BLACK, x, y, nodeSize)
+            }
             tileRenderer.renderText(tile, color, x, y, nodeSize)
         }
     }
