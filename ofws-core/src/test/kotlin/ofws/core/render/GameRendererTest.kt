@@ -47,6 +47,30 @@ class GameRendererTest {
         assertEquals(GameRenderer(Rectangle(0, 0, size), tileRenderer), GameRenderer(size, tileRenderer))
     }
 
+    @Test
+    fun `Render integers`() {
+        val tile0 = FullTile(RED)
+        val tile1 = FullTile(GREEN)
+        val tile2 = FullTile(BLUE)
+
+        renderer.renderInts(size, listOf(10, 20, null, 15, 20, 10)) {
+            when (it) {
+                0.0 -> tile0
+                1.0 -> tile1
+                0.5 -> tile2
+                else -> EmptyTile
+            }
+        }
+
+        verifySequence {
+            tileRenderer.renderTile(tile0, 10, 20)
+            tileRenderer.renderTile(tile1, 11, 20)
+            tileRenderer.renderTile(tile2, 11, 21)
+            tileRenderer.renderTile(tile1, 10, 22)
+            tileRenderer.renderTile(tile0, 11, 22)
+        }
+    }
+
     @Nested
     inner class RenderEntities {
 
